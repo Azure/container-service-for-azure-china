@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    component: {{template "fullname" .}}
+spec:
+  replicas: {{ .Values.kibana.replicaCount }}
+  template:
+    metadata:
+      labels:
+        component: {{ template "fullname" . }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.common.registry }}/kibana:{{ .Values.kibana.image.tag }}"
+        imagePullPolicy: {{ .Values.kibana.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.kibana.service.port }}
+      imagePullSecrets:
+      - name: {{ .Values.common.secretName }}

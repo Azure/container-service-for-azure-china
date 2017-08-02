@@ -1,0 +1,26 @@
+common:
+  namespace: elk-cluster-ns
+  secretName: azure-registry
+  registry: ${REGISTRY_URL}
+
+elasticsearch:
+  image:
+    tag: 1.0.0
+  client:
+    replicas: 2
+  master:
+    replicas: 3
+  data:
+    replicas: 2
+    storageAccount: ${STORAGE_ACCOUNT}
+    location: ${STORAGE_LOCATION}
+
+kibana:
+  image:
+    tag: 1.0.0
+  replicaCount: 1
+
+logstash:
+  image:
+    tag: 1.0.0
+  replicaCount: 1

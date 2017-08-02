@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    component: {{template "fullname" .}}
+spec:
+  type: {{ .Values.kibana.service.type }}
+  ports:
+  - port: {{ .Values.kibana.service.port }}
+    protocol: TCP
+    name: {{ .Values.kibana.service.name }}
+  selector:
+    component: {{ template "fullname" . }}

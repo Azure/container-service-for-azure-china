@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  logstash.conf: |
+{{ .Files.Get "config/logstash.conf" | printf "%s" | indent 4 }}
+kind: ConfigMap
+metadata:
+  name:  {{ template "fullname" . }}
+  namespace: {{ .Values.common.namespace }}
+
