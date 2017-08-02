@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    component: {{template "fullname" .}}
+spec:
+  replicas: {{ .Values.logstash.replicaCount }}
+  template:
+    metadata:
+      labels:
+        component: {{ template "fullname" . }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.common.registry }}/logstash:{{ .Values.logstash.image.tag }}"
+        imagePullPolicy: {{ .Values.logstash.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.logstash.service.port }}
+        volumeMounts:
+        - mountPath: {{ .Values.logstash.configuration.path }}
+          name: config
+      imagePullSecrets:
+      - name: {{ .Values.common.secretName }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "fullname" . }}
+            items:
+            - key: logstash.conf
+              path: logstash.conf

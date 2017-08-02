@@ -1,0 +1,7 @@
+apiVersion: v1
+description: helm chart for filebeat
+name: filebeat
+version: 0.0.1
+maintainers:
+  - name: Yawei Wang
+    email: yaweiw@microsoft.com

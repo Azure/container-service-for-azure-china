@@ -1,0 +1,77 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{template "fullname" .}}-client
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    component: {{template "fullname" .}}
+    role: client
+spec:
+  replicas: {{ .Values.elasticsearch.client.replicas }}
+  template:
+    metadata:
+      labels:
+        component: {{template "fullname" .}}
+        role: client
+      annotations:
+        # Elasticsearch uses a hybrid mmapfs / niofs directory by default to
+        # store its indices. The default operating system limits on mmap counts
+        # is likely to be too low, which may result in out of memory exceptions,
+        # so we use vm.max_map_count=262144 to increase that value.
+        pod.beta.kubernetes.io/init-containers: '[
+          {
+          "name": "sysctl",
+            "image": "busybox",
+            "imagePullPolicy": "IfNotPresent",
+            "command": ["sysctl", "-w", "vm.max_map_count=262144"],
+            "securityContext": {
+              "privileged": true
+            }
+          }
+        ]'
+    spec:
+      containers:
+      - name: es-client
+        securityContext:
+          privileged: false
+          capabilities:
+            add:
+              - IPC_LOCK
+              - SYS_RESOURCE
+        image: "{{ .Values.common.registry }}/elasticsearch:{{ .Values.elasticsearch.image.tag }}"
+        imagePullPolicy: {{ .Values.elasticsearch.image.pullPolicy }}
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: DISCOVERY_SERVICE
+          value: {{template "fullname" .}}-discovery
+        {{- range $key, $value :=  .Values.common.env }}
+        - name: {{ $key | upper | replace "-" "_" }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- range $key, $value :=  .Values.elasticsearch.client.env }}
+        - name: {{ $key | upper | replace "-" "_" }}
+          value: {{ $value | quote }}
+        {{- end }}
+        ports:
+        - containerPort: 9200
+          name: http
+          protocol: TCP
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        volumeMounts:
+        - name: storage
+          mountPath: /data
+      imagePullSecrets:
+      - name: {{ .Values.common.secretName }}
+      volumes:
+        - emptyDir:
+            medium: ""
+          name: "storage"

@@ -1,0 +1,17 @@
+# Headless Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{template "fullname" .}}-data
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    component: {{template "fullname" .}}
+    role: data
+spec:
+  ports:
+  - port: 9300
+    name: transport
+  clusterIP: None
+  selector:
+    component: {{template "fullname" .}}
+    role: data
