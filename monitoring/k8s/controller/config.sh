@@ -27,6 +27,12 @@ readonly DISABLED="disabled"
 # flag to enable docker package mirror or not.
 readonly ENABLE_DOCKER_PACKAGE_MIRROR_FLAG="$ENABLED"
 
+# flag to enable kubectl mirror or not.
+readonly ENABLE_KUBECTL_MIRROR_FLAG="$ENABLED"
+
+# flag to enable helm tiller image mirror or not
+readonly ENABLE_HELM_TILLER_IMAGE_MIRROR_FLAG="$ENABLED"
+
 # =============================================================================
 # constants
 # =============================================================================
@@ -49,16 +55,26 @@ readonly DOCKER_PACKAGE_LOCAL_PATH="$INSTALL_DIR/$DOCKER_PACKAGE_NAME"
 # kubectl constants
 readonly KUBECTL_VERSION="$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)"
 readonly KUBECTL_URL="https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl"
+# TODO: replace to an official mirror site
+readonly KUBECTL_MIRROR_URL="https://ccgmsref.blob.core.windows.net/mirror/kubectl" 
 readonly KUBECTL_TEMP_PATH="$INSTALL_DIR/kubectl"
 readonly KUBECTL_INSTALL_PATH="/usr/local/bin/kubectl"
 
 # kubenetes constants
 readonly K8S_MASTER_NODE_IDENTITY_FILE_PATH="$INSTALL_DIR/k8s_id"
 readonly K8S_MASTER_NODE_KUBE_CONFIG_PATH="~/.kube/config"
+readonly K8S_NAMESPACE_KUBE_SYSTEM="kube-system"
 
 # kube config constants
 readonly KUBE_CONFIG_LOCAL_DIR="/root/.kube"
 readonly KUBE_CONFIG_LOCAL_PATH="$KUBE_CONFIG_LOCAL_DIR/config"
+
+# helm contstants
+readonly HELM_INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"
+readonly HELM_INSTALL_SCRIPT_LOCAL_PATH="$INSTALL_DIR/install_helm.sh"
+readonly HELM_TILLER_DEPLOYMENT="deployments/tiller-deploy"
+readonly HELM_TILLER_VERSION_TAG="v2.5.1"
+readonly HELM_TILLER_MIRROR_IMAGE="mirror.azure.cn:5000/kubernetes-helm/tiller"
 
 # =============================================================================
 # functions
@@ -134,22 +150,34 @@ function install_docker() {
 # Globals:
 #   KUBECTL_URL
 #   KUBECTL_TEMP_PATH
+#   KUBECTL_MIRROR_URL
 #   KUBECTL_INSTALL_PATH
 # Arguments:
-#   None
+#   enable_mirror
 # Returns:
 #   None
 # -----------------------------------------------------------------------------
 function install_kubectl() {
+    local enable_mirror=$1
+
     # log function executing
-    log_message "executing install kubectl function"
+    log_message "executing install kubectl function with arguments: (enable_mirror = $enable_mirror)"
 
     # download kubectl from remote
-    log_message "dowloading kubectl from '$KUBECTL_URL' to '$KUBECTL_TEMP_PATH'"
+    
+    if [ "$enable_mirror" = "$ENABLED" ] ; then
+        log_message "dowloading kubectl from '$KUBECTL_MIRROR_URL' to '$KUBECTL_TEMP_PATH'"
 
-    curl -o "$KUBECTL_TEMP_PATH" -O "$KUBECTL_URL" 
+        curl -o "$KUBECTL_TEMP_PATH" -O "$KUBECTL_MIRROR_URL"
 
-    log_message "dowloaded kubectl from '$KUBECTL_URL' to '$KUBECTL_TEMP_PATH'"
+        log_message "dowloaded kubectl from '$KUBECTL_MIRROR_URL' to '$KUBECTL_TEMP_PATH'"
+    else
+        log_message "dowloading kubectl from '$KUBECTL_URL' to '$KUBECTL_TEMP_PATH'"
+
+        curl -o "$KUBECTL_TEMP_PATH" -O "$KUBECTL_URL"
+
+        log_message "dowloaded kubectl from '$KUBECTL_URL' to '$KUBECTL_TEMP_PATH'"
+    fi
     
     # install kubectl from local
     log_message "installing kubectl from '$KUBECTL_TEMP_PATH' to '$KUBECTL_INSTALL_PATH'"
@@ -163,7 +191,7 @@ function install_kubectl() {
     kubectl version --client
 
     # log function executed
-    log_message "executed install kubectl function"
+    log_message "executed install kubectl function with arguments: (enable_mirror = $enable_mirror)"
 }
 
 # -----------------------------------------------------------------------------
@@ -218,6 +246,82 @@ function load_kube_config() {
 }
 
 # -----------------------------------------------------------------------------
+# Install helm function.
+# Globals:
+#   ENABLED
+#   K8S_NAMESPACE_KUBE_SYSTEM
+#   HELM_INSTALL_SCRIPT_LOCAL_PATH
+#   HELM_INSTALL_SCRIPT_URL
+#   HELM_TILLER_DEPLOYMENT
+#   HELM_TILLER_MIRROR_IMAGE
+#   HELM_TILLER_VERSION_TAG
+# Arguments:
+#   enable_mirror: ENABLED or DISABLED
+# Returns:
+#   None
+# -----------------------------------------------------------------------------
+function install_helm() {
+    local enable_mirror=$1
+
+    # log function executing
+    log_message "executing install helm function with arguments: (enable_mirror = $enable_mirror)"
+
+    # download helm install script
+
+    log_message "downloading helm install script from '$HELM_INSTALL_SCRIPT_URL' to '$HELM_INSTALL_SCRIPT_LOCAL_PATH'"
+
+    # download from remote
+    curl -o "$HELM_INSTALL_SCRIPT_LOCAL_PATH" -O "$HELM_INSTALL_SCRIPT_URL"
+
+    # set execution permission
+    chmod 700 "$HELM_INSTALL_SCRIPT_LOCAL_PATH"
+
+    log_message "downloaded helm install script from '$HELM_INSTALL_SCRIPT_URL' to '$HELM_INSTALL_SCRIPT_LOCAL_PATH'"
+
+    # execute helm install script
+
+    log_message "executing helm install script from '$HELM_INSTALL_SCRIPT_LOCAL_PATH'"
+
+    bash "$HELM_INSTALL_SCRIPT_LOCAL_PATH"
+
+    log_message "executed helm install script from '$HELM_INSTALL_SCRIPT_LOCAL_PATH'"
+
+    # initialize helm
+
+    log_message "initializing helm"
+
+    {
+        helm init
+    } || {
+        echo "helm init failed."
+    }
+
+    log_message "initialized helm"
+
+    # workaround to resolve tiller image issue
+    if [ "$enable_mirror" = "$ENABLED" ] ; then
+        # replace failed tiller image with mirror image
+
+        log_message "deploying tiller image from mirror '$HELM_TILLER_MIRROR_IMAGE:$HELM_TILLER_VERSION_TAG' to deployment '$HELM_TILLER_DEPLOYMENT' in namespace '$K8S_NAMESPACE_KUBE_SYSTEM'"
+
+        kubectl --namespace="$K8S_NAMESPACE_KUBE_SYSTEM" \
+        set image "$HELM_TILLER_DEPLOYMENT" \
+        tiller="$HELM_TILLER_MIRROR_IMAGE:$HELM_TILLER_VERSION_TAG"
+
+        log_message "deployed tiller image from mirror '$HELM_TILLER_MIRROR_IMAGE:$HELM_TILLER_VERSION_TAG'"
+
+        # sleep 5 seconds, wait tiller image up
+        sleep 5
+    fi
+
+    # test helm installed
+    helm version
+
+    # log function executed
+    log_message "executed write install helm function with arguments: (enable_mirror = $enable_mirror)"
+}
+
+# -----------------------------------------------------------------------------
 # Write cleanup script function.
 # Globals:
 #   CLEANUP_SCRIPT_PATH
@@ -235,10 +339,20 @@ function write_cleanup_script() {
 
     # TODO: load content from remote
     local cleanup_script_content="#!/usr/bin/env bash
+# clean helm
+helm reset
+rm -r /root/.helm
+rm -f /usr/local/bin/helm
+
+# clean kubectl
+rm -r $KUBE_CONFIG_LOCAL_DIR
+rm -f $KUBECTL_INSTALL_PATH
+
+# clean docker
 apt-get purge docker-engine -y
 apt-get autoremove -y
-rm $KUBECTL_INSTALL_PATH
-rm -r $KUBE_CONFIG_LOCAL_DIR
+
+# clean temp directory
 rm -r $INSTALL_DIR"
 
     log_message "writing cleanup script content: '$cleanup_script_content' to '$CLEANUP_SCRIPT_PATH'"
@@ -274,10 +388,13 @@ function main() {
         install_docker "$ENABLE_DOCKER_PACKAGE_MIRROR_FLAG"
 
         # install kubectl
-        install_kubectl
+        install_kubectl "$ENABLE_KUBECTL_MIRROR_FLAG"
 
         # load kube config
         load_kube_config
+
+        # install helm
+        install_helm "$ENABLE_HELM_TILLER_IMAGE_MIRROR_FLAG"
     } || {
         log_message "config failed"
     }
