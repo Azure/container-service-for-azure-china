@@ -1,29 +1,30 @@
-# Jenkins to Azure Container Registry [![Build Status](http://devops-ci.westcentralus.cloudapp.azure.com/job/qs/job/201-jenkins-acr/badge/icon)](http://devops-ci.westcentralus.cloudapp.azure.com/blue/organizations/jenkins/qs%2F201-jenkins-acr/activity)
+# Jenkins to Private Docker Registry to Kubernetes cluster
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVincentliu028%2Fazure-quickstart-templates%2Fmaster%2F201-jenkins-acr%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.cn/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVincentliu028%2Fazure-quickstart-templates%2Fmaster%2F201-jenkins-acr%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 <a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FVincentliu028%2Fazure-quickstart-templates%2Fmaster%2F201-jenkins-acr%2Fazuredeploy.json" target="_blank">
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-The template allows you to host an instance of Jenkins on a DS1_v2 size Linux Ubuntu 14.04 LTS VM in Azure. 
+The template allows you to host an instance of Jenkins on a DS1_v2 size Linux Ubuntu 14.04 LTS VM in Azure China. 
 
-It also include a basic Jenkins pipeline that will checkout a sample git repository with a Dockerfile embedded and it will build and push the Docker container in the provisioned private docker registry you provided, then deploy it to K8s cluster.
+It also includes a basic Jenkins pipeline that will checkout a sample git repository with a Dockerfile embedded and it will build and push the Docker container in the provisioned private docker registry you provided, then deploy it to Kubernetes cluster.
 
-## A. Deploy an Azure Container Registry and a Jenkins VM with an embedded Docker build and publish pipeline
+## A. Deploy a Jenkins VM with an embedded Docker build and publish pipeline
 1. Click the "Deploy to Azure" button. If you don't have an Azure subscription, you can follow instructions to signup for a free trial.
 1. Enter the desired user name and password for the VM that's going to host the Jenkins instance. Also provide a DNS prefix for your VM.
 1. Enter the appId and appKey for your Service Principal (used by the Jenkins pipeline to push the built docker container). If you don't have a service principal, use the [Azure CLI 2.0](https://docs.microsoft.com/cli/azure/install-azure-cli) to create one (see [here](https://docs.microsoft.com/cli/azure/create-an-azure-service-principal-azure-cli?toc=%2fazure%2fazure-resource-manager%2ftoc.json) for more details):
     ```bash
-    az login
+    az cloud set -n AzureChinaCloud
+    az login 
     az account set --subscription <Subscription ID>
     az ad sp create-for-rbac --name "Jenkins"
     ```
     > NOTE: You can run `az account list` after you login to get a list of subscription IDs for your account.
 1. Enter a public git repository. The repository must have a Dockerfile in its root.
 1. Provide a private Docker registry url , login user name and password
-1. The Kubernetes master FQDN, user name and private key which is base64 encoded, the pipeline will deploy sample project to this kubernetes cluster
+1. The Kubernetes master FQDN, user name and private key which is [base64](https://en.wikipedia.org/wiki/Base64) encoded, the pipeline will deploy sample project to this kubernetes cluster. You could use some online [tool](https://www.bing.com/search?q=base64+encode&qs=AS&pq=base64+&sk=AS1&sc=8-7&cvid=FFECC475833E43958634B83EA90B2364&FORM=QBLH&sp=2) to do encode.
 
 ## B. Setup SSH port forwarding
 **By default the Jenkins instance is using the http protocol and listens on port 8080. Users shouldn't authenticate over unsecured protocols!**
