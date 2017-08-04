@@ -1,0 +1,21 @@
+heartbeat.monitors:
+- type: http
+
+  schedule: '@every 60s'
+
+  urls: ["http://miaotestapp.default:80"]
+
+  ipv4: true
+  ipv6: true
+  mode: any
+
+output.elasticsearch:
+  hosts: ["elasticsearch.elk-ns:9200"]
+
+  template.enabled: true
+  template.name: "heartbeat"
+  template.path: "heartbeat.template.json"
+  template.overwrite: false
+
+dashboards.enabled: true
+dashboards.beat: heartbeat

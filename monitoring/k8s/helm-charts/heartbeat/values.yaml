@@ -1,0 +1,31 @@
+# Default values for heartbeat.
+
+## Replica count for heartbeat, by default use 1
+replicaCount: 1
+
+## Heartbeat image repository
+## If not in Azure Mooncake, use offical image from elastic
+## repository: docker.elastic.co/beats/heartbeat
+##
+## If in Azure Mooncake, use the mirror image
+## repository: mirror.azure.cn:5000/beats/heartbeat
+##
+image:
+  repository: docker.elastic.co/beats/heartbeat
+  tag: 5.5.1
+  pullPolicy: IfNotPresent
+
+## Here labels can be added to the heartbeat deployment
+labels:
+  feature: "monitoring"
+  component: "heartbeat"
+
+## Manage the resources of the heartbeat deployment
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+

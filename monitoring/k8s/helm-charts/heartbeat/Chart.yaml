@@ -1,0 +1,7 @@
+apiVersion: v1
+description: helm chart for heartbeat
+name: heartbeat
+version: 0.0.1
+maintainers:
+  - name: Miao Zou
+    email: mizo@microsoft.com
