@@ -1,0 +1,185 @@
+#cloud-config
+
+# { { { variable } } }
+
+packages:
+ - jq
+ - traceroute
+
+runcmd:
+- apt-get update
+- apt-get install -y apt-transport-https ca-certificates
+- for i in 1 2 3 4 5; do curl --max-time 60 -fsSL https://apt.dockerproject.org/gpg | apt-key add -; [ $? -eq 0 ] && break || sleep 5; done
+- echo "deb https://mirror.azure.cn/docker-engine/apt/repo/ ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
+- apt-get update
+- apt-get install -y docker-engine
+- apt-get install -y docker-compose
+- mkdir -p /etc/docker-registry/certs
+- mkdir -p /etc/docker-registry/manifests
+
+write_files:
+- path: "/etc/docker-registry/certs/server.crt"
+  permissions: "0644"
+  encoding: "base64"
+  owner: "root"
+  content: |
+    {{{serverCertificate}}}
+
+- path: "/etc/docker-registry/certs/server.key"
+  permissions: "0644"
+  encoding: "base64"
+  owner: "root"
+  content: |
+    {{{serverKey}}}
+
+- path: "/etc/docker-registry/manifests/docker-stack.yml"
+  permissions: "0644"
+  owner: "root"
+  content: |
+    version: "3"
+    services:
+      registry:
+        image: mirror.azure.cn:5000/library/registry
+        ports:
+          - "<<<parameters('registryPort')>>>:5000"
+        volumes:
+          - /etc/docker-registry/certs:/certs
+        networks:
+          - frontend
+        environment:
+          - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/server.crt
+          - REGISTRY_HTTP_TLS_KEY=/certs/server.key
+          - REGISTRY_STORAGE=azure
+          - REGISTRY_STORAGE_AZURE_ACCOUNTNAME="<<<variables('registryStorageAccountName')>>>"
+          - REGISTRY_STORAGE_AZURE_ACCOUNTKEY="<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>"
+          - REGISTRY_STORAGE_AZURE_CONTAINER="<<<variables('registryStorageContainerName')>>>"
+          - REGISTRY_STORAGE_AZURE_REALM="core.chinacloudapi.cn"
+          - REGISTRY_HTTP_SECRET="<<<variables('httpSecretString')>>>"
+        deploy:
+          replicas: 3
+          restart_policy:
+            condition: on-failure
+    networks:
+      frontend:
+
+- path: "/etc/systemd/system/docker-registry.service"
+  permissions: "0644"
+  owner: "root"
+  content: |
+    [Unit]
+    Description=Docker registry
+    Requires=docker.service
+    After=docker.service
+
+    [Service]
+    Restart=always
+    TimeoutStartSec=0
+    RestartSec=5s
+    ExecStartPre=/usr/bin/docker pull mirror.azure.cn:5000/library/registry
+    ExecStartPre=/usr/bin/docker stack deploy --compose-file /etc/docker-registry/manifests/docker-stack.yml myregistry
+    ExecStart=/bin/echo "started."
+
+    [Install]
+    WantedBy=multi-user.target
+
+- path: "/etc/docker-registry/manifests/create-blob.sh"
+  permissions: "0655"
+  owner: "root"
+  content: |
+    #!/bin/bash
+    function ensureDocker() {
+        systemctl enable docker
+        systemctl restart docker
+        dockerStarted=1
+        for i in {1..900}; do
+            if ! /usr/bin/docker info; then
+                echo "status $?"
+                /bin/systemctl restart docker
+            else
+                echo "docker started"
+                dockerStarted=0
+                break
+            fi
+            sleep 1
+        done
+        if [ $dockerStarted -ne 0 ]
+        then
+            echo "docker did not start"
+            exit 1
+        fi
+    }
+
+    function createStorageContainer() {
+        docker pull mirror.azure.cn:5000/microsoft/azure-cli
+
+        # docker run --rm mirror.azure.cn:5000/microsoft/azure-cli /bin/bash -c "azure storage container create -p Container -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" --container container1"
+
+        LENGTH=$(docker run --rm mirror.azure.cn:5000/microsoft/azure-cli /bin/bash -c "azure storage container list --json -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" -p <<<variables('registryStorageContainerName')>>>" | jq ". | length")
+
+        if [ $LENGTH -eq 0 ];then
+          docker run --rm mirror.azure.cn:5000/microsoft/azure-cli /bin/bash -c "azure storage container create -p Container -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" --container <<<variables('registryStorageContainerName')>>>"
+        fi
+    }
+
+    function createSwarm() {
+      docker swarm leave --force
+      docker swarm init --advertise-addr "$2" > swarmcmd.sh
+      sed -i "/^[^ \t]/d" swarmcmd.sh
+
+      LOCALPATH=$(pwd)
+      docker run --rm -v $LOCALPATH:/scripts mirror.azure.cn:5000/microsoft/azure-cli /bin/bash -c "azure storage blob upload -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" /scripts/swarmcmd.sh <<<variables('registryStorageContainerName')>>> swarmcmd"
+    }
+
+    function joinSwarm() {
+      sharedBlobCreated=0
+      for i in {1..900}; do
+        SLAVELENGTH=$(docker run --rm mirror.azure.cn:5000/microsoft/azure-cli /bin/bash -c "azure storage blob list --json -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" <<<variables('registryStorageContainerName')>>> swarmcmd" | jq ".|length")
+
+        if [ $SLAVELENGTH -eq 0 ]; then
+          sleep 5
+        else
+          sharedBlobCreated=1
+          break
+        fi
+      done
+
+      if [ $sharedBlobCreated -eq 0 ]; then
+        exit 1
+      fi
+
+      docker run --rm -v /tmp:/scripts mirror.azure.cn:5000/microsoft/azure-cli /bin/bash -c "azure storage blob download --json -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" <<<variables('registryStorageContainerName')>>> swarmcmd /scripts/"
+
+      chmod a+x /tmp/swarmcmd
+      /bin/bash /tmp/swarmcmd
+    }
+
+    function startRegistry() {
+      for i in {1..900}; do
+        NUMNODE=$(docker node ls | wc -l)
+        NUMNODE=$(($NUMNODE-1))
+        if [ $NUMNODE -eq <<<parameters('numberOfInstances')>>> ]; then
+          break
+        else
+          sleep 5
+        fi
+      done
+
+      systemctl enable docker-registry
+      systemctl restart docker-registry
+    }
+
+    ensureDocker
+    systemctl enable docker
+    systemctl restart docker
+
+    # if the node is master
+    if [ $1 -eq 0 ]; then
+      createStorageContainer
+      createSwarm
+      startRegistry
+    else
+      joinSwarm
+    fi
+
+    echo "Storage container created."
+

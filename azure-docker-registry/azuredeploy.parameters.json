@@ -1,0 +1,23 @@
+{
+    "adminUsername": {
+        "value": "azureuser"
+    },
+    "adminPassword": {
+        "value": ""
+    },
+    "dnsNameforLBIP": {
+        "value": "myhub01"
+    },
+    "registryPort": {
+        "value": 5000
+    },
+    "numberOfInstances": {
+        "value": 2
+    },
+    "vmSize": {
+        "value": "Standard_D2_v2"
+    },
+    "sshRSAPublicKey": {
+        "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsQJfZxCmJ74SQwllQlOauMlyGEMJKV2FpfWm/WOKmi7eizi7/BabPZ5R2ywOdSLkRKkqh4qLiDMB6g/rMZIN3Kg/3hYRwxxixuBPg8bdyPk0tFLIeO0aTZE5kn+NafLs0SQgYXikiAzMQ8ph7uJPKkhx/9+GrQmTLr+8/p5z6I4h5+TGw2J/ZZgh9JEg0MP4RpUMUgwnrz8prDQWstIKAy9HM2g3Lb5tqxzhYYGRd1wWb0ajCslNsaGoDBw3LK/HgSU9mhGfQL7I/H+XzeSd50yHPfV51oyDv5/JYgcDToHJaDK/bYH6f8VRGFTmYkurJ9bMQLhbkcX862Kpieb4x tiantiaw@tiantiaw-pc02"
+    }
+}

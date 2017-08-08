@@ -1,0 +1,381 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "adminUsername": {
+            "type": "string",
+            "defaultValue": "azureuser",
+            "metadata": {
+                "description": "Admin username"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "defaultValue":"",
+            "metadata": {
+                "description": "Password for the Virtual Machine."
+            }
+        },
+        "dnsNameforLBIP": {
+            "type": "string",
+            "defaultValue": "myhub01",
+            "metadata": {
+                "description": "DNS for Load Balancer IP"
+            }
+        },
+        "registryPort": {
+            "type": "int",
+            "defaultValue": 5000,
+            "metadata": {
+                "description": "Default port of registry."
+            }
+        },
+        "numberOfInstances": {
+            "type": "int",
+            "defaultValue": 2,
+            "metadata": {
+                "description": "Number of vm instances."
+            }
+        },
+        "vmSize": {
+            "allowedValues": [
+                "Basic_A2",
+                "Basic_A3",
+                "Basic_A4",
+                "Standard_A2",
+                "Standard_A3",
+                "Standard_A4",
+                "Standard_A5",
+                "Standard_A6",
+                "Standard_A7",
+                "Standard_D2",
+                "Standard_D3",
+                "Standard_D4",
+                "Standard_D11",
+                "Standard_D12",
+                "Standard_D13",
+                "Standard_D14",
+                "Standard_D2_v2",
+                "Standard_D3_v2",
+                "Standard_D4_v2",
+                "Standard_D5_v2",
+                "Standard_D11_v2",
+                "Standard_D12_v2",
+                "Standard_D13_v2",
+                "Standard_D14_v2",
+                "Standard_F2",
+                "Standard_F4",
+                "Standard_F8",
+                "Standard_F16"
+            ],
+            "metadata": {
+                "description": "The size of the Virtual Machine."
+            },
+            "defaultValue": "Standard_D2_v2",
+            "type": "string"
+        },
+        "sshRSAPublicKey": {
+            "metadata": {
+                "description": "SSH public key used for auth to all Linux machines."
+            },
+            "defaultValue": "",
+            "type": "string"
+        }
+    },
+    "variables": {
+        "apiVersionDefault": "2015-05-01-preview",
+        "apiVersionStorage": "2015-05-01-preview",
+        "apiVersionVM": "2016-04-30-preview",
+        "osImageOffer": "UbuntuServer",
+        "osImagePublisher": "Canonical",
+        "osImageSKU": "16.04.0-LTS",
+        "osImageVersion": "16.04.201606270",
+        "vmNamePrefix": "registryvm",
+        "lbName": "registrylb",
+        "publicIPAddressName": "regpublicip",
+        "vnetName": "regvnet",
+        "vmStorageAccountName": "vmstorageacct",
+        "registryStorageAccountName": "registrystorage",
+        "registryStorageContainerName": "regcontainer",
+        "storageAccountType": "Standard_LRS",
+        "availabilitySetName": "regavset",
+        "addressPrefix": "10.0.0.0/16",
+        "nicNamePrefix": "regvmnic",
+        "subnetName": "regvmsubnet",
+        "subnetPrefix": "10.0.0.0/24",
+        "publicIPAddressType": "Dynamic",
+        "firstConsecutiveStaticIP": "10.0.0.4",
+        "httpSecretString":"[uniqueString(concat(parameters('dnsNameforLBIP'), resourceGroup().location))]",
+        "masterFirstAddrOctets": "[split(variables('firstConsecutiveStaticIP'),'.')]",
+        "masterFirstAddrOctet4": "[variables('masterFirstAddrOctets')[3]]",
+        "masterFirstAddrPrefix": "[concat(variables('masterFirstAddrOctets')[0],'.',variables('masterFirstAddrOctets')[1],'.',variables('masterFirstAddrOctets')[2],'.')]",
+        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('vnetName'))]",
+        "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables ('subnetName'))]",
+        "publicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]",
+        "lbID": "[resourceId('Microsoft.Network/loadBalancers',variables('lbName'))]",
+        "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEnd')]",
+        "lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/BackendPool1')]",
+        "lbProbeID": "[concat(variables('lbID'),'/probes/tcpProbe')]",
+        "sshKeyPath": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]"
+    },
+    "resources": [{
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('vmStorageAccountName')]",
+            "apiVersion": "[variables('apiVersionStorage')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "accountType": "[variables('storageAccountType')]"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('registryStorageAccountName')]",
+            "apiVersion": "[variables('apiVersionStorage')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "accountType": "[variables('storageAccountType')]"
+            }
+        },
+        {
+            "type": "Microsoft.Compute/availabilitySets",
+            "name": "[variables('availabilitySetName')]",
+            "apiVersion": "[variables('apiVersionVM')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "platformFaultDomainCount": "2",
+                "platformUpdateDomainCount": "2"
+            }
+        },
+        {
+            "apiVersion": "[variables('apiVersionDefault')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[variables('publicIPAddressName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+                "dnsSettings": {
+                    "domainNameLabel": "[parameters('dnsNameforLBIP')]"
+                }
+            }
+        },
+        {
+            "apiVersion": "[variables('apiVersionDefault')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[variables('vnetName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('addressPrefix')]"
+                    ]
+                },
+                "subnets": [{
+                    "name": "[variables('subnetName')]",
+                    "properties": {
+                        "addressPrefix": "[variables('subnetPrefix')]"
+                    }
+                }]
+            }
+        },
+        {
+            "apiVersion": "[variables('apiVersionDefault')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nicNamePrefix'), copyindex())]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "nicLoop",
+                "count": "[parameters('numberOfInstances')]"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
+                "[concat('Microsoft.Network/loadBalancers/', variables('lbName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [{
+                    "name": "ipconfig1",
+                    "properties": {
+                        "privateIPAddress": "[concat(variables('masterFirstAddrPrefix'), copyIndex(int(variables('masterFirstAddrOctet4'))))]",
+                        "privateIPAllocationMethod": "Static",
+                        "subnet": {
+                            "id": "[variables('subnetRef')]"
+                        },
+                        "loadBalancerBackendAddressPools": [{
+                            "id": "[concat(variables('lbID'), '/backendAddressPools/BackendPool1')]"
+                        }],
+                        "loadBalancerInboundNatRules": [{
+                            "id": "[concat(variables('lbID'),'/inboundNatRules/RDP-VM', copyindex())]"
+                        }]
+                    }
+                }]
+            }
+        },
+        {
+            "apiVersion": "[variables('apiVersionDefault')]",
+            "name": "[variables('lbName')]",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
+            ],
+            "properties": {
+                "frontendIPConfigurations": [{
+                    "name": "LoadBalancerFrontEnd",
+                    "properties": {
+                        "publicIPAddress": {
+                            "id": "[variables('publicIPAddressID')]"
+                        }
+                    }
+                }],
+                "backendAddressPools": [{
+                    "name": "BackendPool1"
+                }],
+                "inboundNatRules": [{
+                        "name": "RDP-VM0",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[variables('frontEndIPConfigID')]"
+                            },
+                            "protocol": "tcp",
+                            "frontendPort": 2201,
+                            "backendPort": 22,
+                            "enableFloatingIP": false
+                        }
+                    },
+                    {
+                        "name": "RDP-VM1",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[variables('frontEndIPConfigID')]"
+                            },
+                            "protocol": "tcp",
+                            "frontendPort": 2202,
+                            "backendPort": 22,
+                            "enableFloatingIP": false
+                        }
+                    }
+                ],
+                "loadBalancingRules": [{
+                    "name": "LBRule",
+                    "properties": {
+                        "frontendIPConfiguration": {
+                            "id": "[variables('frontEndIPConfigID')]"
+                        },
+                        "backendAddressPool": {
+                            "id": "[variables('lbPoolID')]"
+                        },
+                        "protocol": "tcp",
+                        "frontendPort": "[parameters('registryPort')]",
+                        "backendPort": 5000,
+                        "enableFloatingIP": false,
+                        "idleTimeoutInMinutes": 5,
+                        "probe": {
+                            "id": "[variables('lbProbeID')]"
+                        }
+                    }
+                }],
+                "probes": [{
+                    "name": "tcpProbe",
+                    "properties": {
+                        "protocol": "tcp",
+                        "port": 5000,
+                        "intervalInSeconds": 5,
+                        "numberOfProbes": 2
+                    }
+                }]
+            }
+        },
+        {
+            "apiVersion": "[variables('apiVersionVM')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vmNamePrefix'), copyindex())]",
+            "copy": {
+                "name": "virtualMachineLoop",
+                "count": "[parameters('numberOfInstances')]"
+            },
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', variables('vmStorageAccountName'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', variables('registryStorageAccountName'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', variables('nicNamePrefix'), copyindex())]",
+                "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
+            ],
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('availabilitySetName'))]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[concat(variables('vmNamePrefix'), copyIndex())]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "customData": "<<<customData>>>",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [{
+                                "path": "[variables('sshKeyPath')]",
+                                "keyData": "[parameters('sshRSAPublicKey')]"
+                            }]
+                        }
+                    }
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "offer": "[variables('osImageOffer')]",
+                        "publisher": "[variables('osImagePublisher')]",
+                        "sku": "[variables('osImageSKU')]",
+                        "version": "[variables('osImageVersion')]"
+                    },
+                    "osDisk": {
+                        "name": "[concat(variables('vmNamePrefix'), copyindex())]",
+                        "createOption": "FromImage",
+                        "vhd": {
+                            "uri": "[concat('https', '://', variables('vmStorageAccountName'), '.blob.core.chinacloudapi.cn', concat('/vhds/', variables('vmNamePrefix'), copyindex(),'.vhd'))]"
+                        }
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [{
+                        "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nicNamePrefix'),copyindex()))]"
+                    }]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": "true",
+                        "storageUri": "[concat('http://',variables('vmStorageAccountName'),'.blob.core.chinacloudapi.cn')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(variables('vmNamePrefix'), copyIndex(), '/installscripts')]",
+            "copy": {
+                "name": "extLoop",
+                "count": "[parameters('numberOfInstances')]"
+            },
+            "apiVersion": "[variables('apiVersionDefault')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachines/', variables('vmNamePrefix'), copyIndex())]"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Azure.Extensions",
+                "type": "CustomScript",
+                "typeHandlerVersion": "2.0",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "commandToExecute": "[concat('/usr/bin/nohup /bin/bash -c \"/bin/bash /etc/docker-registry/manifests/create-blob.sh ', copyIndex(), ' \\\"', reference(concat('Microsoft.Network/networkInterfaces/', variables('nicNamePrefix'), copyIndex())).ipConfigurations[0].properties.privateIPAddress, '\\\" \"')]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "dockerRegistryURL": {
+            "type": "string",
+            "value": "[reference(concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))).dnsSettings.fqdn]"
+        }
+    }
+}
