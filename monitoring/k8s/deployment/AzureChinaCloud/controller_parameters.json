@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmDnsName": {
+            "value": "<controller-dns-name>"
+        },
+        "vmSize": {
+            "value": "Standard_A1"
+        },
+        "vmAdminUsername": {
+            "value": "azureuser"
+        },
+        "vmAdminPassword": {
+            "value": "<controller-admin-password>"
+        },
+        "configScriptUri": {
+            "value": "<config-script-uri>"
+        },
+        "k8sMasterNodeHostname": {
+            "value": "<k8s-master-node-hostname>"
+        },
+        "k8sMasterNodeUsername": {
+            "value": "<k8s-master-node-username>"
+        },
+        "k8sMasterNodeIdentityFileBase64": {
+            "value": "<k8s-master-node-id-file-base64>"
+        },
+        "monitorClusterNamespace": {
+            "value": "monitor-cluster-ns"
+        },
+        "azureCloudEnvironment": {
+            "value": "AzureChinaCloud"
+        },
+        "enableElkStack": {
+            "value": "enabled"
+        },
+        "enableHigStack": {
+            "value": "enabled"
+        }
+    }
+}

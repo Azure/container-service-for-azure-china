@@ -4,7 +4,6 @@
     "parameters": {
         "vmDnsName": {
             "type": "string",
-            "defaultValue": "k8s-controller",
             "metadata": {
                 "description": "Sets the DNS name for the controller VM."
             }
@@ -35,15 +34,128 @@
                 "description": "The Ubuntu version for the controller VM. This will pick a fully patched image of this given Ubuntu version."
             }
         },
+        "vmSize": {
+            "type": "string",
+            "defaultValue": "Standard_A1",
+            "allowedValues": [
+                "Standard_A0",
+                "Standard_A1",
+                "Standard_A2",
+                "Standard_A3",
+                "Standard_A4",
+                "Standard_A5",
+                "Standard_A6",
+                "Standard_A7",
+                "Standard_A8",
+                "Standard_A9",
+                "Standard_A10",
+                "Standard_A11",
+                "Standard_D1",
+                "Standard_D2",
+                "Standard_D3",
+                "Standard_D4",
+                "Standard_D11",
+                "Standard_D12",
+                "Standard_D13",
+                "Standard_D14",
+                "Standard_D1_v2",
+                "Standard_D2_v2",
+                "Standard_D3_v2",
+                "Standard_D4_v2",
+                "Standard_D5_v2",
+                "Standard_D11_v2",
+                "Standard_D12_v2",
+                "Standard_D13_v2",
+                "Standard_D14_v2",
+                "Standard_G1",
+                "Standard_G2",
+                "Standard_G3",
+                "Standard_G4",
+                "Standard_G5",
+                "Standard_DS1",
+                "Standard_DS2",
+                "Standard_DS3",
+                "Standard_DS4",
+                "Standard_DS11",
+                "Standard_DS12",
+                "Standard_DS13",
+                "Standard_DS14",
+                "Standard_GS1",
+                "Standard_GS2",
+                "Standard_GS3",
+                "Standard_GS4",
+                "Standard_GS5"
+            ],
+            "metadata": {
+                "description": "The size of the Virtual Machine as controller."
+            }
+        },
         "configScriptUri": {
             "type": "string",
             "metadata": {
                 "description": "Controller configuration script URI."
             }
+        },
+        "k8sMasterNodeHostname": {
+            "type": "string",
+            "metadata": {
+                "description": "Kubernetes cluster master node hostname."
+            }
+        },
+        "k8sMasterNodeUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "Kubernetes cluster master node username."
+            }
+        },
+        "k8sMasterNodeIdentityFileBase64": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Kubernetes cluster master node identity file in base64 encoded string."
+            }
+        },
+        "monitorClusterNamespace": {
+            "type": "string",
+            "defaultValue": "monitor-cluster-ns",
+            "metadata": {
+                "description": "Monitoring cluster namespace in kubernetes."
+            }
+        },
+        "azureCloudEnvironment": {
+            "type": "string",
+            "defaultValue": "AzureCloud",
+            "allowedValues": [
+                "AzureCloud",
+                "AzureChinaCloud"
+            ],
+            "metadata": {
+                "description": "Azure cloud environment 'AzureCloud' or 'AzureChinaCloud'."
+            }
+        },
+        "enableElkStack": {
+            "type": "string",
+            "defaultValue": "enabled",
+            "allowedValues": [
+                "enabled",
+                "disabled"
+            ],
+            "metadata": {
+                "description": "Feature flag to enable ELK monitoring stack or not."
+            }
+        },
+        "enableHigStack": {
+            "type": "string",
+            "defaultValue": "enabled",
+            "allowedValues": [
+                "enabled",
+                "disabled"
+            ],
+            "metadata": {
+                "description": "Feature flag to enable Heapster-InfluxDB-Grafana monitoring stack or not."
+            }
         }
     },
     "variables": {
-        "dataStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'data')]",
         "vmStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'ctl')]",
         "storageAccountType": "Standard_LRS",
         "pubIpName": "controllerip",
@@ -56,9 +168,16 @@
         "subnetRef": "[concat(variables('vnetId'),'/subnets/',variables('subnetName'))]",
         "nicName": "controllernic",
         "vmName": "controllervm",
-        "vmSize": "Standard_A1",
+        "vmSize": "[parameters('vmSize')]",
         "vmImagePublisher": "Canonical",
-        "vmImageOffer": "UbuntuServer"
+        "vmImageOffer": "UbuntuServer",
+        "k8sUiAdminUsername": "[parameters('vmAdminUsername')]",
+        "k8sUiAdminPassword": "[parameters('vmAdminPassword')]",
+        "configScriptCmdAzureEnvArgs": "[concat(' --azure-cloud-env=\"', parameters('azureCloudEnvironment'), '\"')]",
+        "configScriptCmdK8sMasterArgs": "[concat(' --k8s-master-node-hostname=\"', parameters('k8sMasterNodeHostname'), '\" --k8s-master-node-username=\"', parameters('k8sMasterNodeUsername'), '\" --k8s-master-node-id-file-base64=\"', parameters('k8sMasterNodeIdentityFileBase64'), '\"')]",
+        "configScriptCmdK8sUiArgs": "[concat(' --k8s-ui-admin-username=\"', variables('k8sUiAdminUsername'), '\" --k8s-ui-admin-password=\"', variables('k8sUiAdminPassword'), '\"')]",
+        "configScriptCmdClusterArgs": "[concat(' --monitor-cluster-ns=\"', parameters('monitorClusterNamespace'), '\" --enable-elk-stack=\"', parameters('enableElkStack'), '\" --enable-hig-stack=\"', parameters('enableHigStack'), '\"')]",
+        "configScriptCmdArgs": "[concat(variables('configScriptCmdAzureEnvArgs'), variables('configScriptCmdK8sMasterArgs', variables('configScriptCmdK8sUiArgs', variables('configScriptCmdClusterArgs'))]"
     },
     "resources": [{
             "type": "Microsoft.Storage/storageAccounts",
@@ -191,7 +310,7 @@
                         ]
                     },
                     "protectedSettings": {
-                        "commandToExecute": "[concat('bash config.sh '))]"
+                        "commandToExecute": "[concat('bash config.sh', variables('confgiScriptCmdArgs')))]"
                     }
                 }
             }]
