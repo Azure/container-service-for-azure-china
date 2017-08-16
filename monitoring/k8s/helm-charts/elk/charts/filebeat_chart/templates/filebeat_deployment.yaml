@@ -1,0 +1,65 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    component: {{ template "fullname" . }}
+spec:
+  template:
+    metadata:
+      labels:
+        component: {{ template "fullname" . }}
+    spec:
+      securityContext:
+        runAsUser: 0
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          privileged: true
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: [ "filebeat" ]
+        args: [ "-e", "-c", "/etc/filebeat/filebeat.yml"]
+        env:
+        - name: NAMESPACE
+          value: "{{ .Release.Namespace }}"
+        - name: CHART_INFO
+          value: "{{ .Chart.Name}} - {{ .Chart.Version }} - {{ .Release.Name }}"
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        {{- range $key, $value :=  .Values.global.env }}
+        - name: {{ $key | upper | replace "-" "_" }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- range $key, $value :=  .Values.env }}
+        - name: {{ $key | upper | replace "-" "_" }}
+          value: {{ $value | quote }}
+        {{- end }}
+        volumeMounts:
+        - name: config
+          mountPath: /etc/filebeat/filebeat.yml
+          subPath: filebeat.yml
+        - name: varlog
+          mountPath: /var/log/containers
+        - name: varlogpods
+          mountPath: /var/log/pods
+          readOnly: true
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: "config"
+        configMap:
+          name: {{ .Values.configmap.name }}
+      - name: "varlog"
+        hostPath:
+          path: /var/log/containers
+      - name: "varlogpods"
+        hostPath:
+          path: /var/log/pods
+      - name: "varlibdockercontainers"
+        hostPath:
+          path: /var/lib/docker/containers
