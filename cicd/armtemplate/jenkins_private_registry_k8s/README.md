@@ -56,3 +56,18 @@ ssh -L 8080:localhost:8080 <User name>@<Public DNS name of instance you just cre
 1. Unlock the Jenkins dashboard for the first time with the initial admin password. To get this token, SSH into the VM and run `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
 1. Your Jenkins instance is now ready to use! You can access a read-only view by going to http://< Public DNS name of instance you just created >.
 1. Go to http://aka.ms/azjenkinsagents if you want to build/CI from this Jenkins master using Azure VM agents.
+
+## Important notes
+If you are using unsecured private docker registry for example if your docker registry use http instead of https or your certs are not CA signed. You need to do below command on jenkins master all nodes in kuernetes cluster to make whole pipleline works
+```bash
+sudo touch /etc/docker/daemon.json
+sudo vim /etc/docker/daemon.json
+```
+then add below entry to configuration:
+
+{"insecure-registries" : [ "139.217.12.139" ]}
+
+then save the changes and run below command to restart docker
+```bash
+sudo service restart docker
+```
