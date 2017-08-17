@@ -21,13 +21,16 @@ MONITOR_CLUSTER_NS="monitor-cluster-ns"
 ENABLE_ELK_STACK="enabled"
 ENABLE_HIG_STACK="enabled"
 
+K8S_MASTER_NODE_IDENTITY_FILE_BASE64="$(base64 $K8S_MASTER_NODE_IDENTITY_FILE_PATH)"
+echo $K8S_MASTER_NODE_IDENTITY_FILE_BASE64
+
 bash "$CONFIG_SCRIPT_PATH" \
-    --azure-cloud-env="$AZURE_CLOUD_ENV" \
-    --k8s-master-node-hostname="$K8S_MASTER_NODE_HOSTNAME" \
-    --k8s-master-node-username="$K8S_MASTER_NODE_USERNAME" \
-    --k8s-master-node-id-file-base64="$(base64 $K8S_MASTER_NODE_IDENTITY_FILE_PATH)" \
-    --k8s-ui-admin-username="$K8S_UI_ADMIN_USERNAME" \
-    --k8s-ui-admin-password="$K8S_UI_ADMIN_PASSWORD" \
-    --monitor-cluster-ns="$MONITOR_CLUSTER_NS" \
-    --enable-elk-stack="$ENABLE_ELK_STACK" \
-    --enable-hig-stack="$ENABLE_HIG_STACK"
+    --azure-cloud-env "$AZURE_CLOUD_ENV" \
+    --k8s-master-node-hostname "$K8S_MASTER_NODE_HOSTNAME" \
+    --k8s-master-node-username "$K8S_MASTER_NODE_USERNAME" \
+    --k8s-master-node-id-file-base64 "$K8S_MASTER_NODE_IDENTITY_FILE_BASE64" \
+    --k8s-ui-admin-username "$K8S_UI_ADMIN_USERNAME" \
+    --k8s-ui-admin-password "$K8S_UI_ADMIN_PASSWORD" \
+    --monitor-cluster-ns "$MONITOR_CLUSTER_NS" \
+    --enable-elk-stack "$ENABLE_ELK_STACK" \
+    --enable-hig-stack "$ENABLE_HIG_STACK"

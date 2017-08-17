@@ -318,7 +318,7 @@ function parse_args() {
         log_message "Option '${1}' set with value '"$arg_value"'"
 
         case "$1" in
-            $ARG_HELP_ALIAS, $ARG_HELP)
+            $ARG_HELP_ALIAS|$ARG_HELP)
                 help
                 exit 2
                 ;;
@@ -378,7 +378,7 @@ function parse_args() {
             $ARG_ENABLE_ELK_STACK)
                 if [ "${arg_value,,}" = "$ENABLED" ] || \
                    [ "${arg_value,,}" = "$DISABLED" ] ; then
-                    $ENABLE_ELK_STACK="${arg_value,,}"
+                    ENABLE_ELK_STACK="${arg_value,,}"
                 else
                     log_message "invalid argument value: $arg_value"
                     help
@@ -388,7 +388,7 @@ function parse_args() {
             $ARG_ENABLE_HIG_STACK)
                 if [ "${arg_value,,}" = "$ENABLED" ] || \
                    [ "${arg_value,,}" = "$DISABLED" ] ; then
-                    $ENABLE_HIG_STACK="${arg_value,,}"
+                    ENABLE_HIG_STACK="${arg_value,,}"
                 else
                     log_message "invalid argument value: $arg_value"
                     help
@@ -428,8 +428,7 @@ function install_docker() {
     local enable_mirror="$1"
 
     # log function executing
-    log_message "executing install docker function with arguments:"\
-                "(enable_mirror = '$enable_mirror')"
+    log_message "executing install docker function with arguments: (enable_mirror = '$enable_mirror')"
 
     # TODO: replace with following code for AzureChinaCloud
     # curl -fsSL https://mirror.azure.cn/docker-engine/apt/gpg | sudo apt-key add -
@@ -447,11 +446,9 @@ function install_docker() {
     fi
 
     # download docker package from remote
-    log_message "downloading docker-ce package from '$docker_package_url'"\
-                "to '$DOCKER_PACKAGE_LOCAL_PATH'"
+    log_message "downloading docker-ce package from '$docker_package_url' to '$DOCKER_PACKAGE_LOCAL_PATH'"
     curl -o "$DOCKER_PACKAGE_LOCAL_PATH" -L "$docker_package_url"
-    log_message "downloaded docker-ce package from '$docker_package_url'"\
-                "to '$DOCKER_PACKAGE_LOCAL_PATH'"
+    log_message "downloaded docker-ce package from '$docker_package_url' to '$DOCKER_PACKAGE_LOCAL_PATH'"
 
     # install docker package from local
     log_message "installing docker package from '$DOCKER_PACKAGE_LOCAL_PATH'"
@@ -470,8 +467,7 @@ function install_docker() {
     docker --version
 
     # log function executed
-    log_message "executed install docker function with arguments:"\
-                "(enable_mirror = '$enable_mirror')"
+    log_message "executed install docker function with arguments: (enable_mirror = '$enable_mirror')"
 }
 
 # -----------------------------------------------------------------------------
@@ -490,38 +486,30 @@ function install_kubectl() {
     local enable_mirror=$1
 
     # log function executing
-    log_message "executing install kubectl function with arguments:"\
-                "(enable_mirror = $enable_mirror)"
+    log_message "executing install kubectl function with arguments: (enable_mirror = $enable_mirror)"
 
     # download kubectl from remote
     if [ "$enable_mirror" = "$ENABLED" ] ; then
-        log_message "dowloading kubectl from mirror site '$KUBECTL_MIRROR_URL'"\
-                    "to '$KUBECTL_TEMP_PATH'"
+        log_message "dowloading kubectl from mirror site '$KUBECTL_MIRROR_URL' to '$KUBECTL_TEMP_PATH'"
         curl -o "$KUBECTL_TEMP_PATH" -L "$KUBECTL_MIRROR_URL"
-        log_message "dowloaded kubectl from mirror site '$KUBECTL_MIRROR_URL'"\
-                    "to '$KUBECTL_TEMP_PATH'"
+        log_message "dowloaded kubectl from mirror site '$KUBECTL_MIRROR_URL' to '$KUBECTL_TEMP_PATH'"
     else
-        log_message "dowloading kubectl from '$KUBECTL_URL'"\
-                    "to '$KUBECTL_TEMP_PATH'"
+        log_message "dowloading kubectl from '$KUBECTL_URL' to '$KUBECTL_TEMP_PATH'"
         curl -o "$KUBECTL_TEMP_PATH" -L "$KUBECTL_URL"
-        log_message "dowloaded kubectl from '$KUBECTL_URL'"\
-                    "to '$KUBECTL_TEMP_PATH'"
+        log_message "dowloaded kubectl from '$KUBECTL_URL' to '$KUBECTL_TEMP_PATH'"
     fi
     
     # install kubectl from local
-    log_message "installing kubectl from '$KUBECTL_TEMP_PATH'"\
-                "to '$KUBECTL_INSTALL_PATH'"
+    log_message "installing kubectl from '$KUBECTL_TEMP_PATH' to '$KUBECTL_INSTALL_PATH'"
     sudo mv "$KUBECTL_TEMP_PATH" "$KUBECTL_INSTALL_PATH"
     chmod +x "$KUBECTL_INSTALL_PATH"
-    log_message "installed kubectl from '$KUBECTL_TEMP_PATH'"\
-                "to '$KUBECTL_INSTALL_PATH'"
+    log_message "installed kubectl from '$KUBECTL_TEMP_PATH' to '$KUBECTL_INSTALL_PATH'"
 
     # test kubectl installed
     kubectl version --client
 
     # log function executed
-    log_message "executed install kubectl function with arguments:"\
-                "(enable_mirror = $enable_mirror)"
+    log_message "executed install kubectl function with arguments: (enable_mirror = $enable_mirror)"
 }
 
 # -----------------------------------------------------------------------------
@@ -544,22 +532,19 @@ function load_kube_config() {
     log_message "executing load kube config function"
 
     # decode kubernetes identity file
-    log_message "docoding kubernetes identity file to"\
-                "'$K8S_MASTER_NODE_IDENTITY_FILE_PATH'"
+    log_message "docoding kubernetes identity file to '$K8S_MASTER_NODE_IDENTITY_FILE_PATH'"
 
     # base64 decode
-    echo "$K8S_MASTER_NODE_IDENTITY_FILE_BASE64" | base64 -d \
-        | tee "$K8S_MASTER_NODE_IDENTITY_FILE_PATH"
+    local base64_str="$K8S_MASTER_NODE_IDENTITY_FILE_BASE64"
+    echo "$base64_str" | base64 -d | tee "$K8S_MASTER_NODE_IDENTITY_FILE_PATH"
 
     # set identity file permission
     chmod 400 ${K8S_MASTER_NODE_IDENTITY_FILE_PATH}
 
-    log_message "docoded kubernetes identity file to"\
-                "'$K8S_MASTER_NODE_IDENTITY_FILE_PATH'"
+    log_message "docoded kubernetes identity file to '$K8S_MASTER_NODE_IDENTITY_FILE_PATH'"
 
     # load kube config from kubernetes master node
-    log_message "loading kube config from '$K8S_MASTER_NODE_HOSTNAME'"\
-                "to '$KUBE_CONFIG_LOCAL_PATH'"
+    log_message "loading kube config from '$K8S_MASTER_NODE_HOSTNAME' to '$KUBE_CONFIG_LOCAL_PATH'"
 
     # prepare kube config directory
     mkdir -p "$KUBE_CONFIG_LOCAL_DIR"
@@ -573,8 +558,7 @@ function load_kube_config() {
         "$user_name@$host_name:$remote_path" \
         "$KUBE_CONFIG_LOCAL_PATH"
 
-    log_message "loaded kube config from '$K8S_MASTER_NODE_HOSTNAME'"\
-                "to '$KUBE_CONFIG_LOCAL_PATH'"
+    log_message "loaded kube config from '$K8S_MASTER_NODE_HOSTNAME' to '$KUBE_CONFIG_LOCAL_PATH'"
 
     # test kube config loaded
     kubectl get nodes
@@ -602,14 +586,12 @@ function install_helm() {
     local enable_mirror=$1
 
     # log function executing
-    log_message "executing install helm function with arguments:"\
-                "(enable_mirror = $enable_mirror)"
+    log_message "executing install helm function with arguments: (enable_mirror = $enable_mirror)"
 
     # download helm install script
     local local_path="$HELM_INSTALL_SCRIPT_LOCAL_PATH"
 
-    log_message "downloading helm install script from"\
-                "'$HELM_INSTALL_SCRIPT_URL' to '$local_path'"
+    log_message "downloading helm install script from '$HELM_INSTALL_SCRIPT_URL' to '$local_path'"
 
     # download from remote
     curl -o "$local_path" -L "$HELM_INSTALL_SCRIPT_URL"
@@ -617,8 +599,7 @@ function install_helm() {
     # set execution permission
     chmod 700 "$local_path"
 
-    log_message "downloaded helm install script from"\
-                "'$HELM_INSTALL_SCRIPT_URL' to '$local_path'"
+    log_message "downloaded helm install script from '$HELM_INSTALL_SCRIPT_URL' to '$local_path'"
 
     # execute helm install script
 
@@ -647,9 +628,7 @@ function install_helm() {
 
         # replace failed tiller image with mirror image
         local tiller_image="$HELM_TILLER_MIRROR_IMAGE:$HELM_TILLER_VERSION_TAG"
-        log_message "deploying tiller image from mirror '$tiller_image'"\
-                    "to deployment '$HELM_TILLER_DEPLOYMENT'"\
-                    "in namespace '$K8S_NAMESPACE_KUBE_SYSTEM'"
+        log_message "deploying tiller image from mirror '$tiller_image' to deployment '$HELM_TILLER_DEPLOYMENT' in namespace '$K8S_NAMESPACE_KUBE_SYSTEM'"
 
         kubectl --namespace="$K8S_NAMESPACE_KUBE_SYSTEM" \
             set image "$HELM_TILLER_DEPLOYMENT" \
@@ -665,8 +644,7 @@ function install_helm() {
     helm version
 
     # log function executed
-    log_message "executed write install helm function with arguments:"\
-                "(enable_mirror = $enable_mirror)"
+    log_message "executed write install helm function with arguments: (enable_mirror = $enable_mirror)"
 }
 
 # -----------------------------------------------------------------------------
@@ -694,21 +672,17 @@ function download_msref() {
     if [ "$MSREF_DOWNLOAD_METHOD" = "$HTTP_DIRECT" ] ; then
         local temp_path="$MSREF_HTTP_DOWNLOAD_TEMP_PATH"
 
-        log_message "downloading msref project from '$MSREF_HTTP_URL'"\
-                    "to '$temp_path'"
+        log_message "downloading msref project from '$MSREF_HTTP_URL' to '$temp_path'"
         curl -o "$temp_path" -L "$MSREF_HTTP_URL"
-        log_message "downloading msref project from '$MSREF_HTTP_URL'"\
-                    "to '$temp_path'"
+        log_message "downloading msref project from '$MSREF_HTTP_URL' to '$temp_path'"
 
         log_message "installing unzip package"
         apt-get install unzip -y
         log_message "installed unzip package"
 
-        log_message "decompressing msref project from '$temp_path'"\
-                    "to '$MSREF_LOCAL_PATH'"
+        log_message "decompressing msref project from '$temp_path' to '$MSREF_LOCAL_PATH'"
         unzip -o "$temp_path" -d "$MSREF_LOCAL_PATH"
-        log_message "decompressed msref project from '$temp_path'"\
-                    "to '$MSREF_LOCAL_PATH'"
+        log_message "decompressed msref project from '$temp_path' to '$MSREF_LOCAL_PATH'"
 
     # clone msref project from GitHub repository
     elif [ $MSREF_DOWNLOAD_METHOD = $GITHUB_REPO ] ; then
@@ -716,11 +690,9 @@ function download_msref() {
         local repo_project="$MSREF_REPO_PROJECT"
         local repo_url="https://github.com/$repo_account/$repo_project"
 
-        log_message "cloning GitHub msref project from '$repo_url'"\
-                    "to '$MSREF_LOCAL_PATH'"
+        log_message "cloning GitHub msref project from '$repo_url' to '$MSREF_LOCAL_PATH'"
         git clone "$repo_url" -L "$MSREF_LOCAL_PATH"
-        log_message "cloned GitHub msref project from '$repo_url'"\
-                    "to '$MSREF_LOCAL_PATH'"
+        log_message "cloned GitHub msref project from '$repo_url' to '$MSREF_LOCAL_PATH'"
 
         log_message "checking out msref project branch '$MSREF_REPO_BRANCH'"
         pushd . >> /dev/null
@@ -761,9 +733,7 @@ function install_helm_charts() {
     local enable_hig_stack=$2
 
     # log function executing
-    log_message "executing install helm charts function with arguments:" \
-                "(enable_elk_stack='$enable_elk_stack',"\
-                "enable_hig_stack='$enable_hig_stack')"
+    log_message "executing install helm charts function with arguments: (enable_elk_stack='$enable_elk_stack', enable_hig_stack='$enable_hig_stack')"
 
     # create namespace
     if [ "$(kubectl get namespaces | grep '$MONITOR_CLUSTER_NS')" = "" ] ; then
@@ -780,21 +750,15 @@ function install_helm_charts() {
         if [ "$AZURE_CLOUD_ENVIRONMENT" = "$AZURE_CHINA_CLOUD" ] ; then
             # install elk charts to AzureChinaCloud
             local config_path=$HELM_CHART_ELK_AZURE_CHINA_CONFIG_PATH
-            log_message "installing elk charts from '$HELM_CHART_ELK_PATH'" \
-                        "with config file '$config_path'" \ 
-                        "to namespace '$MONITOR_CLUSTER_NS'"
+            log_message "installing elk charts from '$HELM_CHART_ELK_PATH' with config file '$config_path' to namespace '$MONITOR_CLUSTER_NS'"
             helm install -f "$config_path" "$HELM_CHART_ELK_PATH" \
                          --namespace "$MONITOR_CLUSTER_NS"
-            log_message "installed elk charts from '$HELM_CHART_ELK_PATH'" \
-                        "with config file '$config_path'" \ 
-                        "to namespace '$MONITOR_CLUSTER_NS'"
+            log_message "installed elk charts from '$HELM_CHART_ELK_PATH' with config file '$config_path' to namespace '$MONITOR_CLUSTER_NS'"
         else
             # install elk charts to AzureCloud
-            log_message "installing elk charts from '$HELM_CHART_ELK_PATH'" \
-                        "to namespace '$MONITOR_CLUSTER_NS'"
+            log_message "installing elk charts from '$HELM_CHART_ELK_PATH' to namespace '$MONITOR_CLUSTER_NS'"
             helm install "$HELM_CHART_ELK_PATH" --namespace "$MONITOR_CLUSTER_NS"
-            log_message "installed elk charts from '$HELM_CHART_ELK_PATH'" \
-                        "to namespace '$MONITOR_CLUSTER_NS'"
+            log_message "installed elk charts from '$HELM_CHART_ELK_PATH' to namespace '$MONITOR_CLUSTER_NS'"
         fi
     fi
 
@@ -803,40 +767,26 @@ function install_helm_charts() {
         # TODO: support AzureCloud environment
 
         # install heapster chart to AzureChinaCloud
-        log_message "installing heapster chart from '$HELM_CHART_HEAPSTER_PATH'" \
-                    "with config file '$HELM_CHART_HEAPSTER_CONFIG_PATH'" \ 
-                    "to namespace '$MONITOR_CLUSTER_NS'"
+        log_message "installing heapster chart from '$HELM_CHART_HEAPSTER_PATH' with config file '$HELM_CHART_HEAPSTER_CONFIG_PATH' to namespace '$MONITOR_CLUSTER_NS'"
         helm install -f "$HELM_CHART_HEAPSTER_CONFIG_PATH" "$HELM_CHART_HEAPSTER_PATH" \
                      --namespace "$MONITOR_CLUSTER_NS"
-        log_message "installed heapster chart from '$HELM_CHART_HEAPSTER_PATH'" \
-            "with config file '$HELM_CHART_HEAPSTER_CONFIG_PATH'" \ 
-            "to namespace '$MONITOR_CLUSTER_NS'"
+        log_message "installed heapster chart from '$HELM_CHART_HEAPSTER_PATH' with config file '$HELM_CHART_HEAPSTER_CONFIG_PATH' to namespace '$MONITOR_CLUSTER_NS'"
 
         # install influxdb chart to AzureChinaCloud
-        log_message "installing influxdb chart from '$HELM_CHART_INFLUXDB_PATH'" \
-                    "with config file '$HELM_CHART_INFLUXDB_CONFIG_PATH'" \ 
-                    "to namespace '$MONITOR_CLUSTER_NS'"
+        log_message "installing influxdb chart from '$HELM_CHART_INFLUXDB_PATH' with config file '$HELM_CHART_INFLUXDB_CONFIG_PATH' to namespace '$MONITOR_CLUSTER_NS'"
         helm install -f "$HELM_CHART_INFLUXDB_CONFIG_PATH" "$HELM_CHART_INFLUXDB_PATH" \
                      --namespace "$MONITOR_CLUSTER_NS"
-        log_message "installed influxdb chart from '$HELM_CHART_INFLUXDB_PATH'" \
-                    "with config file '$HELM_CHART_INFLUXDB_CONFIG_PATH'" \ 
-                    "to namespace '$MONITOR_CLUSTER_NS'"
+        log_message "installed influxdb chart from '$HELM_CHART_INFLUXDB_PATH' with config file '$HELM_CHART_INFLUXDB_CONFIG_PATH' to namespace '$MONITOR_CLUSTER_NS'"
 
         # install grafana chart to AzureChinaCloud
-        log_message "installing grafana chart from '$HELM_CHART_GRAFANA_PATH'" \
-                    "with config file '$HELM_CHART_GRAFANA_CONFIG_PATH'" \ 
-                    "to namespace '$MONITOR_CLUSTER_NS'"
+        log_message "installing grafana chart from '$HELM_CHART_GRAFANA_PATH' with config file '$HELM_CHART_GRAFANA_CONFIG_PATH' to namespace '$MONITOR_CLUSTER_NS'"
         helm install -f "$HELM_CHART_GRAFANA_CONFIG_PATH" "$HELM_CHART_GRAFANA_PATH" \
                      --namespace "$MONITOR_CLUSTER_NS"
-        log_message "installed grafana chart from '$HELM_CHART_GRAFANA_PATH'" \
-                    "with config file '$HELM_CHART_GRAFANA_CONFIG_PATH'" \ 
-                    "to namespace '$MONITOR_CLUSTER_NS'"
+        log_message "installed grafana chart from '$HELM_CHART_GRAFANA_PATH' with config file '$HELM_CHART_GRAFANA_CONFIG_PATH' to namespace '$MONITOR_CLUSTER_NS'"
     fi
 
     # log function executed
-    log_message "executed install helm charts function with arguments:" \
-                "(enable_elk_stack='$enable_elk_stack',"\
-                "enable_hig_stack='$enable_hig_stack')"
+    log_message "executed install helm charts function with arguments: (enable_elk_stack='$enable_elk_stack', enable_hig_stack='$enable_hig_stack')"
 }
 
 # -----------------------------------------------------------------------------
@@ -858,7 +808,7 @@ function write_cleanup_script() {
     # TODO: load content from remote
     local cleanup_script_content="#!/usr/bin/env bash
 # clean helm charts
-helm delete \$(helm list -q)
+helm delete \$(helm list --namespace "$MONITOR_CLUSTER_NS" -q)
 
 # clean helm
 helm reset
@@ -880,8 +830,7 @@ apt-get autoremove -y
 # clean temp directory
 rm -r $INSTALL_DIR"
 
-    log_message "writing cleanup script content: '$cleanup_script_content'"\
-                "to '$CLEANUP_SCRIPT_PATH'"
+    log_message "writing cleanup script content: '$cleanup_script_content' to '$CLEANUP_SCRIPT_PATH'"
 
     # write cleanup script file
     echo -e "$cleanup_script_content" > "$CLEANUP_SCRIPT_PATH"
@@ -911,8 +860,7 @@ function set_feature_flags() {
     local azure_cloud_env=$1
 
     # log function executing
-    log_message "executing set feature flags function with arguments:"\
-                "(azure_cloud_env=$azure_cloud_env)"
+    log_message "executing set feature flags function with arguments: (azure_cloud_env=$azure_cloud_env)"
 
     if [ "$azure_cloud_env" = "$AZURE_CLOUD" ] ; then
         # disable mirror flags for AzureCloud
@@ -927,8 +875,7 @@ function set_feature_flags() {
     fi
 
     # log function executed
-    log_message "executed set feature flags function with arguments:"\
-                "(azure_cloud_env=$azure_cloud_env)"
+    log_message "executed set feature flags function with arguments: (azure_cloud_env=$azure_cloud_env)"
 }
 
 # -----------------------------------------------------------------------------

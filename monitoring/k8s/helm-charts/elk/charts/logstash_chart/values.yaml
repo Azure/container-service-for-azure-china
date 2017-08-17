@@ -17,5 +17,5 @@ env:
 
 service:
   name: logstash
-  type: LoadBalancer
+  type: ClusterIP
   port: 5043

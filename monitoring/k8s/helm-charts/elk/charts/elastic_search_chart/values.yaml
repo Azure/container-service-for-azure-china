@@ -80,7 +80,6 @@ client:
     HTTP_ENABLE: "true"
 
 service:
-  # change it to LoadBalancer for public accessibility
-  type: LoadBalancer
+  type: ClusterIP
   httpPort: 9200
   transportPort: 9300
