@@ -12,10 +12,10 @@ It includes below components:
 
 ## Architecture
 
-Below picture shows the design of CI/CD pipeline:
+CI/CD with Open Source Toolchain:
 ![Image of CI/CD architecture](doc/imgs/cicd_architecture.png)
 
-Below picture shows the design of monitor stack:
+Monitor with OSS Solution:
 ![Image of monitor architecture](doc/imgs/monitor.png)
 
 ## User guides
