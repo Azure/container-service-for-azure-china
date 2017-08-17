@@ -1,4 +1,0 @@
-# it is unused
-
-http.host: "0.0.0.0"
-path.config: /usr/share/logstash/pipeline

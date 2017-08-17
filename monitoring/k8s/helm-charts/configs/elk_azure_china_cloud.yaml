@@ -1,0 +1,33 @@
+# full global config file could be found in helm-charts/elk/values.yaml
+global:
+  busybox:
+    image:
+      repository: crproxy.trafficmanager.net:5000/library/busybox
+
+# full elastic search config file could be found in helm-charts/elk/charts/elastic_search_chart/values.yaml
+elasticsearch:
+  image:
+    repository: crproxy.trafficmanager.net:5000/ccgmsref/elasticsearch
+  client:
+    replicas: 2
+  master:
+    replicas: 3
+  data:
+    replicas: 2
+
+# full logstash config file could be found in helm-charts/elk/charts/logstash_chart/values.yaml
+logstash:
+  image:
+    repository: crproxy.trafficmanager.net:5000/ccgmsref/logstash
+  replicaCount: 1
+
+# full kibana config file could be found in helm-charts/elk/charts/kibana_chart/values.yaml
+kibana:
+  image:
+    repository: crproxy.trafficmanager.net:5000/ccgmsref/kibana
+  replicaCount: 1
+
+# full filebeat config file could be found in helm-charts/elk/charts/filebeat_chart/values.yaml
+filebeat:
+  image:
+    repository: crproxy.trafficmanager.net:5000/ccgmsref/filebeat
