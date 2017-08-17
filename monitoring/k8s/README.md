@@ -26,15 +26,21 @@ The first one is for cluster resource monitoring (e.g. CPU and memory of Node an
 1. Click the "Deply to Azure" button 
 2. Enter the deployment parameters
 
-| Parameter        | Descrption                                                                              | Default Value |
-|------------------|-----------------------------------------------------------------------------------------|---------------|
-| vmName           | Name of the controller VM                                                               |               |
-| vmSize           | Size of the controller VM                                                               | Standard_A1   |
-| adminUsername    | Admin username of the controller VM                                                     |               |
-| adminPassword    | Admin password of the controller VM                                                     |               |
-| masterDNS        | Master node FQDN of the Kubernetes cluster                                              |               |
-| masterUsername   | Master node username of the Kubernetes cluster                                          |               |
-| masterPrivateKey | Master node access key, which is [base64](https://en.wikipedia.org/wiki/Base64) encoded |               |
+| Parameter                       | Descrption                                                               | Default Value |
+|---------------------------------|--------------------------------------------------------------------------|---------------|
+| vmDnsName                       | DNS name of the controller VM                                            |               |
+| vmAdminUsername                 | Administrator user name for the controller VM                            | azureuser     |
+| vmAdminPassword                 | Administrator password to login controller VM                            |               |
+| vmUbuntuOSVersion               | The Ubuntu version for the controller VM                                 | 16.04.0-LTS   |
+| vmSize                          | The size of the Virtual Machine as controller                            | Standard_A1   |
+| configScriptUri                 | Controller configuration script URI                                      |               |
+| k8sMasterNodeHostname           | Kubernetes cluster master node hostname                                  |               |
+| k8sMasterNodeUsername           | Kubernetes cluster master node username                                  |               |
+| k8sMasterNodeIdentityFileBase64 | Kubernetes cluster master node identity file in base64 encoded string    |               |
+| monitorClusterNamespace         | Monitoring cluster namespace in Kubernetes                               |               |
+| azureCloudEnvironment           | Azure cloud environment 'AzureCloud' or 'AzureChinaCloud'                | AzureCloud    |
+| enableElkStack                  | Feature flag to enable ELK monitoring stack or not                       | enabled       |
+| enableHigStack                  | Feature flag to enable Heapster-InfluxDB-Grafana monitoring stack or not | enabled       |
 
 
 ## B. Connect to the controller VM
@@ -47,7 +53,7 @@ Kubectl cluster-info
 4. Open a brower, and go to http://< DNS or Public IP address of controller VM >/ui, with the admin username and password provided in deployment parameters, to check if the Kubernetes UI shows correctly
 
 ## C. View the monitoring stacks
-1. In kubernetes UI, browse the namespace of "monitoring-ns" in which the monitoring stacks are deployed
+1. In kubernetes UI, browse the namespace in which the monitoring stacks are deployed
 2. In Services, Grafana and Kibana are exposed as a services with Public IP address
 3. Go to Grafana and Kibana portal with those Public IP address, to check if data is collected and shows correctly
 
@@ -58,11 +64,11 @@ You can config the Beats per your request, following the official documentation.
 
 1. SSH into the controller VM
 2. Go to /tmp/template/microservice-reference-architectures, this is where the repo file downloaded
-3. Go to k8s/controller/helm-chart-configs/heartbeat-config, edit heartbeat.yml (reference [Heartbeat Configuration Options](https://www.elastic.co/guide/en/beats/heartbeat/current/heartbeat-configuration-details.html))
-4. Go back to  k8s/controller, run the commands below
+3. Go to k8s/helm-charts/config/heartbeat-config, edit heartbeat.yml (reference [Heartbeat Configuration Options](https://www.elastic.co/guide/en/beats/heartbeat/current/heartbeat-configuration-details.html))
+4. Go back to  k8s/helm-charts, run the commands below
 ```
-yes | cp -rf helm-chart-configs/heartbeat-config/heartbeat.yml ../helm-charts/heartbeat/config
-helm upgrade -f helm-chart-configs/heartbeat.yaml ../helm-charts/heartbeat --name=heartbeat --namespace=< monitoring stack namespace, monitoring-ns by default >
+yes | cp -rf config/heartbeat-config/heartbeat.yml /heartbeat/config
+helm upgrade -f config/heartbeat.yaml heartbeat heartbeat/
 ```
 
 
