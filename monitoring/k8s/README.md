@@ -1,14 +1,72 @@
 # Kubernetes based microservice monitoring solution on Azure platform.
 
+<a href="https://portal.azure.cn/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmizow8%2Fazure-quickstart-templates%2Fmaster%2Fk8s-monitoring%2Fazuredeploy.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fmizow8%2Fazure-quickstart-templates%2Fmaster%2Fk8s-monitoring%2Fazuredeploy.json" target="_blank">
+    <img src="http://armviz.io/visualizebutton.png"/>
+</a>
+
+This ARM template will deploy a controller VM of Linux Ubuntu 16.04 with default size Standard_A1 in Azure China.
+
+The controller VM will access and manage the Kubernetes cluster you provided, by installing helm charts for monitoring, and acting as proxy of the cluster for accessing.
+
+Two monitoring stacks will be installed:
+
+* Heapster + Influxdb + Grafana
+* Beats + Logstash + Elasticsearch + Kibana (ELK)
+
+The first one is for cluster resource monitoring (e.g. CPU and memory of Node and Pod), and the second one is for container/app monitoring (e.g. logs of container and heartbeat of the service).
+
 ## Prerequisite
+* Azure China Cloud subscription
+* Existing Kubernetes cluster 
 
-* Azure Cli
+## A. Deploy a controller VM for installing monitoring stacks
+1. Click the "Deply to Azure" button 
+2. Enter the deployment parameters
 
-## Public Azure
+| Parameter        | Descrption                                                                              | Default Value |
+|------------------|-----------------------------------------------------------------------------------------|---------------|
+| vmName           | Name of the controller VM                                                               |               |
+| vmSize           | Size of the controller VM                                                               | Standard_A1   |
+| adminUsername    | Admin username of the controller VM                                                     |               |
+| adminPassword    | Admin password of the controller VM                                                     |               |
+| masterDNS        | Master node FQDN of the Kubernetes cluster                                              |               |
+| masterUsername   | Master node username of the Kubernetes cluster                                          |               |
+| masterPrivateKey | Master node access key, which is [base64](https://en.wikipedia.org/wiki/Base64) encoded |               |
 
-## Azure Mooncake
 
-## References
+## B. Connect to the controller VM
+1. Once the deployment completed, get the Public IP address and DNS of the controller VM
+2. SSH into the VM, with the admin username and password provided in deployment parameters
+3. Run the kubectl command below to check if the VM accesses Kubernetes correctly
+```
+Kubectl cluster-info
+```
+4. Open a brower, and go to http://< DNS or Public IP address of controller VM >/ui, with the admin username and password provided in deployment parameters, to check if the Kubernetes UI shows correctly
+
+## C. View the monitoring stacks
+1. In kubernetes UI, browse the namespace of "monitoring-ns" in which the monitoring stacks are deployed
+2. In Services, Grafana and Kibana are exposed as a services with Public IP address
+3. Go to Grafana and Kibana portal with those Public IP address, to check if data is collected and shows correctly
+
+## D. Customize the config for data collection
+[Beats](https://www.elastic.co/products/beats) are the data shipper which ships kinds of data to ELK stack. Currently we install [Filebeat](https://www.elastic.co/products/beats/filebeat) for shipping container logs, and [Heartbeat](https://www.elastic.co/products/beats/heartbeat) for service health check.
+
+You can config the Beats per your request, following the official documentation. Here we take Heartbeat as an example to show how to customize the config.
+
+1. SSH into the controller VM
+2. Go to /tmp/template/microservice-reference-architectures, this is where the repo file downloaded
+3. Go to k8s/controller/helm-chart-configs/heartbeat-config, edit heartbeat.yml (reference [Heartbeat Configuration Options](https://www.elastic.co/guide/en/beats/heartbeat/current/heartbeat-configuration-details.html))
+4. Go back to  k8s/controller, run the commands below
+```
+yes | cp -rf helm-chart-configs/heartbeat-config/heartbeat.yml ../helm-charts/heartbeat/config
+helm upgrade -f helm-chart-configs/heartbeat.yaml ../helm-charts/heartbeat --name=heartbeat --namespace=< monitoring stack namespace, monitoring-ns by default >
+```
+
+
+## Reference GitHub projects
 
 ### [elk-acs-kubernetes](https://github.com/Microsoft/elk-acs-kubernetes) (MIT License)
 
