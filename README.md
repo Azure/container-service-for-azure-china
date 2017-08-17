@@ -5,20 +5,21 @@
 Microservices on container reference architecture includes ARM(Azure Resource Manager) templates and scrips help users to set up container based DevOps pipeline quikcly and easily on Microsoft Azure China by leveraging open source software as our toolchains.
 
 It includes below components:
-* Container Clusters: Created by [ACS-Engine](https://github.com/Azure/acs-engine), users could choose DC/OS, Kubernetes, or Swarm as the orchestrator. We choose Kubernetes as the implementation reference in this project.
+* Container Clusters: Created by [ACS Engine](https://github.com/Azure/acs-engine), users could choose DC/OS, Kubernetes, or Swarm as the orchestrator. We choose Kubernetes as the implementation reference in this project.
 * Private Docker registry
 * CI/CD Pipeline: which checks out project in git, build it as docker images and publish an Kubernetes clusters. 
 * Monitoring
 
-##Architecture
-Below picture shows the design of CI/CD pipeline
+## Architecture
+
+Below picture shows the design of CI/CD pipeline:
 ![Image of CI/CD architecture](doc/imgs/cicd_architecture.png)
 
 ## User guides
 
-If you deploy from beginning you could follow below steps to deploy the whole end to end pipeline. If you already have some devops components using in your project. You could pick one the missing parts from this project and deploy it separately.
+If you'd like to deploy from beginning, please follow below holistic steps. If you already have some components being used in your project, you could pick the missing parts from this project and deploy it separately.
 
-* [Deploy a Kubernetes cluster using ACS Engine](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.md) - shows you how to build and use the ACS engine to generate custom Docker enabled container clusters
+* [Deploy a Kubernetes cluster using ACS Engine](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.md) - shows you how to use the ACS engine to build custom Docker enabled container clusters
 * [Deploy a Private docker registry](azure-docker-registry/README.md) - describes how to deploy a secure private docker registry
 * [CI/CD pipeline](cicd/README.md) - shows how to deploy a Jenkins master and create pipeline which includes below 5 steps:
     * Check out git repro
@@ -26,7 +27,7 @@ If you deploy from beginning you could follow below steps to deploy the whole en
     * Push docker image to private docker registry 
     * Test and validation 
     * Deploy to Kubernetes 
-* [Monitoring](monitoring/README.md) - shows how to set up monitoring infrastructure 
+* [Monitor](monitoring/README.md) - shows how to set up monitoring framework and artifacts
 
 ## Contributing
 
