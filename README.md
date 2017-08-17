@@ -15,6 +15,9 @@ It includes below components:
 Below picture shows the design of CI/CD pipeline:
 ![Image of CI/CD architecture](doc/imgs/cicd_architecture.png)
 
+Below picture shows the design of monitor stack:
+![Image of monitor architecture](doc/imgs/monitor.png)
+
 ## User guides
 
 If you'd like to deploy from beginning, please follow below holistic steps. If you already have some components being used in your project, you could pick the missing parts from this project and deploy it separately.
@@ -27,7 +30,7 @@ If you'd like to deploy from beginning, please follow below holistic steps. If y
     * Push docker image to private docker registry 
     * Test and validation 
     * Deploy to Kubernetes 
-* [Monitor](monitoring/README.md) - shows how to set up monitoring framework and artifacts
+* [Monitor](monitoring/README.md) - shows how to set up monitoring stack
 
 ## Contributing
 
