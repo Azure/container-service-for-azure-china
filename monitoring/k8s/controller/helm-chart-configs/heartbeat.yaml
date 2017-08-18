@@ -1,5 +1,0 @@
-image:
-  repository: mirror.azure.cn:5000/beats/heartbeat
-  tag: 5.5.1
-
-

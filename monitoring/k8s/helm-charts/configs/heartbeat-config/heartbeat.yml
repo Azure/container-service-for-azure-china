@@ -1,9 +1,10 @@
 heartbeat.monitors:
 - type: http
 
-  schedule: '@every 60s'
+  schedule: '@every 10s'
 
-  urls: ["http://miaotestapp.default:80"]
+  #urls: ["http://mooncaketest.default:80"]
+  urls: []
 
   ipv4: true
   ipv6: true
