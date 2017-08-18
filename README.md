@@ -6,9 +6,9 @@ Microservices on container reference architecture includes ARM(Azure Resource Ma
 
 It includes below components:
 * Container Clusters: Created by [ACS Engine](https://github.com/Azure/acs-engine), users could choose DC/OS, Kubernetes, or Swarm as the orchestrator. We choose Kubernetes as the implementation reference in this project.
-* Private Docker registry
+* Private Docker registry: store custom images
 * CI/CD Pipeline: which checks out project in git, build it as docker images and publish an Kubernetes clusters. 
-* Monitoring
+* Monitoring Stack: cluster resource monitoring and container/app monitoring
 
 ## Architecture
 
@@ -30,7 +30,7 @@ If you'd like to deploy from beginning, please follow below holistic steps. If y
     * Push docker image to private docker registry 
     * Test and validation 
     * Deploy to Kubernetes 
-* [Monitor](monitoring/README.md) - shows how to set up monitoring stack
+* [Monitor](monitoring/k8s/README.md) - shows how to set up monitoring stack
 
 ## Contributing
 
