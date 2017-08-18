@@ -5,25 +5,25 @@
 # Usages:
 #
 # Sample for Public Azure Environment:
-# bash config.sh --k8s-master-node-hostname="k8s-cluster-master.eastasia.cloudapp.azure.com" \
-#                --k8s-master-node-username="azureuser" \
-#                --k8s-master-node-id-file-base64="<K8S_MASTER_NODE_IDENTITY_FILE_BASE64>" \
-#                --k8s-ui-admin-username="azureuser" \
-#                --k8s-ui-admin-password="<K8S_UI_ADMIN_PASSWORD>" \
-#                --monitor-cluster-ns="monitor-cluster-ns" \
-#                --enable-elk-stack="enabled" \
-#                --enable-hig-stack="enabled"
+# bash config.sh --k8s-master-node-hostname "k8s-cluster-master.eastasia.cloudapp.azure.com" \
+#                --k8s-master-node-username "azureuser" \
+#                --k8s-master-node-id-file-base64 "<K8S_MASTER_NODE_IDENTITY_FILE_BASE64>" \
+#                --k8s-ui-admin-username "azureuser" \
+#                --k8s-ui-admin-password "<K8S_UI_ADMIN_PASSWORD>" \
+#                --monitor-cluster-ns "monitor-cluster-ns" \
+#                --enable-elk-stack "enabled" \
+#                --enable-hig-stack "enabled"
 #
 # Sample for Azure China Environment:
-# bash config.sh --azure-cloud-env="AzureChinaCloud" \
-#                --k8s-master-node-hostname="k8s-cluster-master.chinaeast.cloudapp.azure.cn" \
-#                --k8s-master-node-username="azureuser" \
-#                --k8s-master-node-id-file-base64="<K8S_MASTER_NODE_IDENTITY_FILE_BASE64>"
-#                --k8s-ui-admin-username="azureuser" \
-#                --k8s-ui-admin-password="<K8S_UI_ADMIN_PASSWORD>"
-#                --monitor-cluster-ns="monitor-cluster-ns" \
-#                --enable-elk-stack="enabled" \
-#                --enable-hig-stack="enabled"
+# bash config.sh --azure-cloud-env "AzureChinaCloud" \
+#                --k8s-master-node-hostname "k8s-cluster-master.chinaeast.cloudapp.azure.cn" \
+#                --k8s-master-node-username "azureuser" \
+#                --k8s-master-node-id-file-base64 "<K8S_MASTER_NODE_IDENTITY_FILE_BASE64>"
+#                --k8s-ui-admin-username "azureuser" \
+#                --k8s-ui-admin-password "<K8S_UI_ADMIN_PASSWORD>"
+#                --monitor-cluster-ns "monitor-cluster-ns" \
+#                --enable-elk-stack "enabled" \
+#                --enable-hig-stack "enabled"
 #
 
 set -e
@@ -247,7 +247,7 @@ function help() {
 }
 
 # -----------------------------------------------------------------------------
-# Log message.
+# Log message to standard output.
 # Globals:
 #   LOG_FILE
 # Arguments:
@@ -256,6 +256,19 @@ function help() {
 #   None
 # -----------------------------------------------------------------------------
 function log_message() {
+    echo "$(date "+%Y-%m-%d %H:%M:%S") $1"
+}
+
+# -----------------------------------------------------------------------------
+# Log message directly to file.
+# Globals:
+#   LOG_FILE
+# Arguments:
+#   message
+# Returns:
+#   None
+# -----------------------------------------------------------------------------
+function log_message_direct() {
     echo "$(date "+%Y-%m-%d %H:%M:%S") $1" | tee -a $LOG_FILE
 }
 
@@ -396,7 +409,7 @@ function parse_args() {
                 fi
                 ;;
             *) # unknown option
-                echo "Option '${BOLD}$1${NORM} $arg_value' not allowed."
+                log_message "Option '${BOLD}$1${NORM} $arg_value' not allowed."
                 help
                 exit 2
                 ;;
@@ -630,9 +643,7 @@ function install_helm() {
         local tiller_image="$HELM_TILLER_MIRROR_IMAGE:$HELM_TILLER_VERSION_TAG"
         log_message "deploying tiller image from mirror '$tiller_image' to deployment '$HELM_TILLER_DEPLOYMENT' in namespace '$K8S_NAMESPACE_KUBE_SYSTEM'"
 
-        kubectl --namespace="$K8S_NAMESPACE_KUBE_SYSTEM" \
-            set image "$HELM_TILLER_DEPLOYMENT" \
-            tiller="$tiller_image"
+        kubectl --namespace="$K8S_NAMESPACE_KUBE_SYSTEM" set image "$HELM_TILLER_DEPLOYMENT" tiller="$tiller_image"
 
         log_message "deployed tiller image from mirror '$tiller_image'"
 
@@ -994,7 +1005,7 @@ function main() {
 # prepare install directory
 mkdir -p "$INSTALL_DIR"
 
-log_message "Controller VM configuration starting with args: $@"
+log_message_direct "Controller VM configuration starting with args: $@"
 
 # parse command line arguments
 parse_args $@
@@ -1004,13 +1015,13 @@ if [ "$K8S_MASTER_NODE_HOSTNAME" = "" ] || \
    [ "$K8S_MASTER_NODE_IDENTITY_FILE_BASE64" = "" || \
    [ "$K8S_UI_ADMIN_USERNAME" = "" || \
    [ "$K8S_UI_ADMIN_PASSWORD" = ""] ; then
-    log_message "ERROR: Missing required arguments."
+    log_message_direct "ERROR: Missing required arguments."
     # missing required arguments, print help hints
     help
     exit
 else
     # Invoke main entry function.
-    main
+    main 2>&1 | tee -a $LOG_FILE
 fi
 
-log_message "Controller VM configuration completed."
+log_message_direct "Controller VM configuration completed."
