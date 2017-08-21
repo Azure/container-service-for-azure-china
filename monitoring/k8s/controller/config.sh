@@ -32,6 +32,9 @@ set -e
 # constants
 # =============================================================================
 
+# script version
+readonly SCRIPT_VERSION="v0.0.22"
+
 # enable feature flag
 readonly ENABLED="enabled"
 
@@ -43,10 +46,11 @@ readonly AZURE_CLOUD="AzureCloud"
 readonly AZURE_CHINA_CLOUD="AzureChinaCloud"
 
 # install directory
-readonly INSTALL_DIR="/root/tmp/install"
+readonly INSTALL_DIR="/tmp/install"
 
 # log file
 readonly LOG_FILE="$INSTALL_DIR/config.log"
+readonly KUBE_PROXY_LOG_FILE="$INSTALL_DIR/kube_proxy.log"
 
 # cleanup script file
 readonly CLEANUP_SCRIPT_PATH="$INSTALL_DIR/cleanup.sh"
@@ -73,6 +77,7 @@ readonly K8S_NAMESPACE_KUBE_SYSTEM="kube-system"
 # kube config constants
 readonly KUBE_CONFIG_LOCAL_DIR="/root/.kube"
 readonly KUBE_CONFIG_LOCAL_PATH="$KUBE_CONFIG_LOCAL_DIR/config"
+export KUBECONFIG="$KUBE_CONFIG_LOCAL_PATH"
 
 # helm contstants
 readonly HELM_INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"
@@ -328,7 +333,7 @@ function parse_args() {
             shift_once=1
         fi
 
-        log_message "Option '${1}' set with value '"$arg_value"'"
+        log_message_direct "Option '${1}' set with value '"$arg_value"'"
 
         case "$1" in
             $ARG_HELP_ALIAS|$ARG_HELP)
@@ -358,7 +363,7 @@ function parse_args() {
                    [ "$arg_value" = "$AZURE_CHINA_CLOUD" ] ; then
                     AZURE_CLOUD_ENVIRONMENT="$arg_value"
                 else
-                    log_message "invalid argument value: $arg_value"
+                    log_message_direct "ERROR: invalid argument value: $arg_value"
                     help
                     exit 2
                 fi
@@ -368,7 +373,7 @@ function parse_args() {
                    [ "$arg_value" = "$GITHUB_REPO" ] ; then
                     MSREF_DOWNLOAD_METHOD="$arg_value"
                 else
-                    log_message "invalid argument value: $arg_value"
+                    log_message_direct "ERROR: invalid argument value: $arg_value"
                     help
                     exit 2
                 fi
@@ -393,7 +398,7 @@ function parse_args() {
                    [ "${arg_value,,}" = "$DISABLED" ] ; then
                     ENABLE_ELK_STACK="${arg_value,,}"
                 else
-                    log_message "invalid argument value: $arg_value"
+                    log_message_direct "ERROR: invalid argument value: $arg_value"
                     help
                     exit 2
                 fi
@@ -403,13 +408,13 @@ function parse_args() {
                    [ "${arg_value,,}" = "$DISABLED" ] ; then
                     ENABLE_HIG_STACK="${arg_value,,}"
                 else
-                    log_message "invalid argument value: $arg_value"
+                    log_message_direct "ERROR: invalid argument value: $arg_value"
                     help
                     exit 2
                 fi
                 ;;
             *) # unknown option
-                log_message "Option '${BOLD}$1${NORM} $arg_value' not allowed."
+                log_message_direct "ERROR: Option '${BOLD}$1${NORM} $arg_value' not allowed."
                 help
                 exit 2
                 ;;
@@ -514,8 +519,8 @@ function install_kubectl() {
     
     # install kubectl from local
     log_message "installing kubectl from '$KUBECTL_TEMP_PATH' to '$KUBECTL_INSTALL_PATH'"
+    chmod +x "$KUBECTL_TEMP_PATH"
     sudo mv "$KUBECTL_TEMP_PATH" "$KUBECTL_INSTALL_PATH"
-    chmod +x "$KUBECTL_INSTALL_PATH"
     log_message "installed kubectl from '$KUBECTL_TEMP_PATH' to '$KUBECTL_INSTALL_PATH'"
 
     # test kubectl installed
@@ -563,17 +568,12 @@ function load_kube_config() {
     mkdir -p "$KUBE_CONFIG_LOCAL_DIR"
 
     # download kube config file
-    local user_name="$K8S_MASTER_NODE_USERNAME"
-    local host_name="$K8S_MASTER_NODE_HOSTNAME"
-    local remote_path="$K8S_MASTER_NODE_KUBE_CONFIG_PATH"
-    scp -o StrictHostKeyChecking=no \
-        -i "$K8S_MASTER_NODE_IDENTITY_FILE_PATH" \
-        "$user_name@$host_name:$remote_path" \
-        "$KUBE_CONFIG_LOCAL_PATH"
+    scp -o StrictHostKeyChecking=no -i "$K8S_MASTER_NODE_IDENTITY_FILE_PATH" "$K8S_MASTER_NODE_USERNAME@$K8S_MASTER_NODE_HOSTNAME:$K8S_MASTER_NODE_KUBE_CONFIG_PATH" "$KUBE_CONFIG_LOCAL_PATH"
 
     log_message "loaded kube config from '$K8S_MASTER_NODE_HOSTNAME' to '$KUBE_CONFIG_LOCAL_PATH'"
 
     # test kube config loaded
+
     kubectl get nodes
 
     # log function executed
@@ -624,31 +624,20 @@ function install_helm() {
 
     # initialize helm
 
-    log_message "initializing helm"
-
-    {
-        helm init
-    } || {
-        echo "helm init failed."
-    }
-
-    log_message "initialized helm"
-
-    # workaround to resolve tiller image issue
     if [ "$enable_mirror" = "$ENABLED" ] ; then
-        # sleep 30 seconds, wait tiller image deploy failed
-        sleep 30
-
-        # replace failed tiller image with mirror image
         local tiller_image="$HELM_TILLER_MIRROR_IMAGE:$HELM_TILLER_VERSION_TAG"
-        log_message "deploying tiller image from mirror '$tiller_image' to deployment '$HELM_TILLER_DEPLOYMENT' in namespace '$K8S_NAMESPACE_KUBE_SYSTEM'"
 
-        kubectl --namespace="$K8S_NAMESPACE_KUBE_SYSTEM" set image "$HELM_TILLER_DEPLOYMENT" tiller="$tiller_image"
+        log_message "initializing helm with tiller image from mirror '$tiller_image'"
 
-        log_message "deployed tiller image from mirror '$tiller_image'"
+        helm init --tiller-image "$tiller_image"
+ 
+        log_message "initialized helm with tiller image from mirror '$tiller_image'"
+    else
+        log_message "initializing helm"
 
-        # sleep 30 seconds, wait tiller image up
-        sleep 30
+        helm init
+
+        log_message "initialized helm"
     fi
 
     # test helm installed
@@ -834,6 +823,9 @@ rm -f $KUBECTL_INSTALL_PATH
 apt-get purge docker-engine -y
 apt-get autoremove -y
 
+# stop kube ui proxy
+kill $(pgrep -f "kubectl proxy")
+
 # clean nginx
 apt-get purge nginx apache2-utils -y
 apt-get autoremove -y
@@ -896,6 +888,7 @@ function set_feature_flags() {
 #   K8S_UI_ADMIN_PASSWORD
 #   MSREF_NGINX_SITE_CONFIG_PATH
 #   NGINX_DEFAULT_SITE_PATH
+#   KUBE_PROXY_LOG_FILE
 # Arguments:
 #   None
 # Returns:
@@ -924,7 +917,7 @@ function setup_nginx() {
 
     # set proxy from local port 8080 to kubenetes dashboard
     log_message "setting proxy from local port 8080 to kubenetes dashboard"
-    nohup kubectl proxy --port=8080 &
+    nohup kubectl proxy --port=8080 > "$KUBE_PROXY_LOG_FILE" 2>&1 &
     log_message "set proxy from local port 8080 to kubenetes dashboard"
 
     # activate nginx config
@@ -933,6 +926,7 @@ function setup_nginx() {
     log_message "activated nginx config"
 
     # test nginx
+    sleep 10
     curl http://localhost/ -u "$admin_user:$admin_pass"
 
     # log function executed
@@ -981,11 +975,11 @@ function main() {
         # download msref project
         download_msref
 
+        # setup nginx
+        setup_nginx 2>&1 | tee -a $LOG_FILE
+
         # install helm charts
         install_helm_charts "$ENABLE_ELK_STACK" "$ENABLE_HIG_STACK"
-
-        # setup nginx
-        setup_nginx
     } || {
         log_message "config failed"
     }
@@ -1005,15 +999,19 @@ function main() {
 # prepare install directory
 mkdir -p "$INSTALL_DIR"
 
+log_message_direct "Script version: $SCRIPT_VERSION"
+
 log_message_direct "Controller VM configuration starting with args: $@"
+
+log_message_direct "Install directory: $INSTALL_DIR"
 
 # parse command line arguments
 parse_args $@
 
 if [ "$K8S_MASTER_NODE_HOSTNAME" = "" ] || \
    [ "$K8S_MASTER_NODE_USERNAME" = "" ] || \
-   [ "$K8S_MASTER_NODE_IDENTITY_FILE_BASE64" = "" || \
-   [ "$K8S_UI_ADMIN_USERNAME" = "" || \
+   [ "$K8S_MASTER_NODE_IDENTITY_FILE_BASE64" = "" ] || \
+   [ "$K8S_UI_ADMIN_USERNAME" = "" ] || \
    [ "$K8S_UI_ADMIN_PASSWORD" = ""] ; then
     log_message_direct "ERROR: Missing required arguments."
     # missing required arguments, print help hints
