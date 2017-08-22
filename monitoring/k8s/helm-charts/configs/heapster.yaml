@@ -5,7 +5,7 @@ image:
 command:
 - "/heapster"
 - "--source=kubernetes:https://kubernetes.default"
-- "--sink=influxdb:http://influxdb-influxdb.monitoring-ns.svc:8086"
+- "--sink=influxdb:http://influxdb-influxdb.{MONITOR_CLUSTER_NS}:8086"
 
 resizer:
   image:
