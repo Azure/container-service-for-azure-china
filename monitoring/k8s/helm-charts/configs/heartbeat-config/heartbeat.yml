@@ -11,7 +11,7 @@ heartbeat.monitors:
   mode: any
 
 output.elasticsearch:
-  hosts: ["elasticsearch.elk-ns:9200"]
+  hosts: ["elasticsearch.{MONITOR_CLUSTER_NS}:9200"]
 
   template.enabled: true
   template.name: "heartbeat"

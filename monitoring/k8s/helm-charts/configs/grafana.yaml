@@ -12,7 +12,7 @@ server:
     datasource:
       name: influxdb
       type: influxdb
-      url: "http://influxdb-influxdb:8086"
+      url: "http://influxdb-influxdb.{MONITOR_CLUSTER_NS}:8086"
       database: k8s
       access: proxy
       isDefault: true

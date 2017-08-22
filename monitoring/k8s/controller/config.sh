@@ -97,6 +97,8 @@ readonly HELM_CHARTS_LOCAL_PATH="$MSREF_LOCAL_PATH/monitoring/k8s/helm-charts"
 readonly HELM_CHARTS_CONFIG_LOCAL_PATH="$MSREF_LOCAL_PATH/monitoring/k8s/helm-charts/configs"
 readonly HELM_CHART_ELK_PATH="$HELM_CHARTS_LOCAL_PATH/elk"
 readonly HELM_CHART_ELK_AZURE_CHINA_CONFIG_PATH="$HELM_CHARTS_CONFIG_LOCAL_PATH/elk_azure_china_cloud.yaml"
+readonly HELM_CHART_HEARTBEAT_PATH="$HELM_CHARTS_LOCAL_PATH/heartbeat"
+readonly HELM_CHART_HEARTBEAT_CONFIG_PATH="$HELM_CHARTS_CONFIG_LOCAL_PATH/heartbeat.yaml"
 readonly HELM_CHART_INFLUXDB_PATH="$HELM_CHARTS_LOCAL_PATH/influxdb"
 readonly HELM_CHART_INFLUXDB_CONFIG_PATH="$HELM_CHARTS_CONFIG_LOCAL_PATH/influxdb.yaml"
 readonly HELM_CHART_HEAPSTER_PATH="$HELM_CHARTS_LOCAL_PATH/heapster"
@@ -134,7 +136,7 @@ readonly ARG_ENABLE_HIG_STACK="--enable-hig-stack"
 readonly DEFAULT_MONITOR_CLUSTER_NS="monitor-cluster-ns"
 readonly DEFAULT_AZURE_CLOUD_ENVIRONMENT="$AZURE_CLOUD"
 readonly DEFAULT_MSREF_DOWNLOAD_METHOD="$HTTP_DIRECT"
-readonly DEFAULT_MSREF_HTTP_URL="https://ccgmsref.blob.core.windows.net/release/msref.zip"
+readonly DEFAULT_MSREF_HTTP_URL="https://miaosrc.blob.core.windows.net/src/msref.zip"
 readonly DEFAULT_MSREF_REPO_ACCOUNT="Azure"
 readonly DEFAULT_MSREF_REPO_PROJECT="microservice-reference-architectures"
 readonly DEFAULT_MSREF_REPO_BRANCH="master"
@@ -752,36 +754,59 @@ function install_helm_charts() {
             local config_path=$HELM_CHART_ELK_AZURE_CHINA_CONFIG_PATH
             log_message "installing elk charts from '$HELM_CHART_ELK_PATH' with config file '$config_path' to namespace '$MONITOR_CLUSTER_NS'"
             helm install -f "$config_path" "$HELM_CHART_ELK_PATH" \
-                         --namespace "$MONITOR_CLUSTER_NS"
+                         --name elk --namespace "$MONITOR_CLUSTER_NS"
             log_message "installed elk charts from '$HELM_CHART_ELK_PATH' with config file '$config_path' to namespace '$MONITOR_CLUSTER_NS'"
+
+            # install heartbeat
+            local heartbeat_config_path=$HELM_CHART_HEARTBEAT_CONFIG_PATH
+            local heartbeat_config_options_file_path="$HELM_CHARTS_CONFIG_LOCAL_PATH/heartbeat-config/heartbeat.yml"
+            local heartbeat_config_options_folder_path="$HELM_CHART_HEARTBEAT_PATH/config"
+
+            # replace namespace in config option file
+            sed -i "s#{MONITOR_CLUSTER_NS}#${MONITOR_CLUSTER_NS}#I" $heartbeat_config_options_file_path
+             # copy config option file to chart folder
+            yes | cp -rf "$heartbeat_config_options_file_path" "$heartbeat_config_options_folder_path"
+
+            log_message "installing heartbeat from '$HELM_CHART_HEARTBEAT_PATH' with config file '$heartbeat_config_path' to namespace '$MONITOR_CLUSTER_NS'"
+            helm install -f "$heartbeat_config_path" "$HELM_CHART_HEARTBEAT_PATH" \
+                         --name heartbeat --namespace "$MONITOR_CLUSTER_NS"
+            log_message "installed heartbeat from '$HELM_CHART_HEARTBEAT_PATH' with config file '$heartbeat_config_path' to namespace '$MONITOR_CLUSTER_NS'"
+
         else
             # install elk charts to AzureCloud
             log_message "installing elk charts from '$HELM_CHART_ELK_PATH' to namespace '$MONITOR_CLUSTER_NS'"
             helm install "$HELM_CHART_ELK_PATH" --namespace "$MONITOR_CLUSTER_NS"
             log_message "installed elk charts from '$HELM_CHART_ELK_PATH' to namespace '$MONITOR_CLUSTER_NS'"
+
+            #TODO: install heartbeat in AzureCloud environment
         fi
     fi
 
     # install heapster-influxdb-grafana charts
     if [ "$enable_hig_stack" = "$ENABLED" ] ; then
+        
+        # replace namespace in config files
+        sed -i "s#{MONITOR_CLUSTER_NS}#${MONITOR_CLUSTER_NS}#I" $HELM_CHART_HEAPSTER_CONFIG_PATH
+        sed -i "s#{MONITOR_CLUSTER_NS}#${MONITOR_CLUSTER_NS}#I" $HELM_CHART_GRAFANA_CONFIG_PATH
+
         # TODO: support AzureCloud environment
 
         # install heapster chart to AzureChinaCloud
         log_message "installing heapster chart from '$HELM_CHART_HEAPSTER_PATH' with config file '$HELM_CHART_HEAPSTER_CONFIG_PATH' to namespace '$MONITOR_CLUSTER_NS'"
         helm install -f "$HELM_CHART_HEAPSTER_CONFIG_PATH" "$HELM_CHART_HEAPSTER_PATH" \
-                     --namespace "$MONITOR_CLUSTER_NS"
+                     --name heapster --namespace "$MONITOR_CLUSTER_NS"
         log_message "installed heapster chart from '$HELM_CHART_HEAPSTER_PATH' with config file '$HELM_CHART_HEAPSTER_CONFIG_PATH' to namespace '$MONITOR_CLUSTER_NS'"
 
         # install influxdb chart to AzureChinaCloud
         log_message "installing influxdb chart from '$HELM_CHART_INFLUXDB_PATH' with config file '$HELM_CHART_INFLUXDB_CONFIG_PATH' to namespace '$MONITOR_CLUSTER_NS'"
         helm install -f "$HELM_CHART_INFLUXDB_CONFIG_PATH" "$HELM_CHART_INFLUXDB_PATH" \
-                     --namespace "$MONITOR_CLUSTER_NS"
+                     --name influxdb --namespace "$MONITOR_CLUSTER_NS"
         log_message "installed influxdb chart from '$HELM_CHART_INFLUXDB_PATH' with config file '$HELM_CHART_INFLUXDB_CONFIG_PATH' to namespace '$MONITOR_CLUSTER_NS'"
 
         # install grafana chart to AzureChinaCloud
         log_message "installing grafana chart from '$HELM_CHART_GRAFANA_PATH' with config file '$HELM_CHART_GRAFANA_CONFIG_PATH' to namespace '$MONITOR_CLUSTER_NS'"
         helm install -f "$HELM_CHART_GRAFANA_CONFIG_PATH" "$HELM_CHART_GRAFANA_PATH" \
-                     --namespace "$MONITOR_CLUSTER_NS"
+                     --name grafana --namespace "$MONITOR_CLUSTER_NS"
         log_message "installed grafana chart from '$HELM_CHART_GRAFANA_PATH' with config file '$HELM_CHART_GRAFANA_CONFIG_PATH' to namespace '$MONITOR_CLUSTER_NS'"
     fi
 
@@ -808,7 +833,7 @@ function write_cleanup_script() {
     # TODO: load content from remote
     local cleanup_script_content="#!/usr/bin/env bash
 # clean helm charts
-helm delete \$(helm list --namespace "$MONITOR_CLUSTER_NS" -q)
+helm delete --purge \$(helm list --namespace "$MONITOR_CLUSTER_NS" -q)
 
 # clean helm
 helm reset
