@@ -1,5 +1,5 @@
 server:
-  image: "mirror.azure.cn:5000/grafana:latest"
+  image: "crproxy.trafficmanager.net:5000/grafana/grafana:latest"
 
   serviceType: LoadBalancer
 
@@ -7,7 +7,7 @@ server:
 
   setDatasource:
     enabled: true
-    image: mirror.azure.cn:5000/curl:latest
+    image: crproxy.trafficmanager.net:5000/appropriate/curl:latest
 
     datasource:
       name: influxdb

@@ -1,5 +1,5 @@
 image:
-  repo: "mirror.azure.cn:5000/influxdb"
+  repo: "crproxy.trafficmanager.net:5000/library/influxdb"
   tag: "1.2-alpine"
 
 service:

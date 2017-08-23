@@ -1,6 +1,5 @@
 image:
-  repository: mirror.azure.cn:5000/heapster
-  tag: v1.3.0
+  repository: crproxy.trafficmanager.net:5000/kubernetes/heapster
 
 command:
 - "/heapster"
@@ -9,5 +8,5 @@ command:
 
 resizer:
   image:
-    repository: mirror.azure.cn:5000/addon-resizer
+    repository: crproxy.trafficmanager.net:6000/google_containers/addon-resizer
     tag: 1.7

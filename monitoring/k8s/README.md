@@ -63,12 +63,12 @@ Kubectl cluster-info
 You can config the Beats per your request, following the official documentation. Here we take Heartbeat as an example to show how to customize the config.
 
 1. SSH into the controller VM
-2. Go to /tmp/template/microservice-reference-architectures, this is where the repo file downloaded
-3. Go to k8s/helm-charts/config/heartbeat-config, edit heartbeat.yml (reference [Heartbeat Configuration Options](https://www.elastic.co/guide/en/beats/heartbeat/current/heartbeat-configuration-details.html))
-4. Go back to  k8s/helm-charts, run the commands below
+2. Go to /tmp/install/microservice-reference-architectures, this is where the repo file downloaded
+3. Go to monitoring/k8s/helm-charts/configs/heartbeat-config, edit heartbeat.yml (reference [Heartbeat Configuration Options](https://www.elastic.co/guide/en/beats/heartbeat/current/heartbeat-configuration-details.html))
+4. Go back to  monitoring/k8s/helm-charts, run the commands below
 ```
-yes | cp -rf config/heartbeat-config/heartbeat.yml /heartbeat/config
-helm upgrade -f config/heartbeat.yaml heartbeat heartbeat/
+yes | cp -rf configs/heartbeat-config/heartbeat.yml heartbeat/config
+helm upgrade -f configs/heartbeat.yaml heartbeat heartbeat/
 ```
 
 
