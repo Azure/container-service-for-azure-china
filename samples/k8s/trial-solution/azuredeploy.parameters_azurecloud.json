@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "clusterDnsPrefix": {
+            "value": "{CLUSTER_DNS_PREFIX}"
+        },
+        "cloudEnvironmentName": {
+            "value": "AzureCloud"
+        },
+        "linuxAdminUserName": {
+            "value": "azureuser"
+        },
+        "jumpboxAdminPassword": {
+            "value": "{JUMPBOX_ADMIN_PASSWORD}"
+        },
+        "k8sLinuxSshPublicKey": {
+            "value": "{K8S_LINUX_SSH_PUBLIC_KEY}"
+        },
+        "k8sLinuxSshPrivateKeyBase64": {
+            "value": "{K8S_LINUX_SSH_PRIVATE_KEY_BASE64}"
+        },
+        "servicePrincipalTenantId": {
+            "value": "{SERVICE_PRINCIPAL_TENANT_ID}"
+        },
+        "servicePrincipalClientId": {
+            "value": "{SERVICE_PRINCIPAL_CLIENT_ID}"
+        },
+        "servicePrincipalSecret": {
+            "value": "{SERVICE_PRINCIPAL_SECRET}"
+        }
+    }
+}

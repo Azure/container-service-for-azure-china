@@ -1,0 +1,250 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.12",
+    "parameters": {
+        "clusterDnsPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Sets the DNS prefix for the trial cluster."
+            }
+        },
+        "cloudEnvironmentName": {
+            "type": "string",
+            "defaultValue": "AzureChinaCloud",
+            "allowedValues": [
+                "AzureCloud",
+                "AzureChinaCloud"
+            ],
+            "metadata": {
+                "description": "Azure cloud environment 'AzureCloud' or 'AzureChinaCloud'."
+            }
+        },
+        "linuxAdminUserName": {
+            "type": "string",
+            "defaultValue": "azureuser",
+            "metadata": {
+                "description": "Administrator user name for all linux VMs."
+            }
+        },
+        "jumpboxAdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Administrator password to login jumpbox VM and kubernates dashboard."
+            }
+        },
+        "k8sLinuxSshPublicKey": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Public key for kubernetes cluster SSH connection."
+            }
+        },
+        "k8sLinuxSshPrivateKeyBase64": {
+            "type": "securestring",
+            "metadata": {
+                "description": "BASE64 encoded private key for kubernetes cluster SSH connection."
+            }
+        },
+        "servicePrincipalTenantId": {
+            "type": "string",
+            "metadata": {
+                "description": "The AAD tenant id for service principal."
+            }
+        },
+        "servicePrincipalClientId": {
+            "type": "string",
+            "metadata": {
+                "description": "The service principal client id."
+            }
+        },
+        "servicePrincipalSecret": {
+            "type": "string",
+            "metadata": {
+                "description": "The service principal secret."
+            }
+        }
+    },
+    "variables": {
+        "servicePrincipalTenantId": "[parameters('servicePrincipalTenantId')]",
+        "servicePrincipalClientId": "[parameters('servicePrincipalClientId')]",
+        "servicePrincipalSecret": "[parameters('servicePrincipalSecret')]",
+        "cloudEnvironmentName": "[parameters('cloudEnvironmentName')]",
+        "k8sMasterDnsName": "[concat(parameters('clusterDnsPrefix'), '-master')]",
+        "k8sLinuxAdminUserName": "[parameters('linuxAdminUserName')]",
+        "k8sLinuxSshPublicKey": "[parameters('k8sLinuxSshPublicKey')]",
+        "k8sLinuxSshPrivateKeyBase64": "[parameters('k8sLinuxSshPrivateKeyBase64')]",
+        "k8sUiAdminUserName": "[parameters('linuxAdminUserName')]",
+        "k8sUiAdminPassword": "[parameters('jumpboxAdminPassword')]",
+        "jumpboxDnsName": "[concat(parameters('clusterDnsPrefix'), '-jb')]",
+        "jumpboxStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'jb')]",
+        "jumpboxStorageAccountType": "Standard_LRS",
+        "jumpboxPublicIpName": "jumpboxip",
+        "jumpboxPublicIpType": "Dynamic",
+        "jumpboxVNetName": "jumpbox-vnet",
+        "jumpboxVNetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('jumpboxVNetName'))]",
+        "jumpboxVNetAddressPrefix": "10.0.0.0/16",
+        "jumpboxSubnetName": "jumpbox-subnet",
+        "jumpboxSubnetPrefix": "10.0.0.0/24",
+        "jumpboxNicName": "jumpboxnic",
+        "jumpboxVmName": "jumpboxvm",
+        "jumpboxVmSize": "Standard_A1",
+        "jumpboxVmImagePublisher": "Canonical",
+        "jumpboxVmImageOffer": "UbuntuServer",
+        "jumpboxVmUbuntuOSVersion": "16.04.0-LTS",
+        "jumpboxAdminUserName": "[parameters('linuxAdminUserName')]",
+        "jumpboxAdminPassword": "[parameters('jumpboxAdminPassword')]",
+        "jumpboxVmUtilitiesScriptUrl": "https://ccgmsref.blob.core.windows.net/scripts/k8s_trial/jumpbox_utilities.sh",
+        "jumpboxVmConfigScriptUrl": "https://ccgmsref.blob.core.windows.net/scripts/k8s_trial/jumpbox_config.sh",
+        "jumpboxVmConfigCmdGeneralArgs": "[concat(' --cloud-env-name ', variables('cloudEnvironmentName'), ' --rg-name ', resourceGroup().name, ' --rg-location ', resourceGroup().location, ' --sp-tenant-id ', variables('servicePrincipalTenantId'), ' --sp-client-id ', variables('servicePrincipalClientId'), ' --sp-client-secret ', variables('servicePrincipalSecret'))]",
+        "jumpboxVmConfigCmdK8sArgs": "[concat(' --k8s-master-dns-name ', variables('k8sMasterDnsName'), ' --k8s-linux-admin-user-name ', variables('k8sLinuxAdminUserName'), ' --k8s-linux-ssh-pub-key \"', variables('k8sLinuxSshPublicKey'), '\" --k8s-linux-ssh-private-key-base64 \"', variables('k8sLinuxSshPrivateKeyBase64'), '\" --k8s-ui-admin-user-name', variables('k8sUiAdminUserName'), ' --k8s-ui-admin-password ', variables('k8sUiAdminPassword'))]",
+        "jumpboxVmConfigCmdArgs": "[concat(variables('jumpboxVmConfigCmdGeneralArgs'), variables('jumpboxVmConfigCmdK8sArgs'))]",
+        "jumpboxVmConfigCmd": "[concat('bash jumpbox_config.sh', variables('jumpboxVmConfigCmdArgs'))]"
+    },
+    "resources": [{
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('jumpboxStorageAccountName')]",
+            "apiVersion": "2017-06-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[variables('jumpboxStorageAccountType')]"
+            },
+            "kind": "Storage",
+            "properties": {}
+        },
+        {
+            "apiVersion": "2017-04-01",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[variables('jumpboxPublicIpName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAllocationMethod": "[variables('jumpboxPublicIpType')]",
+                "dnsSettings": {
+                    "domainNameLabel": "[variables('jumpboxDnsName')]"
+                }
+            }
+        },
+        {
+            "apiVersion": "2017-04-01",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[variables('jumpboxVNetName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('jumpboxVNetAddressPrefix')]"
+                    ]
+                },
+                "subnets": [{
+                    "name": "[variables('jumpboxSubnetName')]",
+                    "properties": {
+                        "addressPrefix": "[variables('jumpboxSubnetPrefix')]"
+                    }
+                }]
+            }
+        },
+        {
+            "apiVersion": "2017-04-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[variables('jumpboxNicName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses/', variables('jumpboxPublicIpName'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/', variables('jumpboxVNetName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [{
+                    "name": "ipconfig1",
+                    "properties": {
+                        "privateIPAllocationMethod": "Dynamic",
+                        "publicIPAddress": {
+                            "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('jumpboxPublicIpName'))]"
+                        },
+                        "subnet": {
+                            "id": "[concat(variables('jumpboxVNetId'),'/subnets/', variables('jumpboxSubnetName'))]"
+                        }
+                    }
+                }]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[variables('jumpboxVmName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/', variables('jumpboxStorageAccountName'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces/', variables('jumpboxNicName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('jumpboxVmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[variables('jumpboxVmName')]",
+                    "adminUsername": "[variables('jumpboxAdminUserName')]",
+                    "adminPassword": "[variables('jumpboxAdminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('jumpboxVmImagePublisher')]",
+                        "offer": "[variables('jumpboxVmImageOffer')]",
+                        "sku": "[variables('jumpboxVmUbuntuOSVersion')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "createOption": "FromImage"
+                    },
+                    "dataDisks": [{
+                        "diskSizeGB": "1023",
+                        "lun": 0,
+                        "createOption": "Empty"
+                    }]
+                },
+                "networkProfile": {
+                    "networkInterfaces": [{
+                        "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('jumpboxNicName'))]"
+                    }]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": "true",
+                        "storageUri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('jumpboxStorageAccountName')), '2016-01-01').primaryEndpoints.blob)]"
+                    }
+                }
+            },
+            "resources": [{
+                "name": "config-vm",
+                "type": "extensions",
+                "location": "[resourceGroup().location]",
+                "apiVersion": "2015-06-15",
+                "dependsOn": [
+                    "[resourceId('Microsoft.Compute/virtualMachines/', variables('jumpboxVmName'))]"
+                ],
+                "properties": {
+                    "publisher": "Microsoft.Azure.Extensions",
+                    "type": "CustomScript",
+                    "typeHandlerVersion": "2.0",
+                    "autoUpgradeMinorVersion": true,
+                    "settings": {
+                        "fileUris": [
+                            "[variables('jumpboxVmConfigScriptUrl')]",
+                            "[variables('jumpboxVmUtilitiesScriptUrl')]"
+                        ]
+                    },
+                    "protectedSettings": {
+                        "commandToExecute": "[variables('jumpboxVmConfigCmd')]"
+                    }
+                }
+            }]
+        }
+    ],
+    "outputs": {
+        "jumpboxVmConfigCmd": {
+            "type": "string",
+            "value": "[variables('jumpboxVmConfigCmd')]"
+        },
+        "sshCommand": {
+            "type": "string",
+            "value": "[concat('ssh ', parameters('linuxAdminUserName'), '@', reference(variables('jumpboxPublicIpName')).dnsSettings.fqdn)]"
+        }
+    }
+}
