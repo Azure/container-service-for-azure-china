@@ -1,5 +1,6 @@
 image:
-  repository: crproxy.trafficmanager.net:5000/kubernetes/heapster
+  repository: crproxy.trafficmanager.net:6000/google_containers/heapster
+  tag: v1.3.0
 
 command:
 - "/heapster"
