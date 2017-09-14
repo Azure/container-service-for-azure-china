@@ -709,6 +709,26 @@ function download_msref() {
 }
 
 # -----------------------------------------------------------------------------
+# Cleanup old deployment.
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+# -----------------------------------------------------------------------------
+function cleanup_old_deployment() {
+    # log function executing
+    log_message "clean up load deployment"
+
+    helm delete --purge $(helm list --namespace "$MONITOR_CLUSTER_NS" -q)
+    log_message "helm charts deleted"
+
+    kubectl delete namespace "$MONITOR_CLUSTER_NS"
+    log_message "namespace '$MONITOR_CLUSTER_NS' deleted"
+}
+
+# -----------------------------------------------------------------------------
 # Install helm charts function.
 # Globals:
 #   ENABLED
@@ -1002,6 +1022,9 @@ function main() {
 
         # setup nginx
         setup_nginx 2>&1 | tee -a $LOG_FILE
+
+        # cleanup old deployment
+        cleanup_old_deployment
 
         # install helm charts
         install_helm_charts "$ENABLE_ELK_STACK" "$ENABLE_HIG_STACK"
