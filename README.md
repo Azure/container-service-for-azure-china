@@ -1,4 +1,4 @@
-# Microservices on Container Reference Architecture
+# Microservices on Container Reference Architecture for Azure China
 
 ## Overview
 
@@ -14,6 +14,7 @@ It includes below components:
 
 CI/CD with Open Source Toolchain:
 ![Image of CI/CD architecture](doc/imgs/cicd_architecture.png)
+Currently we only support to deploy application to kubernetes cluster, we will add support for service fabric and other orchestrators in following releases.
 
 Monitor with OSS Solution:
 ![Image of monitor architecture](doc/imgs/monitor.png)
