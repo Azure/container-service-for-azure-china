@@ -19,9 +19,12 @@ node {
         }
     }
     stage('Deploy to K8S') {
-        // update image
-        def cmd = """kubectl set image deployments/${params.service_name} ${params.service_name}=${registry_url}/${app.imageName()}"""
+        // Clean up old releases
+        sh "kubectl delete pods,deployment -l run=${params.service_name} || true"
+        def cmd = """kubectl run ${params.service_name} --image=${registry_url}/${app.imageName()} --replicas=2 --port=${params.service_port_number}"""
+        // execute shell for the command above
         sh cmd
+        sh "kubectl get svc ${params.service_name} || kubectl expose deployment ${params.service_name} --target-port=${params.service_port_number} --type=LoadBalancer"
     }
 }
     

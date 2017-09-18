@@ -26,7 +26,12 @@ NB! The repository must contain a Dockerfile in the root</description>
         <hudson.model.StringParameterDefinition>
           <name>service_name</name>
           <description>the deployment service name in Kubernetes</description>
-          <defaultValue>webmvc</defaultValue>
+          <defaultValue>testapp</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>service_port_number</name>
+          <description>the expose port number for service</description>
+          <defaultValue>8000</defaultValue>
         </hudson.model.StringParameterDefinition>
         <com.cloudbees.plugins.credentials.CredentialsParameterDefinition plugin="credentials@2.1.12">
           <name>registry_credentials_id</name>
