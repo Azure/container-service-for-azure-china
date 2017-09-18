@@ -137,6 +137,7 @@ readonly DEFAULT_MONITOR_CLUSTER_NS="monitor-cluster-ns"
 readonly DEFAULT_AZURE_CLOUD_ENVIRONMENT="$AZURE_CLOUD"
 readonly DEFAULT_MSREF_DOWNLOAD_METHOD="$HTTP_DIRECT"
 readonly DEFAULT_MSREF_HTTP_URL="https://github.com/Azure/microservice-reference-architectures/archive/eshop.zip"
+readonly DEFAULT_MSREF_ZIP_NAME="$INSTALL_DIR/microservice-reference-architectures-eshop"
 readonly DEFAULT_MSREF_REPO_ACCOUNT="Azure"
 readonly DEFAULT_MSREF_REPO_PROJECT="microservice-reference-architectures"
 readonly DEFAULT_MSREF_REPO_BRANCH="master"
@@ -683,7 +684,8 @@ function download_msref() {
         log_message "installed unzip package"
 
         log_message "decompressing msref project from '$temp_path' to '$MSREF_LOCAL_PATH'"
-        unzip -o "$temp_path" -d "$MSREF_LOCAL_PATH"
+        unzip -o "$temp_path" -d "$INSTALL_DIR"
+        mv "$DEFAULT_MSREF_ZIP_NAME" "$MSREF_LOCAL_PATH"
         log_message "decompressed msref project from '$temp_path' to '$MSREF_LOCAL_PATH'"
 
     # clone msref project from GitHub repository
