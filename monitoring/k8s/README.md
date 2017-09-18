@@ -1,9 +1,9 @@
 # Kubernetes based microservice monitoring solution on Azure platform.
 
-<a href="https://portal.azure.cn/#create/Microsoft.Template/uri/https%3A%2F%2Fccgmsref.blob.core.windows.net%2Frelease%2Fcontroller_template.json" target="_blank">
+<a href="https://portal.azure.cn/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fmicroservice-reference-architectures%2Fmaster-dev%2Fmonitoring%2Fk8s%2Fdeployment%2Fcontroller_template.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
-<a href="http://armviz.io/#/?load=https%3A%2F%2Fccgmsref.blob.core.windows.net%2Frelease%2Fcontroller_template.json" target="_blank">
+<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fmicroservice-reference-architectures%2Fmaster-dev%2Fmonitoring%2Fk8s%2Fdeployment%2Fcontroller_template.json" target="_blank">
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
@@ -26,21 +26,20 @@ The first one is for cluster resource monitoring (e.g. CPU and memory of Node an
 1. Click the "Deply to Azure" button 
 2. Enter the deployment parameters
 
-| Parameter                       | Descrption                                                               | Default Value |
-|---------------------------------|--------------------------------------------------------------------------|---------------|
-| vmDnsName                       | DNS name of the controller VM                                            |               |
-| vmAdminUsername                 | Administrator user name for the controller VM                            | azureuser     |
-| vmAdminPassword                 | Administrator password to login controller VM                            |               |
-| vmUbuntuOSVersion               | The Ubuntu version for the controller VM                                 | 16.04.0-LTS   |
-| vmSize                          | The size of the Virtual Machine as controller                            | Standard_A1   |
-| configScriptUri                 | Controller configuration script URI                                      |               |
-| k8sMasterNodeHostname           | Kubernetes cluster master node hostname                                  |               |
-| k8sMasterNodeUsername           | Kubernetes cluster master node username                                  |               |
-| k8sMasterNodeIdentityFileBase64 | Kubernetes cluster master node identity file in base64 encoded string    |               |
-| monitorClusterNamespace         | Monitoring cluster namespace in Kubernetes                               |               |
-| azureCloudEnvironment           | Azure cloud environment 'AzureCloud' or 'AzureChinaCloud'                | AzureCloud    |
-| enableElkStack                  | Feature flag to enable ELK monitoring stack or not                       | enabled       |
-| enableHigStack                  | Feature flag to enable Heapster-InfluxDB-Grafana monitoring stack or not | enabled       |
+| Parameter                       | Descrption                                                               | Default Value   |
+|---------------------------------|--------------------------------------------------------------------------|-----------------|
+| vmDnsName                       | DNS name of the controller VM                                            |                 |
+| vmAdminUsername                 | Administrator user name for the controller VM                            | azureuser       |
+| vmAdminPassword                 | Administrator password to login controller VM                            |                 |
+| vmUbuntuOSVersion               | The Ubuntu version for the controller VM                                 | 16.04.0-LTS     |
+| vmSize                          | The size of the Virtual Machine as controller                            | Standard_A1     |
+| k8sMasterNodeHostname           | Kubernetes cluster master node hostname                                  |                 |
+| k8sMasterNodeUsername           | Kubernetes cluster master node username                                  |                 |
+| k8sMasterNodeIdentityFileBase64 | Kubernetes cluster master node identity file in base64 encoded string    |                 |
+| monitorClusterNamespace         | Monitoring cluster namespace in Kubernetes                               |                 |
+| azureCloudEnvironment           | Azure cloud environment 'AzureCloud' or 'AzureChinaCloud'                | AzureChinaCloud |
+| enableElkStack                  | Feature flag to enable ELK monitoring stack or not                       | enabled         |
+| enableHigStack                  | Feature flag to enable Heapster-InfluxDB-Grafana monitoring stack or not | enabled         |
 
 
 ## B. Connect to the controller VM
@@ -62,8 +61,8 @@ Kubectl cluster-info
 
 You can config the Beats per your request, following the official documentation. Here we take Heartbeat as an example to show how to customize the config.
 
-1. SSH into the controller VM
-2. Go to /tmp/install/microservice-reference-architectures, this is where the repo file downloaded
+1. SSH into the controller VM, switch to root account (sudo -i)
+2. Go to /tmp/install/msref, this is where the repo file downloaded
 3. Go to monitoring/k8s/helm-charts/configs/heartbeat-config, edit heartbeat.yml (reference [Heartbeat Configuration Options](https://www.elastic.co/guide/en/beats/heartbeat/current/heartbeat-configuration-details.html))
 4. Go back to  monitoring/k8s/helm-charts, run the commands below
 ```

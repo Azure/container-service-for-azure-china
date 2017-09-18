@@ -14,9 +14,6 @@
         "vmAdminPassword": {
             "value": "<controller-admin-password>"
         },
-        "configScriptUri": {
-            "value": "<config-script-uri>"
-        },
         "k8sMasterNodeHostname": {
             "value": "<k8s-master-node-hostname>"
         },
