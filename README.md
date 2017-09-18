@@ -1,4 +1,4 @@
-# Microservices on Container Reference Architecture
+# Microservices on Container Reference Architecture for Azure China
 
 ## Overview
 
@@ -14,6 +14,7 @@ It includes below components:
 
 CI/CD with Open Source Toolchain:
 ![Image of CI/CD architecture](doc/imgs/cicd_architecture.png)
+Currently we only support to deploy application to kubernetes cluster, we will add support for service fabric and other orchestrators in following releases.
 
 Monitor with OSS Solution:
 ![Image of monitor architecture](doc/imgs/monitor.png)
@@ -24,7 +25,7 @@ If you'd like to deploy from beginning, please follow below holistic steps. If y
 
 * [Deploy a Kubernetes cluster using ACS Engine](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.md) - shows you how to use the ACS engine to build custom Docker enabled container clusters
 * [Deploy a Private docker registry](azure-docker-registry/README.md) - describes how to deploy a secure private docker registry
-* [CI/CD pipeline](cicd/README.md) - shows how to deploy a Jenkins master and create pipeline which includes below 5 steps:
+* [CI/CD pipeline](cicd/armtemplate/jenkins_private_registry_k8s/README.md) - shows how to deploy a Jenkins master and create pipeline which includes below five stages :
     * Check out git repro
     * Build Docker images 
     * Push docker image to private docker registry 

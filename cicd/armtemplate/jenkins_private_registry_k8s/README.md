@@ -71,3 +71,9 @@ then save the changes and run below command to restart docker
 ```bash
 sudo service restart docker
 ```
+
+## Reference GitHub projects
+
+### [Azure-devops-utils](https://github.com/Azure/azure-devops-utils) (MIT License)
+
+This repository contains utility scripts to run/configure DevOp systems in Azure.
