@@ -55,7 +55,7 @@ job_description="A basic pipeline that builds a Docker container and deploy it t
 repository="${USER}/myfirstapp"
 scm_poll_schedule=""
 scm_poll_ignore_commit_hooks="0"
-artifacts_location="https://raw.githubusercontent.com/VincentLiu028/azure-devops-utils/master/"
+artifacts_location="https://raw.githubusercontent.com/Azure/microservice-reference-architectures/master-dev/cicd/script"
 
 while [[ $# > 0 ]]
 do
@@ -192,11 +192,8 @@ job_xml=${job_xml//'{insert-groovy-script}'/"$(curl -s ${artifacts_location}/jen
 echo "${job_xml}" > job.xml
 
 #install the required plugins
-run_util_script "jenkins/run-cli-command.sh" -j "$jenkins_url" -ju "$jenkins_username" -jp "$jenkins_password" -c "install-plugin credentials -deploy"
-plugins=(docker-workflow git)
-for plugin in "${plugins[@]}"; do
-  run_util_script "jenkins/run-cli-command.sh" -j "$jenkins_url" -ju "$jenkins_username" -jp "$jenkins_password" -c "install-plugin $plugin -restart"
-done
+run_util_script "jenkins/install_jenkins_plugin.sh" "credentials@2.1.15" "docker-workflow@1.13" "git@3.5.1"
+sudo service jenkins restart
 
 #wait for instance to be back online
 run_util_script "jenkins/run-cli-command.sh" -j "$jenkins_url" -ju "$jenkins_username" -jp "$jenkins_password" -c "version"

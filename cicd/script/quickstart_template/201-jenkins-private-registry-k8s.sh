@@ -64,6 +64,7 @@ function copy_kube_config() {
   sudo mkdir /var/lib/jenkins/.kube/
   sudo scp -i $k8sprivatekey_rsa -o StrictHostKeyChecking=no $kubernetes_user_name@$kubernetes_master_fqdn:.kube/config $kubconfigdir
   sudo cp $kubconfigdir/config /var/lib/jenkins/.kube/config
+  sudo chmod 775 /var/lib/jenkins/.kube/config
   export KUBECONFIG=$kubconfigdir/config
 }
 # create a k8s registry secrect and bind it with default service account
@@ -73,7 +74,8 @@ function bind_k8s_registry_secret_to_service_account() {
 }
 
 #defaults
-artifacts_location="https://raw.githubusercontent.com/Vincentliu028/azure-devops-utils/master/"
+artifacts_location="https://raw.githubusercontent.com/Azure/microservice-reference-architectures/master-dev/cicd/script/"
+jenkins_version_location="https://raw.githubusercontent.com/microservice-reference-architectures/master-dev/cicd/script/jenkins/jenkins-verified-ver"
 while [[ $# > 0 ]]
 do
   key="$1"
@@ -152,7 +154,7 @@ if [ -z "$repository" ]; then
 fi
 
 #install jenkins
-run_util_script "jenkins/install_jenkins.sh" -jf "${jenkins_fqdn}" -al "${artifacts_location}" -st "${artifacts_location_sas_token}"
+run_util_script "jenkins/install_jenkins.sh" -jf "${jenkins_fqdn}" -al "${artifacts_location}" -st "${artifacts_location_sas_token}" -jvl "${jenkins_version_location}"
 
 #install git
 sudo apt-get install git --yes
