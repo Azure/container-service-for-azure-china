@@ -75,7 +75,7 @@ function bind_k8s_registry_secret_to_service_account() {
 
 #defaults
 artifacts_location="https://raw.githubusercontent.com/Azure/microservice-reference-architectures/master-dev/cicd/script/"
-jenkins_version_location="https://raw.githubusercontent.com/microservice-reference-architectures/master-dev/cicd/script/jenkins/jenkins-verified-ver"
+jenkins_version_location="https://raw.githubusercontent.com/Azure/microservice-reference-architectures/master-dev/cicd/script/jenkins/jenkins-verified-ver"
 while [[ $# > 0 ]]
 do
   key="$1"
