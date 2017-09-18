@@ -55,7 +55,7 @@ job_description="A basic pipeline that builds a Docker container and deploy it t
 repository="${USER}/myfirstapp"
 scm_poll_schedule=""
 scm_poll_ignore_commit_hooks="0"
-artifacts_location="https://raw.githubusercontent.com/Azure/microservice-reference-architectures/master-dev/cicd/script"
+artifacts_location="https://raw.githubusercontent.com/Azure/microservice-reference-architectures/eshop/cicd/script"
 
 while [[ $# > 0 ]]
 do
