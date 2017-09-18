@@ -1,9 +1,9 @@
 # Jenkins to Private Docker Registry to Kubernetes cluster
 
-<a href="https://portal.azure.cn/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVincentliu028%2Fazure-quickstart-templates%2Fmaster%2F201-jenkins-acr%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.cn/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fmicroservice-reference-architectures%2Fmaster-dev%2Fcicd%2Farmtemplate%2Fjenkins_private_registry_k8s%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
-<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FVincentliu028%2Fazure-quickstart-templates%2Fmaster%2F201-jenkins-acr%2Fazuredeploy.json" target="_blank">
+<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fmicroservice-reference-architectures%2Fmaster-dev%2Fcicd%2Farmtemplate%2Fjenkins_private_registry_k8s%2Fazuredeploy.json" target="_blank">
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
@@ -71,6 +71,10 @@ then save the changes and run below command to restart docker
 ```bash
 sudo service restart docker
 ```
+
+## Sample applications
+The pipeline included in this template is based on the sample application(https://github.com/azure-devops/spin-kub-demo) to do build and deployment. You could use your own application, but the build and deployment scripts in Jenkins may need to be updated accordingly.
+
 
 ## Reference GitHub projects
 
