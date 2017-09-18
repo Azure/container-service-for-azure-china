@@ -25,7 +25,7 @@ If you'd like to deploy from beginning, please follow below holistic steps. If y
 
 * [Deploy a Kubernetes cluster using ACS Engine](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.md) - shows you how to use the ACS engine to build custom Docker enabled container clusters
 * [Deploy a Private docker registry](azure-docker-registry/README.md) - describes how to deploy a secure private docker registry
-* [CI/CD pipeline](cicd/armtemplate/jenkins_private_registry_k8s\README.md) - shows how to deploy a Jenkins master and create pipeline which includes below five stages :
+* [CI/CD pipeline](cicd/armtemplate/jenkins_private_registry_k8s/README.md) - shows how to deploy a Jenkins master and create pipeline which includes below five stages :
     * Check out git repro
     * Build Docker images 
     * Push docker image to private docker registry 
