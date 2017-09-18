@@ -1,5 +1,5 @@
 server:
-  image: "crproxy.trafficmanager.net:5000/grafana/grafana:latest"
+  image: "crproxy.trafficmanager.net:5000/grafana/grafana:4.5.0"
 
   serviceType: LoadBalancer
 
