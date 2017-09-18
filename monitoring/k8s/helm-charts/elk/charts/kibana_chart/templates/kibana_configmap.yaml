@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configmap.name }}
+data:
+  kibana.yml: |
+{{ toYaml .Values.configmap.data | indent 4 }}

@@ -1,0 +1,85 @@
+nameOverride: elasticsearch
+
+image: 
+  repository: docker.elastic.co/elasticsearch/elasticsearch
+  tag: 5.5.1
+  pullPolicy: Always
+    
+configmap:
+  name: es-config
+  data:
+    cluster.name: ${CLUSTER_NAME}
+    node.master: ${NODE_MASTER}
+    node.name: ${NODE_NAME}
+    node.data: ${NODE_DATA}
+    node.ingest: ${NODE_INGEST}
+    network.host: ${NETWORK_HOST}
+    path.data: /usr/share/elasticsearch/esdata/data
+    path.logs: /usr/share/elasticsearch/esdata/log
+    http.enabled: ${HTTP_ENABLE}
+    http.compression: true
+    discovery.zen.ping.unicast.hosts: ${DISCOVERY_SERVICE}
+    discovery.zen.minimum_master_nodes: ${NUMBER_OF_MASTERS}
+    xpack.graph.enabled: false
+    xpack.ml.enabled: false
+    xpack.monitoring.enabled: false
+    xpack.security.enabled: false
+    xpack.watcher.enabled: false
+
+common:
+  env:
+    NETWORK_HOST: "_eth0_"
+    DISCOVERY_SERVICE: "elasticsearch-discovery"
+    ES_JAVA_OPTS: "-Xms256m -Xmx256m"
+
+    # The default value for this environment variable is 2, meaning a cluster
+    # will need a minimum of 2 master nodes to operate. If you have 3 masters
+    # and one dies, the cluster still works.
+    NUMBER_OF_MASTERS: "2"
+
+# Data nodes hold the shards that contain the documents you have indexed. Data
+# nodes handle data related operations like CRUD, search, and aggregations.
+# These operations are I/O-, memory-, and CPU-intensive. It is important to
+# monitor these resources and to add more data nodes if they are overloaded.
+#
+# The main benefit of having dedicated data nodes is the separation of the
+# master and data roles.
+data:
+  # This count will depend on your data and computation needs.
+  replicas: 2
+  env:
+    NODE_MASTER: "false"
+    NODE_DATA: "true"
+    NODE_INGEST: "false"
+    HTTP_ENABLE: "false"
+
+# The master node is responsible for lightweight cluster-wide actions such as
+# creating or deleting an index, tracking which nodes are part of the
+# cluster, and deciding which shards to allocate to which nodes. It is
+# important for cluster health to have a stable master node.
+master:
+  # Master replica count should be (#clients / 2) + 1, and generally at least 3.
+  replicas: 3
+  env:
+    NODE_MASTER: "true"
+    NODE_DATA: "false"
+    NODE_INGEST: "false"
+    HTTP_ENABLE: "false"
+
+# Client/ingest nodes can execute pre-processing pipelines, composed of
+# one or more ingest processors. Depending on the type of operations
+# performed by the ingest processors and the required resources, it may make
+# sense to have dedicated ingest nodes, that will only perform this specific task.
+client:
+  # It isn't common to need more than 2 client nodes.
+  replicas: 2
+  env:
+    NODE_MASTER: "false"
+    NODE_DATA: "false"
+    NODE_INGEST: "true"
+    HTTP_ENABLE: "true"
+
+service:
+  type: ClusterIP
+  httpPort: 9200
+  transportPort: 9300

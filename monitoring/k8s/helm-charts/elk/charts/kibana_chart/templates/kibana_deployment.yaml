@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    component: {{ template "fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        component: {{ template "fullname" . }}
+    spec:
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          privileged: false
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: NAMESPACE
+          value: "{{ .Release.Namespace }}"
+        - name: CHART_INFO
+          value: "{{ .Chart.Name}} - {{ .Chart.Version }} - {{ .Release.Name }}"
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        {{- range $key, $value :=  .Values.global.env }}
+        - name: {{ $key | upper | replace "-" "_" }}
+          value: {{ $value | quote }}
+        {{- end }}
+        ports:
+        - containerPort: 5601
+          name: kibana
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/kibana/config/kibana.yml
+          subPath: kibana.yml
+      volumes:
+        - name: "config"
+          configMap:
+            name: {{ .Values.configmap.name }}
