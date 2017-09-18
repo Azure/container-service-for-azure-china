@@ -40,6 +40,7 @@ artifacts_location="https://raw.githubusercontent.com/Azure/azure-devops-utils/m
 jenkins_version_location="https://raw.githubusercontent.com/Azure/azure-devops-utils/master/jenkins/jenkins-verified-ver"
 azure_web_page_location="/usr/share/nginx/azure"
 jenkins_release_type="LTS"
+jenkins_mirror_site="https://mirrors.tuna.tsinghua.edu.cn/jenkins/"
 
 while [[ $# > 0 ]]
 do
@@ -184,15 +185,6 @@ server {
 EOF
 )
 
-#update apt repositories
-wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -
-
-if [ "$jenkins_release_type" == "weekly" ]; then
-  sudo sh -c 'echo deb http://pkg.jenkins.io/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
-else
-  sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
-fi
-
 sudo add-apt-repository ppa:openjdk-r/ppa --yes
 
 echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/azure-cli/ wheezy main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
@@ -204,27 +196,21 @@ sudo apt-get update --yes
 sudo apt-get install openjdk-8-jre openjdk-8-jre-headless openjdk-8-jdk --yes
 
 #install jenkins
-if [[ ${jenkins_release_type} == 'verified' ]]; then
-  jenkins_version=$(curl --silent "${jenkins_version_location}")
-  deb_file=jenkins_${jenkins_version}_all.deb
-  wget -q "https://pkg.jenkins.io/debian-stable/binary/${deb_file}"
-  if [[ -f ${deb_file} ]]; then
-    sudo dpkg -i ${deb_file}
-    sudo apt-get install -f --yes
-  else
-    echo "Failed to download ${deb_file}. The initialization is terminated!"
-    exit -1
-  fi
+jenkins_version=$(curl --silent "${jenkins_version_location}")
+deb_file=jenkins_${jenkins_version}_all.deb
+wget -q "https://mirrors.tuna.tsinghua.edu.cn/jenkins/debian-stable/${deb_file}"
+if [[ -f ${deb_file} ]]; then
+  sudo dpkg -i ${deb_file}
+  sudo apt-get install -f --yes
 else
-  sudo apt-get install jenkins --yes
-  sudo apt-get install jenkins --yes # sometime the first apt-get install jenkins command fails, so we try it twice
+  echo "Failed to download ${deb_file}. The initialization is terminated!"
+  exit -1
 fi
 
 #We need to install workflow-aggregator so all the options in the auth matrix are valid
-plugins=(azure-vm-agents windows-azure-storage matrix-auth workflow-aggregator azure-app-service tfs)
-for plugin in "${plugins[@]}"; do
-  run_util_script "jenkins/run-cli-command.sh" -c "install-plugin $plugin -deploy"
-done
+sudo apt-get install unzip
+run_util_script "jenkins/install_jenkins_plugin.sh" "azure-vm-agents@0.4.7.1" "windows-azure-storage@0.3.6" "matrix-auth@1.4" "workflow-aggregator@2.5" "azure-app-service@0.1" "tfs@5.121.0"
+sudo service jenkins restart
 
 #allow anonymous read access
 inter_jenkins_config=$(sed -zr -e"s|<authorizationStrategy.*</authorizationStrategy>|{auth-strategy-token}|" /var/lib/jenkins/config.xml)
