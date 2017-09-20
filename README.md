@@ -1,4 +1,4 @@
-# Microservices on Container Reference Architecture for Azure China
+# DevOps Sample Solution for Azure China
 
 ## Overview
 
