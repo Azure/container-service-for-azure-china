@@ -82,7 +82,7 @@
     "vmExtensionName": "[concat(variables('resourcePrefix'), 'Init')]",
     "virtualNetworkName": "[concat(variables('resourcePrefix'), 'VNET')]",
     "frontEndNSGName": "[concat(variables('resourcePrefix'), 'NSG')]",
-    "_artifactsLocation": "https://raw.githubusercontent.com/Azure/microservice-reference-architectures/master-dev/cicd/script/",
+    "_artifactsLocation": "https://raw.githubusercontent.com/Azure/devops-sample-solution-for-azure-china/master-dev/cicd/script/",
     "_extensionScript": "201-jenkins-private-registry-k8s.sh",
     "_artifactsLocationSasToken": ""
   },

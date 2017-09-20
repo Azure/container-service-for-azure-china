@@ -172,7 +172,7 @@
         "configScriptCmdK8sUiArgs": "[concat(' --k8s-ui-admin-username \"', variables('k8sUiAdminUsername'), '\" --k8s-ui-admin-password \"', variables('k8sUiAdminPassword'), '\"')]",
         "configScriptCmdClusterArgs": "[concat(' --monitor-cluster-ns \"', parameters('monitorClusterNamespace'), '\" --enable-elk-stack \"', parameters('enableElkStack'), '\" --enable-hig-stack \"', parameters('enableHigStack'), '\"')]",
         "configScriptCmdArgs": "[concat(variables('configScriptCmdAzureEnvArgs'), variables('configScriptCmdK8sMasterArgs'), variables('configScriptCmdK8sUiArgs'), variables('configScriptCmdClusterArgs'))]",
-        "configScriptUri": "https://raw.githubusercontent.com/Azure/microservice-reference-architectures/master-dev/monitoring/k8s/controller/config.sh"
+        "configScriptUri": "https://raw.githubusercontent.com/Azure/devops-sample-solution-for-azure-china/master-dev/monitoring/k8s/controller/config.sh"
     },
     "resources": [{
             "type": "Microsoft.Storage/storageAccounts",
