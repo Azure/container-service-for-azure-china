@@ -2,10 +2,10 @@
 
 ## Overview
 
-Microservices on container reference architecture includes ARM(Azure Resource Manager) templates and scrips help users to set up container based DevOps pipeline quickly and easily on Microsoft Azure China by leveraging open source software as our toolchains.
+DevOps Sample Solution for Azure China includes ARM(Azure Resource Manager) templates and scripts which help users to set up container-based platform, CI/CD pipeline and monitoring stacks quickly and easily on Azure China by leveraging open source toolchains.
 
 It includes below components:
-* Container Clusters: Created by [ACS Engine](https://github.com/Azure/acs-engine), users could choose DC/OS, Kubernetes, or Swarm as the orchestrator. We choose Kubernetes as the implementation reference in this project.
+* Container Clusters: created by [acs-engine](https://github.com/Azure/acs-engine), users could choose DC/OS, Kubernetes, or Swarm as the orchestrator. We choose Kubernetes as the implementation reference in this project.
 * Private Docker registry: store custom images
 * CI/CD Pipeline: which checks out project in git, build it as docker images and publish an Kubernetes clusters. 
 * Monitoring Stack: cluster resource monitoring and container/app monitoring
