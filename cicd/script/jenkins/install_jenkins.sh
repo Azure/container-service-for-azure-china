@@ -203,8 +203,11 @@ if [[ -f ${deb_file} ]]; then
   sudo dpkg -i ${deb_file}
   sudo apt-get install -f --yes
 else
-  echo "Failed to download ${deb_file}. The initialization is terminated!"
-  exit -1
+  echo "Failed to download ${deb_file} from mirror, trying to download from official repo:"
+  curl -L https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+  echo "deb https://pkg.jenkins.io/debian-stable binary/" | sudo tee /etc/apt/sources.list.d/jenkins.list
+  sudo apt-get update
+  sudo apt-get install jenkins -y --fix-missing
 fi
 
 #We need to install workflow-aggregator so all the options in the auth matrix are valid
