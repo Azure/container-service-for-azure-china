@@ -68,7 +68,14 @@
         "description": "The private key for kubernetes master FQDN, need to be base64 encoded"
       },
       "defaultValue": ""
-    }        
+    },
+    "dockerEngineDownloadRepo": {
+      "metadata": {
+        "description": "docker-engine download repo."
+      },
+      "defaultValue": "https://mirror.azure.cn/docker-engine/apt/repo",
+      "type": "string"
+    }
   },
   "variables": {
     "resourcePrefix": "jenkins",
@@ -266,7 +273,7 @@
               ]
             },
             "protectedSettings": {
-              "commandToExecute": "[concat('./' , variables('_extensionScript'),' -jf \"', reference(variables('publicIPAddressName')).dnsSettings.fqdn, '\" -u \"', parameters('adminUsername') , '\" -g \"', parameters('gitRepository') , '\" -r \"', parameters('privateRegistryUrl'), '\" -ru \"', parameters('privateRegistryUserName'), '\" -rp \"', parameters('privateRegistryPassword'), '\" -al \"', variables('_artifactsLocation'), '\" -st \"', variables('_artifactsLocationSasToken'), '\" -kmf \"', parameters('kubernetesMasterFQDN'), '\" -kun \"', parameters('kubernetesUserName'), '\" -kpk \"', parameters('kubernetesPrivateKey'), '\"' )]"
+              "commandToExecute": "[concat('./' , variables('_extensionScript'),' -jf \"', reference(variables('publicIPAddressName')).dnsSettings.fqdn, '\" -u \"', parameters('adminUsername') , '\" -g \"', parameters('gitRepository') , '\" -r \"', parameters('privateRegistryUrl'), '\" -ru \"', parameters('privateRegistryUserName'), '\" -rp \"', parameters('privateRegistryPassword'), '\" -al \"', variables('_artifactsLocation'), '\" -st \"', variables('_artifactsLocationSasToken'), '\" -kmf \"', parameters('kubernetesMasterFQDN'), '\" -kun \"', parameters('kubernetesUserName'), '\" -kpk \"', parameters('kubernetesPrivateKey'), '\" -dedr \"', parameters('dockerEngineDownloadRepo'),'\"' )]"
             }
           }
         }

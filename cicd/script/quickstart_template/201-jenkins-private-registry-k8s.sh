@@ -17,6 +17,7 @@ Arguments
   --kubernetes_private_key|-kpk [Required] : kubernetes private key log in to master FQDN
   --artifacts_location|-al            : Url used to reference other scripts/artifacts.
   --sas_token|-st                     : A sas token needed if the artifacts location is private.
+  --docker_engine_download_repo|-dedr : docker-engine download repo
 EOF
 }
 
@@ -48,8 +49,8 @@ function install_kubectl() {
   fi
 }
 function install_docker_fromMirror() {
-  curl -fsSL https://mirror.azure.cn/docker-engine/apt/gpg | sudo apt-key add -
-  sudo add-apt-repository "deb [arch=amd64] https://mirror.azure.cn/docker-engine/apt/repo ubuntu-xenial main"
+  curl --max-time 60 -fsSL https://aptdocker.azureedge.net/gpg | apt-key add -
+  sudo add-apt-repository "deb [arch=amd64] ${docker_engine_download_repo} ubuntu-xenial main"
   sudo apt-get update --fix-missing
   apt-cache policy docker-engine
   sudo apt-get install -y unzip docker-engine nginx apache2-utils
@@ -128,7 +129,11 @@ do
     --kubernetes_private_key|-kpk)
       kubernetes_private_key="$1"
       shift
-      ;;                  
+      ;;
+    --docker_engine_download_repo|-dedr)
+      docker_engine_download_repo="$1"
+      shift
+      ;;
     --help|-help|-h)
       print_usage
       exit 13
@@ -147,7 +152,10 @@ throw_if_empty --registry_password $registry_password
 throw_if_empty --jenkins_fqdn $jenkins_fqdn
 throw_if_empty --kubernetes_master_fqdn $kubernetes_master_fqdn
 throw_if_empty --kubernetes_user_name $kubernetes_user_name
-throw_if_empty --kubernetes_private_key $kubernetes_private_key
+
+if [ -z "$docker_engine_download_repo" ] ; then
+  docker_engine_download_repo="https://mirror.azure.cn/docker-engine/apt/repo"
+fi
 
 if [ -z "$repository" ]; then
   repository="${vm_user_name}/myfirstapp"
@@ -170,6 +178,25 @@ sleep 5
 sudo gpasswd -a jenkins docker
 skill -KILL -u jenkins
 sudo service jenkins restart
+
+# check jenkins is fully up
+echo "waiting jenkins fully up at $(date "+%Y-%m-%d %H:%M:%S")"
+jenkins_up_counter=0
+jenkins_fully_up=1
+while [[ $(curl -s -w "%{http_code}" http://localhost:8080/ -o /dev/null) == "503" ]]; do
+  if [[ "$jenkins_up_counter" -gt 30 ]]; then
+    echo "jenkins still not fully up at $(date "+%Y-%m-%d %H:%M:%S")"
+    jenkins_fully_up=0
+    break
+  else
+    let jenkins_up_counter++
+  fi
+  sleep 10
+done
+if [ ! -z $jenkins_fully_up ] ; then
+  echo "jenkins fully up at $(date "+%Y-%m-%d %H:%M:%S"), retried $jenkins_up_counter time(s)."
+fi
+
 echo "Including the pipeline"
 run_util_script "jenkins/add-docker-build-deploy-k8s.sh" -j "http://localhost:8080/" -ju "admin" -g "${git_url}" -r "${registry}" -ru "${registry_user_name}"  -rp "${registry_password}" -rr "$repository" -sps "* * * * *" -al "$artifacts_location" -st "$artifacts_location_sas_token"
 install_kubectl
