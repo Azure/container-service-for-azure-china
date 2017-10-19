@@ -10,7 +10,7 @@ To enable eshop services on Mooncake, we've updated the offical deployment scrip
 1. Fork the repo from [sampleapp-eshop](https://github.com/mizow8/sampleapp-eshop)
 2. In Powershell, run k8s/deploy.ps1 as below:
     ```bash
-    ./deploy.ps1 -configFile ./conf_local.yml -buildImages $false -imageTag latest -registry crproxy.trafficmanager.net:5000
+    ./deploy.ps1 -configFile ./conf_local.yml -buildImages $false -imageTag latest -registry crproxy.trafficmanager.net:5000 -dockerOrg ccgmsref -imagePrefix eshop_
     ```
    After this command run successfully, you will see the deployments and services of eshop on your Kubernetes cluster. 
    
