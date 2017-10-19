@@ -82,9 +82,9 @@ export KUBECONFIG="$KUBE_CONFIG_LOCAL_PATH"
 # helm contstants
 readonly HELM_INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"
 readonly HELM_INSTALL_SCRIPT_LOCAL_PATH="$INSTALL_DIR/install_helm.sh"
-readonly HELM_TILLER_DEPLOYMENT="deployments/tiller-deploy"
-readonly HELM_TILLER_VERSION_TAG="$(curl -SsL https://github.com/kubernetes/helm/releases/latest | awk '/\/tag\//' | head -n 1 | cut -d '"' -f 2 | awk '{n=split($NF,a,"/");print a[n]}')"
-readonly HELM_TILLER_MIRROR_IMAGE="crproxy.trafficmanager.net:6000/kubernetes-helm/tiller"
+readonly HELM_TAG="$(curl -SsL https://github.com/kubernetes/helm/releases/latest | awk '/\/tag\//' | head -n 1 | cut -d '"' -f 2 | awk '{n=split($NF,a,"/");print a[n]}')"
+readonly HELM_DIST="helm-${HELM_TAG}-linux-amd64.tar.gz"
+readonly HELM_DOWNLOAD_MIRROR="https://ccgmsref.blob.core.windows.net/release/helm/${HELM_DIST}"
 
 # microservice reference architecture project constants
 readonly GITHUB_REPO="GIT" # download from GitHub repo
@@ -169,7 +169,7 @@ ENABLE_DOCKER_PACKAGE_MIRROR_FLAG="$ENABLED"
 ENABLE_KUBECTL_MIRROR_FLAG="$ENABLED"
 
 # flag to enable helm tiller image mirror or not
-ENABLE_HELM_TILLER_IMAGE_MIRROR_FLAG="$ENABLED"
+ENABLE_HELM_MIRROR_FLAG="$ENABLED"
 
 # flag to enable elk stack
 ENABLE_ELK_STACK="$ENABLED"
@@ -604,43 +604,36 @@ function install_helm() {
     # log function executing
     log_message "executing install helm function with arguments: (enable_mirror = $enable_mirror)"
 
-    # download helm install script
-    local local_path="$HELM_INSTALL_SCRIPT_LOCAL_PATH"
-
-    log_message "downloading helm install script from '$HELM_INSTALL_SCRIPT_URL' to '$local_path'"
-
-    # download from remote
-    curl -o "$local_path" -L "$HELM_INSTALL_SCRIPT_URL"
-
-    # set execution permission
-    chmod 700 "$local_path"
-
-    log_message "downloaded helm install script from '$HELM_INSTALL_SCRIPT_URL' to '$local_path'"
-
-    # execute helm install script
-
-    log_message "executing helm install script from '$local_path'"
-
-    bash "$local_path"
-
-    log_message "executed helm install script from '$local_path'"
-
     # initialize helm
 
     if [ "$enable_mirror" = "$ENABLED" ] ; then
-        local tiller_image="$HELM_TILLER_MIRROR_IMAGE:$HELM_TILLER_VERSION_TAG"
-
-        log_message "initializing helm with tiller image from mirror '$tiller_image'"
-
-        helm init --tiller-image "$tiller_image"
- 
-        log_message "initialized helm with tiller image from mirror '$tiller_image'"
+        local temp_file="$INSTALL_DIR/$HELM_DIST"
+        curl -SsL "$HELM_DOWNLOAD_MIRROR" -o "$temp_file"
+        local helm_temp="$INSTALL_DIR/helm"
+        mkdir -p "$helm_temp"
+        tar xf "$temp_file" -C "$helm_temp"
+        cp "$helm_temp/linux-amd64/helm" "/usr/local/bin"
     else
-        log_message "initializing helm"
+        # download helm install script
+        local local_path="$HELM_INSTALL_SCRIPT_LOCAL_PATH"
 
-        helm init
+        log_message "downloading helm install script from '$HELM_INSTALL_SCRIPT_URL' to '$local_path'"
 
-        log_message "initialized helm"
+        # download from remote
+        curl -o "$local_path" -L "$HELM_INSTALL_SCRIPT_URL"
+
+        # set execution permission
+        chmod 700 "$local_path"
+
+        log_message "downloaded helm install script from '$HELM_INSTALL_SCRIPT_URL' to '$local_path'"
+
+        # execute helm install script
+
+        log_message "executing helm install script from '$local_path'"
+
+        bash "$local_path"
+
+        log_message "executed helm install script from '$local_path'"
     fi
 
     # test helm installed
@@ -997,7 +990,7 @@ function main() {
         load_kube_config
 
         # install helm
-        install_helm "$ENABLE_HELM_TILLER_IMAGE_MIRROR_FLAG"
+        install_helm "$ENABLE_HELM_MIRROR_FLAG"
 
         # download msref project
         download_msref
