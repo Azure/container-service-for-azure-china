@@ -10,7 +10,7 @@ runcmd:
 - apt-get update
 - apt-get install -y apt-transport-https ca-certificates
 - for i in 1 2 3 4 5; do curl --max-time 60 -fsSL https://apt.dockerproject.org/gpg | apt-key add -; [ $? -eq 0 ] && break || sleep 5; done
-- echo "deb https://mirror.azure.cn/docker-engine/apt/repo/ ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
+- echo "deb https://{{{azureMirror}}}/docker-engine/apt/repo/ ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
 - apt-get update
 - apt-get install -y docker-engine
 - apt-get install -y docker-compose
@@ -39,7 +39,7 @@ write_files:
     version: "3"
     services:
       registry:
-        image: mirror.azure.cn:5000/library/registry
+        image: crproxy.trafficmanager.net:5000/library/registry
         ports:
           - "<<<parameters('registryPort')>>>:5000"
         volumes:
@@ -47,14 +47,15 @@ write_files:
         networks:
           - frontend
         environment:
-          - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/server.crt
-          - REGISTRY_HTTP_TLS_KEY=/certs/server.key
+          #- REGISTRY_HTTP_TLS_CERTIFICATE=/certs/server.crt
+          #- REGISTRY_HTTP_TLS_KEY=/certs/server.key
+          #- REGISTRY_HTTP_SECRET="<<<variables('httpSecretString')>>>"
           - REGISTRY_STORAGE=azure
           - REGISTRY_STORAGE_AZURE_ACCOUNTNAME="<<<variables('registryStorageAccountName')>>>"
           - REGISTRY_STORAGE_AZURE_ACCOUNTKEY="<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>"
           - REGISTRY_STORAGE_AZURE_CONTAINER="<<<variables('registryStorageContainerName')>>>"
           - REGISTRY_STORAGE_AZURE_REALM="core.chinacloudapi.cn"
-          - REGISTRY_HTTP_SECRET="<<<variables('httpSecretString')>>>"
+          - REGISTRY_HEALTH_STORAGEDRIVER_ENABLED=false
         deploy:
           replicas: 3
           restart_policy:
@@ -75,7 +76,7 @@ write_files:
     Restart=always
     TimeoutStartSec=0
     RestartSec=5s
-    ExecStartPre=/usr/bin/docker pull mirror.azure.cn:5000/library/registry
+    ExecStartPre=/usr/bin/docker pull crproxy.trafficmanager.net:5000/library/registry
     ExecStartPre=/usr/bin/docker stack deploy --compose-file /etc/docker-registry/manifests/docker-stack.yml myregistry
     ExecStart=/bin/echo "started."
 
@@ -109,15 +110,16 @@ write_files:
         fi
     }
 
+
     function createStorageContainer() {
-        docker pull mirror.azure.cn:5000/microsoft/azure-cli
+        docker pull crproxy.trafficmanager.net:5000/microsoft/azure-cli
 
-        # docker run --rm mirror.azure.cn:5000/microsoft/azure-cli /bin/bash -c "azure storage container create -p Container -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" --container container1"
+        # docker run --rm crproxy.trafficmanager.net:5000/microsoft/azure-cli /bin/bash -c "azure storage container create -p Container -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" --container container1"
 
-        LENGTH=$(docker run --rm mirror.azure.cn:5000/microsoft/azure-cli /bin/bash -c "azure storage container list --json -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" -p <<<variables('registryStorageContainerName')>>>" | jq ". | length")
+        LENGTH=$(docker run --rm crproxy.trafficmanager.net:5000/microsoft/azure-cli /bin/bash -c "azure storage container list --json -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" -p <<<variables('registryStorageContainerName')>>>" | jq ". | length")
 
         if [ $LENGTH -eq 0 ];then
-          docker run --rm mirror.azure.cn:5000/microsoft/azure-cli /bin/bash -c "azure storage container create -p Container -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" --container <<<variables('registryStorageContainerName')>>>"
+          docker run --rm crproxy.trafficmanager.net:5000/microsoft/azure-cli /bin/bash -c "azure storage container create -p Container -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" --container <<<variables('registryStorageContainerName')>>>"
         fi
     }
 
@@ -127,13 +129,14 @@ write_files:
       sed -i "/^[^ \t]/d" swarmcmd.sh
 
       LOCALPATH=$(pwd)
-      docker run --rm -v $LOCALPATH:/scripts mirror.azure.cn:5000/microsoft/azure-cli /bin/bash -c "azure storage blob upload -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" /scripts/swarmcmd.sh <<<variables('registryStorageContainerName')>>> swarmcmd"
+      docker run --rm -v $LOCALPATH:/scripts crproxy.trafficmanager.net:5000/microsoft/azure-cli /bin/bash -c "azure storage blob upload -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" /scripts/swarmcmd.sh <<<variables('registryStorageContainerName')>>> swarmcmd"
     }
 
     function joinSwarm() {
+      sleep 60
       sharedBlobCreated=0
       for i in {1..900}; do
-        SLAVELENGTH=$(docker run --rm mirror.azure.cn:5000/microsoft/azure-cli /bin/bash -c "azure storage blob list --json -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" <<<variables('registryStorageContainerName')>>> swarmcmd" | jq ".|length")
+        SLAVELENGTH=$(docker run --rm crproxy.trafficmanager.net:5000/microsoft/azure-cli /bin/bash -c "azure storage blob list --json -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" <<<variables('registryStorageContainerName')>>> swarmcmd" | jq ".|length")
 
         if [ $SLAVELENGTH -eq 0 ]; then
           sleep 5
@@ -147,7 +150,7 @@ write_files:
         exit 1
       fi
 
-      docker run --rm -v /tmp:/scripts mirror.azure.cn:5000/microsoft/azure-cli /bin/bash -c "azure storage blob download --json -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" <<<variables('registryStorageContainerName')>>> swarmcmd /scripts/"
+      docker run --rm -v /tmp:/scripts crproxy.trafficmanager.net:5000/microsoft/azure-cli /bin/bash -c "azure storage blob download --json -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" <<<variables('registryStorageContainerName')>>> swarmcmd /scripts/"
 
       chmod a+x /tmp/swarmcmd
       /bin/bash /tmp/swarmcmd

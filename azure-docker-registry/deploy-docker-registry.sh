@@ -4,13 +4,15 @@ usage(){
   echo "Invalid option: -$OPTARG"
   echo "Usage: deploy-docker-registry -n [Resource group name]"
   echo "                              -l [Resource group location]"
+  echo "                              -m [Azure mirror site]"
   exit 1
 }
 
-while getopts ":n:l:" opt; do
+while getopts ":n:l:m:" opt; do
   case $opt in
     n)GROUP_NAME=$OPTARG;;
     l)LOCATION=$OPTARG;;
+    m)MIRROR=$OPTARG;;
     *)usage;;
   esac
 done
@@ -18,6 +20,10 @@ done
 if [ -z $GROUP_NAME ] || [ -z $LOCATION ]; then
   usage
   exit 1
+fi
+
+if [ -z $MIRROR ] ; then
+  $MIRROR="mirror.azure.cn"
 fi
 
 ARMTEMPLATE="azuredeploy-template.json"
@@ -33,6 +39,7 @@ KEYFILECONTENT=`cat "$KEYFILE"|base64 -w 0`
 cp -f $ARMTEMPLATE $TEMPLATE
 cp -f $CLOUDINIT cloud-config.yml
 sed -i "s|{{{serverCertificate}}}|$CERTFILECONTENT|g; s|{{{serverKey}}}|$KEYFILECONTENT|g;" cloud-config.yml
+sed -i "s|{{{azureMirror}}}|$MIRROR|g;" cloud-config.yml
 
 sed -i 's/\r$//' cloud-config.yml
 sed -i 's/\\/\\\\/g' cloud-config.yml
@@ -45,8 +52,8 @@ INITCONTENT=$(cat cloud-config.yml)
 echo "[base64(concat('$INITCONTENT'))]" > updatepattern.txt
 sed -i "s/<<<[^>]*>>>/$(sed 's:/:\\/:g; s:&:\\&:g; s:\\\":\\\\\":g;' updatepattern.txt)/g" $TEMPLATE
 
-azure config mode arm
-azure group create -n "$GROUP_NAME" -l "$LOCATION" -f $TEMPLATE -e $PARAMETERS  -v
+az group create --name "$GROUP_NAME" --location "$LOCATION"
+az group deployment create -g "$GROUP_NAME" --template-file $TEMPLATE --parameters $PARAMETERS
 
 rm $TEMPLATE
 rm cloud-config.yml
