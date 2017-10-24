@@ -1,6 +1,6 @@
 # 微软Azure容器服务引擎
 
-微软容器服务引擎（`acs-engine`）用于将一个容器集群描述文件转化成一组ARM（Azure Resource Manager）模板，通过在Azure上部署这些模板，用户可以很方便地在Azure上建立一套基于Docker的容器服务集群。用户可以自由地选择集群编排引擎DC/OS, Kubernetes或者是Swarm/Swarm Mode。集群描述文件使用和ARM模板相同的语法，它们都可以用来部署Azure容器服务。
+微软容器服务引擎（`acs-engine`）用于将一个容器集群描述文件转化成一组ARM（Azure Resource Manager）模板，通过在Azure上部署这些模板，用户可以很方便地在Azure上建立一套基于Docker的容器服务集群。用户可以自由地选择集群编排引擎DC/OS, Kubernetes或者是Swarm/Swarm Mode。集群描述文件使用和ARM模板相同的语法，它们都可以用来部署Azure容器服务。关于acs-engine的详细内容请参考：https://github.com/Azure/acs-engine
 
 ## 1.  安装acs-engine. 支持直接安装包和通过源代码编译两种方式：
 - 下载并解压最新的[acs-engine](https://github.com/Azure/acs-engine/releases/)
@@ -21,7 +21,7 @@ echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ wheezy ma
 apt-key adv --keyserver packages.microsoft.com --recv-keys 417A0893
 apt-get install -y apt-transport-https
 apt-get update
- apt-get install -y azure-cli
+apt-get install -y azure-cli
 ```
 ## 4. 创建[Service Principle](https://docs.microsoft.com/en-us/azure/container-service/kubernetes/container-service-kubernetes-service-principal)
 ```
@@ -30,14 +30,18 @@ az login
 az account set --subscription="${SUBSCRIPTION_ID}" (if there is only one subscription, this step is optional)
 az ad sp create-for-rbac --name XXX
 ```
-## 5. 编辑[kubernetes.json](https://raw.githubusercontent.com/Azure/acs-engine/master/examples/kubernetes.json),将其需要的参数配置好
-* dnsPrefix：设置集群DNS名称前缀
-* keyData：对应于SSH公钥
-* clientId: 对应于Service Principle中的appId
-* secret：对应于Service Principle中的password
-* 在apiVersion: "vlabs"后面增加位置信息"location": "chinaeast",
+## 5. 编辑Kubernetes集群定义文件[example/kubernetes.json](https://raw.githubusercontent.com/Azure/acs-engine/master/examples/kubernetes.json)，将需要的参数配置好。
+* dnsPrefix - 设置集群DNS名称前缀
+* keyData - 使用SSH公钥填充
+* clientId - 使用Service Principle中的appId填充
+* secret - 使用Service Principle中的password填充
+* 在`apiVersion: "vlabs"`后面增加位置信息`"location": "chinaeast",`
 ## 6. 生成ARM模板
-运行`acs-engine generate kubernetes.json`命令生成ARM模板
+运行`acs-engine generate kubernetes.json`命令生成ARM模板。主要多个类似如下模板的文件：
+* apimodel.json - 集群配置文件
+* azuredeploy.json - 核心的ARM (Azure Resource Model)模板，用来部署Docker集群
+* azuredeploy.parameters.json - 部署参数文件，其中的参数可以自定义
+* certificate and access config files - 某些编排引擎例如kubernetes需要生成一些证书，这些证书文件和它依赖的kube config配置文件也存放在和ARM模板同级目录下面
 ## 7. 使用ARM模板部署K8S容器集群
 ```
 az cloud set -n AzureChinaCloud
@@ -46,7 +50,7 @@ az group create -l chinaeast -n xxx
 az group deployment create -g xxx --template-file azuredeploy.json --parameters azuredeploy.parameters.json
 ```
 ## 8. 验证集群安装是否正确
-登录集群master node，并执行以下命令
+SSH登录到集群master节点，并执行以下命令。如果在default和kube-system命名空间下面的services（kubernetes, heapster，kube-dns，kubernetes-dashboard，tiller-deploy）运行正常，则说明安装成功。
 ```
-kubectl get pods --all-namespaces
+kubectl get services --all-namespaces
 ```
