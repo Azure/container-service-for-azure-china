@@ -16,7 +16,7 @@ apt-get install -y apt-transport-https
 apt-get update
  apt-get install -y azure-cli
 ```
-## 4. 创建Service Principle
+## 4. 创建[Service Principle](https://docs.microsoft.com/en-us/azure/container-service/kubernetes/container-service-kubernetes-service-principal)
 ```
 az cloud set -n AzureChinaCloud
 az login
