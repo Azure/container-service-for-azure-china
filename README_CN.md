@@ -11,6 +11,7 @@
 ## 参考架构
 
 * 使用acs-engine部署的Kubernetes容器集群架构
+![Image of K8S architecture](https://docs.microsoft.com/en-us/azure/container-service/kubernetes/media/acs-intro/kubernetes.png)
 
 * CI/CD开源解决方案：
 ![Image of CI/CD architecture](doc/imgs/cicd_architecture.png)
