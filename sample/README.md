@@ -19,12 +19,12 @@ To enable eshop services on Mooncake, we've updated the offical deployment scrip
 
 ## B. Setup CI/CD
 
-1. Follow the [instruction](https://github.com/Azure/microservice-reference-architectures/tree/eshop/cicd/armtemplate/jenkins_private_registry_k8s) to setup CI/CD, with setting gitRepository to the sample repo forked in Step A.
+1. Follow the [instruction](https://github.com/Azure/microservice-reference-architectures/tree/eshop/cicd) to setup CI/CD, with setting gitRepository to the sample repo forked in Step A.
 2. Once jenkins runs successfully, make a change in the sample repo (e.g. change color in src/Web/WebMVC/wwwroot/css/_variables.scss) and commit. Check if the jenkins job run successfully, and once completed access http://< externalDns >/webmvc again to see if the change applied.
 
 ## C. Setup Monitoring
 
-1. Follow the [instruction](https://github.com/Azure/microservice-reference-architectures/tree/eshop/monitoring/k8s) to setup monitoring stacks.
+1. Follow the [instruction](https://github.com/Azure/microservice-reference-architectures/tree/eshop/monitoring) to setup monitoring stacks.
 2. In the last step, customize the config for data collection. Edit monitoring/k8s/helm-charts/configs/heartbeat-config with 
     ```bash
     urls: ["http://< externalDns >/webmvc"]
