@@ -1,25 +1,23 @@
-# DevOps Sample Solution for Azure China
+# DevOps开源解决方案
 
-## Overview
+## 概览
 
-Microservices on container reference architecture includes ARM(Azure Resource Manager) templates and scrips help users to set up container based DevOps pipeline quickly and easily on Microsoft Azure China by leveraging open source software as our toolchains.
+此开源解决方案帮助用户快速搭建基于Azure容器技术的微服务和DevOps容器集群，并提供基于Jenkins的持续集成和持续部署管道，以及基于ELK和Grafana的监控和分析实现。主要包括下面几个组成部分：
+* 容器集群: 使用[acs-engine](https://github.com/Azure/acs-engine)创建容器集群，用户可以选择DC/OS，Kubernetes，Swarm作为编排工具。在这个项目中，我们选择Kubernetes作为参考实现。
+* 私有镜像仓库: store custom images
+* CI/CD管道: which checks out project in git, build it as docker images and publish an Kubernetes clusters. 
+* 监控和日志: cluster resource monitoring and container/app monitoring
 
-It includes below components:
-* Container Clusters: Created by [ACS Engine](https://github.com/Azure/acs-engine), users could choose DC/OS, Kubernetes, or Swarm as the orchestrator. We choose Kubernetes as the implementation reference in this project.
-* Private Docker registry: store custom images
-* CI/CD Pipeline: which checks out project in git, build it as docker images and publish an Kubernetes clusters. 
-* Monitoring Stack: cluster resource monitoring and container/app monitoring
+## 架构
 
-## Architecture
-
-CI/CD with Open Source Toolchain:
+CI/CD开源解决方案：
 ![Image of CI/CD architecture](doc/imgs/cicd_architecture.png)
 Currently we only support to deploy application to kubernetes cluster, we will add support for service fabric and other orchestrators in following releases.
 
-Monitor with OSS Solution:
+监控和日志参考架构：
 ![Image of monitor architecture](doc/imgs/monitor.png)
 
-## User guides
+## 用户指南
 
 If you'd like to deploy from beginning, please follow below holistic steps. If you already have some components being used in your project, you could pick the missing parts from this project and deploy it separately.
 
@@ -33,16 +31,3 @@ If you'd like to deploy from beginning, please follow below holistic steps. If y
     * Deploy to Kubernetes 
 * [Monitor](monitoring/k8s/README.md) - shows how to set up monitoring stack
 
-## Contributing
-
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.microsoft.com.
-
-When you submit a pull request, a CLA-bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
