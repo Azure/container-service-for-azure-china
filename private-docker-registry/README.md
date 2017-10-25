@@ -22,7 +22,7 @@ $ az login -u <username>
 $ mkdir -p /path/to/project
 $ cd /path/to/project
 $ git clone https://github.com/Azure/devops-sample-solution-for-azure-china.git
-$ cd /path/to/project/devops-sample-solution-for-azure-china/azure-docker-registry
+$ cd /path/to/project/devops-sample-solution-for-azure-china/private-docker-registry
 ```
 
 ## Parameters in azuredeploy.parameters.json
