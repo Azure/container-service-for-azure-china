@@ -30,7 +30,7 @@ az login
 az account set --subscription="${SUBSCRIPTION_ID}" (if there is only one subscription, this step is optional)
 az ad sp create-for-rbac --name XXX
 ```
-## 5. 编辑Kubernetes集群定义文件[example/kubernetes.json](https://raw.githubusercontent.com/Azure/acs-engine/master/examples/kubernetes.json)，将需要的参数配置好。
+## 5. 编辑Kubernetes集群定义文件[example/kubernetes.json](https://raw.githubusercontent.com/Azure/acs-engine/master/examples/kubernetes.json)，将需要的参数配置好。点击查看关于[集群定义文件](https://github.com/Azure/acs-engine/blob/master/docs/clusterdefinition.zh-CN.md)的详细说明。
 * dnsPrefix - 设置集群DNS名称前缀
 * keyData - 使用SSH公钥填充
 * clientId - 使用Service Principle中的appId填充
