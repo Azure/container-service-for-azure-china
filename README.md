@@ -2,10 +2,9 @@
 
 ## Overview
 
-DevOps open source solution helps user to set up container-based cluster with orchestrator(including Kubernetes, DC/OS, Docker Swarm) supported quickly and easily on Azure China. Also this solution provides CI/CD pipeline enabled by Jenkins and plugins, and monitoring stacks(ELK + Grafana) reference implementation.
+DevOps open source solution helps user to set up container-based cluster with orchestrator(including Kubernetes, DC/OS, Docker Swarm) supported quickly and easily on Azure China. Also this solution provides CI/CD pipeline enabled by Jenkins and plugins, and monitoring stacks(ELK + Grafana) reference implementation. It includes several parts:
 
-It includes below components:
-* Container-based Clusters: Created by [acs-engine](https://github.com/Azure/acs-engine), users could choose DC/OS, Kubernetes, or Swarm as the orchestrator. We choose Kubernetes as the reference implementation in this project.
+* Container-based Clusters: Created by [acs-engine](https://github.com/Azure/acs-engine), users could choose DC/OS, Kubernetes, or Swarm as the orchestrator. We choose Kubernetes as the reference implementation in this project
 * Private Docker registry: store custom images
 * CI/CD Pipeline: CI/CD pipeline implementation based on Jenkine and plugins
 * Monitoring Stack: Cluster(node + pod) resource and container/app monitoring and log analytics
