@@ -4,7 +4,7 @@
 
 此开源解决方案帮助用户快速搭建基于Azure容器技术的微服务和DevOps容器集群，并提供基于Jenkins的持续集成和持续部署管道，以及基于ELK和Grafana的监控和分析实现。主要包括下面几个组成部分：
 * 容器集群: 使用[acs-engine](https://github.com/Azure/acs-engine)创建容器集群，用户可以选择DC/OS，Kubernetes，Swarm作为编排工具。acs-engine还会帮助您创建负载均衡，网络管理，安全和存储等相关组件，以及完成高可用性（Availability Set）等相关设置，使您可以在容器集群上方便地部署容器化应用。在这个项目中，我们选择Kubernetes作为参考实现
-* 私有镜像仓库: 镜像仓库可以和容器编排引擎（如Kubernetes，Swarm, DC/OS）进行集成，用于存储自定义的镜像。此镜像仓库兼容Docker格式的镜像仓库，可以和Docker工具进行无缝迁移
+* 私有镜像仓库: 镜像仓库可以和容器编排引擎（如Kubernetes，Swarm，DC/OS）进行集成，用于存储自定义的镜像。此镜像仓库兼容Docker格式的镜像仓库，可以和Docker工具进行无缝迁移
 * CI/CD管道: 基于Jenkins的持续集成和持续部署（CI/CD）管道实现
 * 监控和日志: 包括集群资源（Node + Pod）以及容器（container）和应用（app）的监控及日志分析
 
