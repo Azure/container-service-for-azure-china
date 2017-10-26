@@ -23,7 +23,7 @@ DevOps open source solution helps user to set up container-based cluster with or
 
 If you'd like to deploy from beginning, please follow below holistic steps. If you already have some components being used in your project, you could pick the missing parts from this project and deploy it separately.
 
-* [Deploy a Kubernetes cluster using acs-engine](README.md) - shows you how to use the acs-engine to build container-based clusters.
+* [Deploy a Kubernetes cluster using acs-engine](acs-engie/README.md) - shows you how to use the acs-engine to build container-based clusters.
 * [Deploy a Private docker registry](private-docker-registry/README.md) - describes how to deploy a secure private docker registry
 * [CI/CD pipeline](cicd/README.md) - shows how to deploy a Jenkins master and create pipeline which includes below 5 steps:
     * Check out git repro
