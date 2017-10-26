@@ -65,6 +65,7 @@ readonly DOCKER_PACKAGE_LOCAL_PATH="$INSTALL_DIR/$DOCKER_PACKAGE_NAME"
 readonly KUBECTL_VERSION="$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)"
 readonly KUBECTL_URL="https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl"
 # set default version to v1.7.7 if can't get stable version from remote
+# TODO: move this setting to arm template
 readonly KUBECTL_MIRROR_URL="https://mirror.azure.cn/kubernetes/kubectl/${KUBECTL_VERSION:-v1.7.7}/bin/linux/amd64/kubectl"
 readonly KUBECTL_TEMP_PATH="$INSTALL_DIR/kubectl"
 readonly KUBECTL_INSTALL_PATH="/usr/local/bin/kubectl"
@@ -82,7 +83,10 @@ export KUBECONFIG="$KUBE_CONFIG_LOCAL_PATH"
 # helm contstants
 readonly HELM_INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"
 readonly HELM_INSTALL_SCRIPT_LOCAL_PATH="$INSTALL_DIR/install_helm.sh"
-readonly HELM_TAG="$(curl -SsL https://github.com/kubernetes/helm/releases/latest | awk '/\/tag\//' | head -n 1 | cut -d '"' -f 2 | awk '{n=split($NF,a,"/");print a[n]}')"
+# fix helm version to v2.6.1
+# TODO: move this setting to arm template
+#readonly HELM_TAG="$(curl -SsL https://github.com/kubernetes/helm/releases/latest | awk '/\/tag\//' | head -n 1 | cut -d '"' -f 2 | awk '{n=split($NF,a,"/");print a[n]}')"
+readonly HELM_TAG="v2.6.1"
 readonly HELM_DIST="helm-${HELM_TAG}-linux-amd64.tar.gz"
 readonly HELM_DOWNLOAD_MIRROR="https://mirror.azure.cn/kubernetes/helm/${HELM_DIST}"
 
