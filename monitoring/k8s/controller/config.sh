@@ -64,9 +64,9 @@ readonly DOCKER_PACKAGE_LOCAL_PATH="$INSTALL_DIR/$DOCKER_PACKAGE_NAME"
 # kubectl constants
 readonly KUBECTL_VERSION="$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)"
 readonly KUBECTL_URL="https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl"
-# set default version to v1.7.7 if can't get stable version from remote
+# set default version to v1.7.9 if can't get stable version from remote
 # TODO: move this setting to arm template
-readonly KUBECTL_MIRROR_URL="https://mirror.azure.cn/kubernetes/kubectl/${KUBECTL_VERSION:-v1.7.7}/bin/linux/amd64/kubectl"
+readonly KUBECTL_MIRROR_URL="https://mirror.azure.cn/kubernetes/kubectl/${KUBECTL_VERSION:-v1.7.9}/bin/linux/amd64/kubectl"
 readonly KUBECTL_TEMP_PATH="$INSTALL_DIR/kubectl"
 readonly KUBECTL_INSTALL_PATH="/usr/local/bin/kubectl"
 
