@@ -1,4 +1,4 @@
-# Jenkins to Private Docker Registry to Kubernetes cluster
+# 基于 Jenkins 的持续集成和持续部署（CI/CD）管道实现
 
 <a href="https://portal.azure.cn/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fdevops-sample-solution-for-azure-china%2Fmaster-dev%2Fcicd%2Farmtemplate%2Fjenkins_private_registry_k8s%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -64,11 +64,11 @@ sudo vim /etc/docker/daemon.json
 ```
 then add below entry to configuration:
 
-{"insecure-registries" : [ "私有镜像仓库的ip地址" ]}
+{"insecure-registries" : [ "私有镜像仓库的地址" ]}
 
 then save the changes and run below command to restart docker
 ```bash
-sudo service restart docker
+sudo service docker restart
 ```
 
 ## 示例项目
