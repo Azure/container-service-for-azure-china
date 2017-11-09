@@ -65,11 +65,11 @@ sudo vim /etc/docker/daemon.json
 ```
 then add below entry to configuration:
 
-{"insecure-registries" : [ "139.217.12.139" ]}
+{"insecure-registries" : [ "139.217.12.139:5000" ]}
 
 then save the changes and run below command to restart docker
 ```bash
-sudo service restart docker
+sudo service docker restart
 ```
 
 ## Sample applications
