@@ -5,8 +5,8 @@
 ## 1.  安装acs-engine。支持直接安装包和通过源代码编译两种方式：
 - 下载并解压最新的[acs-engine](https://github.com/Azure/acs-engine/releases/)
 ```
-curl -LO https://github.com/Azure/acs-engine/releases/download/v0.8.0/acs-engine-v0.8.0-linux-amd64.tar.gz
-tar -xvzf acs-engine-v0.8.0-linux-amd64.tar.gz
+curl -LO https://github.com/Azure/acs-engine/releases/download/v0.9.1/acs-engine-v0.9.1-linux-amd64.tar.gz
+tar -xvzf acs-engine-v0.9.1-linux-amd64.tar.gz
 ```
 - [本地下载源代码并编译acs-engine](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.zh-CN.md)
 
