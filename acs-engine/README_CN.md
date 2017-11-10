@@ -10,6 +10,10 @@ tar -xvzf acs-engine-v0.8.0-linux-amd64.tar.gz
 ```
 - [本地下载源代码并编译acs-engine](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.zh-CN.md)
 
+由于从中国访问GitHub的速度较慢，也可以从Azure的镜像站点下载acs-engine：
+- https://mirror.kaiyuanshe.cn/kubernetes/acs-engine/
+- https://mirror.azure.cn/kubernetes/acs-engine/
+
 ## 2. 准备一个SSH公钥私钥对
 除了使用Kubernetes APIs和集群进行交互外，还可以通过SSH的方式访问master和agent节点。如果你还没有生成SSH Key，[可以直接生成一个新的](https://github.com/Azure/acs-engine/blob/master/docs/ssh.md#ssh-key-generation)。
 ```
