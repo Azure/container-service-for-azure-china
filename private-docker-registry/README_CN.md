@@ -58,7 +58,6 @@ $ bash ./deploy-docker-registry.sh -n <resource_group_name> -l <location> -m mir
 ```
 - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/server.crt
 - REGISTRY_HTTP_TLS_KEY=/certs/server.key
-- REGISTRY_HTTP_SECRET="<<<variables('httpSecretString')>>>"
 ```
 3. 编辑azuredeploy.parameters.json中的参数，运行命令
 ```
