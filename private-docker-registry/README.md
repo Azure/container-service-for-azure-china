@@ -58,7 +58,6 @@ To be more secure than plain HTTP solution, you can [deploy with a self-signed c
 ```
 - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/server.crt
 - REGISTRY_HTTP_TLS_KEY=/certs/server.key
-- REGISTRY_HTTP_SECRET="<<<variables('httpSecretString')>>>"
 ```
 3. Edit azuredeploy.parameters.json, and run command below
 ```
