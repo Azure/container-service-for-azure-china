@@ -11,6 +11,10 @@ tar -xvzf acs-engine-v0.9.1-linux-amd64.tar.gz
 ```
 - [Build acs-engine from source](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.zh-CN.md)
 
+Due to the download speed from China to GitHub is unstable, you could download the acs-engine binaries from Azure mirror sites：
+- https://mirror.kaiyuanshe.cn/kubernetes/acs-engine/
+- https://mirror.azure.cn/kubernetes/acs-engine/
+
 ## 2. Generate an SSH Key 
 In addition to using Kubernetes APIs to interact with the clusters, cluster operators may access the master and agent machines using SSH. If you don't have an SSH key [cluster operators may generate a new one](https://github.com/Azure/acs-engine/blob/master/docs/ssh.md#ssh-key-generation).
 ```
