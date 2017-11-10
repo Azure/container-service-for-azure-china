@@ -6,8 +6,8 @@ The Azure Container Service Engine (acs-engine) generates ARM (Azure Resource Ma
 ## 1. Install acs-engine. It supports build acd-engine from source and install binary download:
 - Binary downloads for the latest version of acs-engine for are available [here](https://github.com/Azure/acs-engine/releases/)
 ```
-curl -LO https://github.com/Azure/acs-engine/releases/download/v0.8.0/acs-engine-v0.8.0-linux-amd64.tar.gz
-tar -xvzf acs-engine-v0.8.0-linux-amd64.tar.gz
+curl -LO https://github.com/Azure/acs-engine/releases/download/v0.9.1/acs-engine-v0.9.1-linux-amd64.tar.gz
+tar -xvzf acs-engine-v0.9.1-linux-amd64.tar.gz
 ```
 - [Build acs-engine from source](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.zh-CN.md)
 
