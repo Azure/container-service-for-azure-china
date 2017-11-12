@@ -15,10 +15,10 @@
       "value": "https://github.com/azure-devops/spin-kub-demo.git"
     }, 
     "privateRegistryUrl": {
-      "value": "http://139.217.12.139"
+      "value": "https://mirror.azure.cn:5000"
     },
     "privateRegistryUserName": {
-      "value": "azureuser"
+      "value": ""
     },
     "privateRegistryPassword": {
       "value": "Vl_10218"
