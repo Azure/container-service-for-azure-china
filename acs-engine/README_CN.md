@@ -5,8 +5,8 @@
 ## 1.  安装acs-engine（建议安装v0.9.1及后续的版本，之前的版本需要做一些额外的工作才可以工作）。支持直接安装包和通过源代码编译两种方式：
 - 下载并解压具体版本的[acs-engine](https://github.com/Azure/acs-engine/releases/)，对于一些老版本的安装包，可直接从国内的镜像站点下载： https://mirror.azure.cn/kubernetes/acs-engine/
 ```
-curl -LO https://mirror.azure.cn/kubernetes/acs-engine/v0.9.1/acs-engine-v0.9.1-linux-amd64.tar.gz
-tar -xvzf acs-engine-v0.9.1-linux-amd64.tar.gz
+  curl -LO https://mirror.azure.cn/kubernetes/acs-engine/v0.9.1/acs-engine-v0.9.1-linux-amd64.tar.gz
+  tar -xvzf acs-engine-v0.9.1-linux-amd64.tar.gz
 ```
 - [本地下载源代码并编译acs-engine](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.zh-CN.md)
 
