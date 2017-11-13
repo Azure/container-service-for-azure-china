@@ -68,6 +68,9 @@ yes | cp -rf configs/heartbeat-config/heartbeat.yml heartbeat/config
 helm upgrade -f configs/heartbeat.yaml heartbeat heartbeat/
 ```
 
+## 故障排除
+
+如果部署出现错误，或者部署成功后没有在cluster上看到监控环境，需要登陆到跳板机上（使用部署模板中提供的用户名密码），访问/var/lib/waagent/custom-script/download/0/目录，检查stdout和stderr两个文件的内容，获得所有安装过程信息。
 
 ## GitHub参考项目
 

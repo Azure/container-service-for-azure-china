@@ -74,6 +74,9 @@ sudo service docker restart
 ## 示例项目
 这个模板中包含的jenkins流水线基于示例项目(https://github.com/azure-devops/spin-kub-demo).你可以使用你自己的项目，但需要更新jenkins流水线中编译和部署的脚本。
 
+## 故障排除
+
+如果部署出现错误，或者部署成功后不能成功访问Jeknis UI，需要登陆到跳板机上（使用部署模板中提供的用户名密码），访问/var/lib/waagent/custom-script/download/0/目录，检查stdout和stderr两个文件的内容，获得所有安装过程信息。
 
 ## 参考项目
 

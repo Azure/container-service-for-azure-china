@@ -70,6 +70,10 @@ yes | cp -rf configs/heartbeat-config/heartbeat.yml heartbeat/config
 helm upgrade -f configs/heartbeat.yaml heartbeat heartbeat/
 ```
 
+## Troubleshooting
+
+If the deployment does not succeed, or after succeed there's no monitoring stacks deploymented, please ssh to the controller VM with the admin username and password provided in ARM template. Go to /var/lib/waagent/custom-script/download/0/ to check the stdout and stderr files with all the installation details in them.
+
 
 ## Reference GitHub projects
 
