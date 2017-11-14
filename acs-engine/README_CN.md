@@ -64,3 +64,30 @@ SSH登录到集群master节点，并执行以下命令。如果在default和kube
 ```
 kubectl get services --all-namespaces
 ```
+
+## 9. 配置Kubernetes管理网站 (可选)
+> SSH登录到集群master节点
+```
+ssh -i <path_to_id_rsa> <adminUsername>@<master_node_fqdn>
+```
+> 下载 config_k8s_ui_http.sh 脚本
+```
+curl -LO https://raw.githubusercontent.com/Azure/devops-sample-solution-for-azure-china/acs-engine/config_k8s_ui_http.sh
+```
+> 通过以下命令运行脚本:
+```
+bash config_k8s_ui_http.sh -c <cloud_name> -g <rg_name> -t <tenant_id> -i <app_id> -s <app_secret> -u <user_name> -p <user_pass>
+```
+参数说明: 
+* -c [Azure实例名, AzureCloud 或者 AzureChinaCloud]"
+* -g [资源组名]"
+* -t [Service principal tenant id, 例如. foo.onmicrosoft.com, bar.partner.onmschina.cn etc. ]"
+* -i [Service principal app id]"
+* -s [Service principal secret]"
+* -u [Kubernetes 管理网站用户名, 默认值是 'admin']"
+* -p [Kubernetes 管理网站用户密码, 默认值是 'password']"
+
+> 通过以下链接访问Kubernetes管理网站:
+```
+http://<master_node_fqdn>/ui
+```

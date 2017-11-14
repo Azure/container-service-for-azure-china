@@ -67,3 +67,30 @@ Log in to master node via SSH and run below command. If all services(like kubern
 ```
 kubectl get services --all-namespaces
 ```
+
+## 9. Config kubernetes dashboard (Optional)
+> Login to master node via SSH
+```
+ssh -i <path_to_id_rsa> <adminUsername>@<master_node_fqdn>
+```
+> Download config_k8s_ui_http.sh script
+```
+curl -LO https://raw.githubusercontent.com/Azure/devops-sample-solution-for-azure-china/acs-engine/config_k8s_ui_http.sh
+```
+> Run following command:
+```
+bash config_k8s_ui_http.sh -c <cloud_name> -g <rg_name> -t <tenant_id> -i <app_id> -s <app_secret> -u <user_name> -p <user_pass>
+```
+Usages: 
+* -c [Cloud instance name, AzureCloud or AzureChinaCloud]"
+* -g [Resource group]"
+* -t [Service principal tenant id, e.g. foo.onmicrosoft.com, bar.partner.onmschina.cn etc. ]"
+* -i [Service principal app id]"
+* -s [Service principal secret]"
+* -u [Kubernetes dashboard user name, default value is 'admin']"
+* -p [Kubernetes dashboard user password, default value is 'password']"
+
+> Access dashboard via following link:
+```
+http://<master_node_fqdn>/ui
+```
