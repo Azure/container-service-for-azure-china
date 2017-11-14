@@ -5,14 +5,18 @@ usage(){
   echo "Usage: deploy-docker-registry -n [Resource group name]"
   echo "                              -l [Resource group location]"
   echo "                              -m [Azure mirror site]"
+  echo "                              -i [id_rsa file for SSH to k8s nodes]"
+  echo "                              -u [user name for SSH to k8s nodes]"
   exit 1
 }
 
-while getopts ":n:l:m:" opt; do
+while getopts ":n:l:m:i:" opt; do
   case $opt in
     n)GROUP_NAME=$OPTARG;;
     l)LOCATION=$OPTARG;;
     m)MIRROR=$OPTARG;;
+    i)ID_RSA_FILE=$OPTARG;;
+    i)K8S_USER=$OPTARG;;
     *)usage;;
   esac
 done
@@ -35,11 +39,15 @@ KEYFILE="./certs/server.key"
 
 CERTFILECONTENT=`cat "$CERTFILE"|base64 -w 0`
 KEYFILECONTENT=`cat "$KEYFILE"|base64 -w 0`
+K8S_ID_RSA_CONTENT=`cat "$ID_RSA_FILE|base64 -w 0"`
 
 cp -f $ARMTEMPLATE $TEMPLATE
 cp -f $CLOUDINIT cloud-config.yml
 sed -i "s|{{{serverCertificate}}}|$CERTFILECONTENT|g; s|{{{serverKey}}}|$KEYFILECONTENT|g;" cloud-config.yml
 sed -i "s|{{{azureMirror}}}|$MIRROR|g;" cloud-config.yml
+
+sed -i "s|{{{K8S_ID_RSA_CONTENT}}}|$K8S_ID_RSA_CONTENT|g;" cloud-config.yml
+sed -i "s|{{{K8S_USER}}}|$K8S_USER|g;" cloud-config.yml
 
 sed -i 's/\r$//' cloud-config.yml
 sed -i 's/\\/\\\\/g' cloud-config.yml
