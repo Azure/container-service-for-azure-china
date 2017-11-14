@@ -92,14 +92,14 @@ function main() {
 
     # create nsg rule
     log "create network security group rule"
-    nsg_rule="allow-http"
+    nsg_rule_name="allow-http"
     nsg_name=`hostname | sed "s/-0/-nsg/"`
-    az network nsg rule create -g "${RESOURCE_GROUP}" --nsg-name nsg_name -n "${nsg_name}" --priority 111 --protocol Tcp --destination-port-ranges 80
+    az network nsg rule create -g "${RESOURCE_GROUP}"  -n "${nsg_rule_name}" --nsg-name "${nsg_name}" --priority 111 --protocol Tcp --destination-port-ranges 80
 
     # create lb nat rule
     nat_rule_name="allow-master-http"
     log "create load balancer nat rule"
-    lb_name=`hostname | sed "s/\([0-9]*\)-0/\1-lb/"`
+    lb_name=`hostname | sed "s/\([0-9]*\)-0/lb-\1/"`
     az network lb inbound-nat-rule create -g "${RESOURCE_GROUP}" -n "${nat_rule_name}" --lb-name "${lb_name}" --protocol Tcp --frontend-port 80 --backend-port 80
 
     # assign nic inbound rule
