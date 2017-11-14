@@ -21,7 +21,7 @@ usage(){
   exit 1
 }
 
-while getopts ":c:g:i:s:u:p:" opt; do
+while getopts ":c:g:t:i:s:u:p:" opt; do
   case $opt in
     c)CLOUD_NAME=$OPTARG;;
     g)RESOURCE_GROUP=$OPTARG;;
@@ -87,7 +87,7 @@ function main() {
 
     # azure cli login
     log "azure cli login"
-    az cloud set -n ${CLOUD_NAME}
+    az cloud set -n ${CLOUD_NAME:-AzureCloud}
     az login --service-principal -u ${APP_ID} -p ${APP_SECRET} --tenant ${TENANT_ID}
 
     # create nsg rule
