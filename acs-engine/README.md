@@ -4,16 +4,13 @@ The Azure Container Service Engine (acs-engine) generates ARM (Azure Resource Ma
 
 
 ## 1. Install acs-engine. It supports build acd-engine from source and install binary download:
-- Binary downloads for the latest version of acs-engine for are available [here](https://github.com/Azure/acs-engine/releases/)
+* Binary downloads for the specific version(better to install v0.9.1 and later versions) of acs-engine for are available [here](https://github.com/Azure/acs-engine/releases/). For some previous version packages, please download from Azure China mirror site: https://mirror.azure.cn/kubernetes/acs-engine/
 ```
-curl -LO https://github.com/Azure/acs-engine/releases/download/v0.9.1/acs-engine-v0.9.1-linux-amd64.tar.gz
-tar -xvzf acs-engine-v0.9.1-linux-amd64.tar.gz
+  curl -LO https://mirror.azure.cn/kubernetes/acs-engine/v0.9.1/acs-engine-v0.9.1-linux-amd64.tar.gz
+  tar -xvzf acs-engine-v0.9.1-linux-amd64.tar.gz
 ```
-- [Build acs-engine from source](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.zh-CN.md)
+* [Build acs-engine from source](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.zh-CN.md)
 
-Due to the download speed from China to GitHub is unstable, you could download the acs-engine binaries from Azure mirror sites：
-- https://mirror.kaiyuanshe.cn/kubernetes/acs-engine/
-- https://mirror.azure.cn/kubernetes/acs-engine/
 
 ## 2. Generate an SSH Key 
 In addition to using Kubernetes APIs to interact with the clusters, cluster operators may access the master and agent machines using SSH. If you don't have an SSH key [cluster operators may generate a new one](https://github.com/Azure/acs-engine/blob/master/docs/ssh.md#ssh-key-generation).
@@ -42,6 +39,7 @@ az ad sp create-for-rbac --name XXX
 
 ## 5. Edit cluster definition
 Acs-engine consumes a cluster definition which outlines the desired shape, size, and configuration of Kubernetes. There are a number of features that can be enabled through the cluster definition:
+* adminUsername - change username for agent nodes
 * dnsPrefix - must be a region-unique name and will form part of the hostname (e.g. myprod1, staging, leapingllama) 
 * keyData - must contain the public portion of an SSH key - this will be associated with the adminUsername value found in the same section of the cluster definition (e.g. 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABA....')
 * clientId - this is the service principal's appId uuid or name from step 4

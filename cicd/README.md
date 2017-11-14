@@ -75,6 +75,9 @@ sudo service docker restart
 ## Sample applications
 The pipeline included in this template is based on the sample application(https://github.com/azure-devops/spin-kub-demo) to do build and deployment. You could use your own application, but the build and deployment scripts in Jenkins may need to be updated accordingly.
 
+## Troubleshooting
+
+If the deployment does not succeed, or after succeed the Jenkins UI does not show as expected, please ssh to the jenkinsVM with the admin username and password provided in ARM template. Go to /var/lib/waagent/custom-script/download/0/ to check the stdout and stderr files with all the installation details in them.
 
 ## Reference GitHub projects
 

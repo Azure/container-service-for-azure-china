@@ -2,17 +2,14 @@
 
 微软容器服务引擎（`acs-engine`）用于将一个容器集群描述文件转化成一组ARM（Azure Resource Manager）模板，通过在Azure上部署这些模板，用户可以很方便地在Azure上建立一套基于Docker的容器服务集群。用户可以自由地选择集群编排引擎DC/OS, Kubernetes或者是Swarm/Swarm Mode。集群描述文件使用和ARM模板相同的语法，它们都可以用来部署Azure容器服务。关于acs-engine的详细内容请参考：https://github.com/Azure/acs-engine
 
-## 1.  安装acs-engine。支持直接安装包和通过源代码编译两种方式：
-- 下载并解压最新的[acs-engine](https://github.com/Azure/acs-engine/releases/)
+## 1.  安装acs-engine（建议安装v0.9.1及后续的版本，之前的版本需要做一些额外的工作才可以工作）。支持直接安装包和通过源代码编译两种方式：
+- 下载并解压具体版本的[acs-engine](https://github.com/Azure/acs-engine/releases/)，对于一些老版本的安装包，可直接从国内的镜像站点下载： https://mirror.azure.cn/kubernetes/acs-engine/
 ```
-curl -LO https://github.com/Azure/acs-engine/releases/download/v0.9.1/acs-engine-v0.9.1-linux-amd64.tar.gz
-tar -xvzf acs-engine-v0.9.1-linux-amd64.tar.gz
+  curl -LO https://mirror.azure.cn/kubernetes/acs-engine/v0.9.1/acs-engine-v0.9.1-linux-amd64.tar.gz
+  tar -xvzf acs-engine-v0.9.1-linux-amd64.tar.gz
 ```
 - [本地下载源代码并编译acs-engine](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.zh-CN.md)
 
-由于从中国访问GitHub的速度较慢，也可以从Azure的镜像站点下载acs-engine：
-- https://mirror.kaiyuanshe.cn/kubernetes/acs-engine/
-- https://mirror.azure.cn/kubernetes/acs-engine/
 
 ## 2. 准备一个SSH公钥私钥对
 除了使用Kubernetes APIs和集群进行交互外，还可以通过SSH的方式访问master和agent节点。如果你还没有生成SSH Key，[可以直接生成一个新的](https://github.com/Azure/acs-engine/blob/master/docs/ssh.md#ssh-key-generation)。
@@ -40,6 +37,7 @@ az ad sp create-for-rbac --name XXX
 ```
 
 ## 5. 编辑Kubernetes集群定义文件[example/kubernetes.json](https://raw.githubusercontent.com/Azure/acs-engine/master/examples/kubernetes.json)，将需要的参数配置好。点击查看关于[集群定义文件](https://github.com/Azure/acs-engine/blob/master/docs/clusterdefinition.zh-CN.md)的详细说明。
+* adminUsername - 修改agent用户名
 * dnsPrefix - 设置集群DNS名称前缀
 * keyData - 使用SSH公钥填充
 * clientId - 使用Service Principle中的appId填充
