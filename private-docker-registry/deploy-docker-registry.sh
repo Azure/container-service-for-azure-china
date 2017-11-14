@@ -10,13 +10,13 @@ usage(){
   exit 1
 }
 
-while getopts ":n:l:m:i:" opt; do
+while getopts ":n:l:m:i:u:" opt; do
   case $opt in
     n)GROUP_NAME=$OPTARG;;
     l)LOCATION=$OPTARG;;
     m)MIRROR=$OPTARG;;
     i)ID_RSA_FILE=$OPTARG;;
-    i)K8S_USER=$OPTARG;;
+    u)K8S_USER=$OPTARG;;
     *)usage;;
   esac
 done
