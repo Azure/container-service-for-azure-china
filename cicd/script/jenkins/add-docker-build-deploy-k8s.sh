@@ -10,8 +10,6 @@ Arguments
   --jenkins_password|-jp              : Jenkins password. If not specified and the user name is "admin", the initialAdminPassword will be used
   --git_url|-g              [Required]: Git URL with a Dockerfile in it's root
   --registry|-r             [Required]: Registry url targeted by the pipeline
-  --registry_user_name|-ru  [Required]: Registry user name
-  --registry_password|-rp   [Required]: Registry password
   --repository|-rr                    : Repository targeted by the pipeline
   --credentials_id|-ci                : Desired Jenkins credentials id
   --credentials_desc|-cd              : Desired Jenkins credentials description
@@ -22,6 +20,8 @@ Arguments
   --scm_poll_ignore_commit_hooks|spi  : Ignore changes notified by SCM post-commit hooks. (Will be ignore if the poll schedule is not defined)
   --artifacts_location|-al            : Url used to reference other scripts/artifacts.
   --sas_token|-st                     : A sas token needed if the artifacts location is private.
+  --registry_user_name|-ru            : Registry user name
+  --registry_password|-rp             : Registry password (Required if user name not empty)
 EOF
 }
 
@@ -147,8 +147,10 @@ if [ "$jenkins_username" != "admin" ]; then
 fi
 throw_if_empty --git_url $git_url
 throw_if_empty --registry $registry
-throw_if_empty --registry_user_name $registry_user_name
-throw_if_empty --registry_password $registry_password
+
+if [ ! -z "$registry_user_name" ] ; then
+  throw_if_empty --registry_password $registry_password
+fi
 
 #download dependencies
 job_xml=$(curl -s ${artifacts_location}/jenkins/basic-docker-build-deploy-k8s-job.xml${artifacts_location_sas_token})

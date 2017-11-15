@@ -8,8 +8,6 @@ Arguments
   --vm_user_name|-u        [Required] : VM user name
   --git_url|-g             [Required] : Git URL with a Dockerfile in it's root
   --registry|-r            [Required] : Registry url targeted by the pipeline
-  --registry_user_name|-ru [Required] : Registry user name
-  --registry_password|-rp  [Required] : Registry password
   --repository|-rr         [Required] : Repository targeted by the pipeline
   --jenkins_fqdn|-jf       [Required] : Jenkins FQDN
   --kubernetes_master_fqdn|-kmf [Required] : Kubernete master FQDN
@@ -17,6 +15,8 @@ Arguments
   --kubernetes_private_key|-kpk [Required] : kubernetes private key log in to master FQDN
   --artifacts_location|-al            : Url used to reference other scripts/artifacts.
   --sas_token|-st                     : A sas token needed if the artifacts location is private.
+  --registry_user_name|-ru : Registry user name
+  --registry_password|-rp : Registry password (Required if user name not empty)
   --docker_engine_download_repo|-dedr : docker-engine download repo
 EOF
 }
@@ -147,8 +147,11 @@ done
 throw_if_empty --vm_user_name $vm_user_name
 throw_if_empty --git_url $git_url
 throw_if_empty --registry $registry
-throw_if_empty --registry_user_name $registry_user_name
-throw_if_empty --registry_password $registry_password
+
+if [ ! -z "$registry_user_name" ] ; then
+  throw_if_empty --registry_password $registry_password
+fi
+
 throw_if_empty --jenkins_fqdn $jenkins_fqdn
 throw_if_empty --kubernetes_master_fqdn $kubernetes_master_fqdn
 throw_if_empty --kubernetes_user_name $kubernetes_user_name
