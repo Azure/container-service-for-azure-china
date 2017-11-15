@@ -181,17 +181,7 @@ if [ -z "$registry_user_name" ] ; then
   
   daemon_file="/etc/docker/daemon.json"
 
-  echo "original daemon file"
-  cat $daemon_file
-  echo "\n"
-
-  sudo apt-get install -y -q git jq moreutils
-  sudo cat "$daemon_file" | jq '."insecure-registries"[0]="{{{REGISTRY}}}"' | sudo sponge "$daemon_file"
-  sudo sed -i "s|{{{REGISTRY}}}|$registry|" $daemon_file
-
-  echo "updated daemon file"
-  cat $daemon_file
-  echo "\n"
+  echo "{\"insecure-registries\" : [ \"$registry\" ]}" | sudo tee $daemon_file
 
   sudo service docker restart
   echo "docker insecure registry config enabled"
