@@ -147,7 +147,7 @@ write_files:
       done
 
       if [ $sharedBlobCreated -eq 0 ]; then
-        echo "shared blob haven't been created after retries."
+        echo "shared blob not created after retries."
         exit 1
       fi
 
