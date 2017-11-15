@@ -35,7 +35,6 @@ KEYFILE="./certs/server.key"
 
 CERTFILECONTENT=`cat "$CERTFILE"|base64 -w 0`
 KEYFILECONTENT=`cat "$KEYFILE"|base64 -w 0`
-K8S_ID_RSA_CONTENT=`cat "$ID_RSA_FILE"|base64 -w 0`
 
 cp -f $ARMTEMPLATE $TEMPLATE
 cp -f $CLOUDINIT cloud-config.yml

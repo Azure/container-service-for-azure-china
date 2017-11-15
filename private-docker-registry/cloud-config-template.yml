@@ -138,7 +138,7 @@ write_files:
       for i in {1..900}; do
         SLAVELENGTH=$(docker run --rm crproxy.trafficmanager.net:5000/microsoft/azure-cli /bin/bash -c "azure storage blob list --json -c \\"DefaultEndpointsProtocol=https;AccountName=<<<variables('registryStorageAccountName')>>>;AccountKey=<<<listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('registryStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value>>>;BlobEndpoint=https://<<<variables('registryStorageAccountName')>>>.blob.core.chinacloudapi.cn;\\" <<<variables('registryStorageContainerName')>>> swarmcmd" | jq ".|length")
 
-        if [ $SLAVELENGTH -eq 0 ]; then
+        if [ "$SLAVELENGTH" -eq "0" ]; then
           sleep 5
         else
           sharedBlobCreated=1
@@ -147,6 +147,7 @@ write_files:
       done
 
       if [ $sharedBlobCreated -eq 0 ]; then
+        echo "shared blob haven't been created after retries."
         exit 1
       fi
 
