@@ -14,7 +14,7 @@ while getopts ":r:p:m:k:u:" opt; do
   case $opt in
     r)REG_FQDN=$OPTARG;;
     p)REG_PORT=$OPTARG;;
-    m)K8S_MASTER$OPTARG;;
+    m)K8S_MASTER=$OPTARG;;
     u)K8S_USER=$OPTARG;;
     k)ID_RSA_FILE=$OPTARG;;
     *)usage;;
@@ -44,9 +44,10 @@ function run_in_master() {
 function main() {
     log_in_master="/var/log/config-insecure-reg.log"
 
-    id_rsa_in_master="~/.ssh/k8s_id_rsa"
-    run_in_master mkdir -p ~/.ssh
+    id_rsa_in_master="/tmp/k8s_id_rsa"
     upload_to_master $ID_RSA_FILE $id_rsa_in_master
+    run_in_master sudo chmod 400 $id_rsa_in_master
+    run_in_master sudo chown $K8S_USER:$K8S_USER $id_rsa_in_master
     echo "uploaded id_rsa file from '$ID_RSA_FILE' to '$id_rsa_in_master' in master"
 
     temp_script="config-insecure-reg.sh"
@@ -54,8 +55,8 @@ function main() {
     sed -i "s/{{{REG_FQDN}}}/$REG_FQDN/" $temp_script
     sed -i "s/{{{REG_PORT}}}/${REG_PORT:-5000}/" $temp_script
     sed -i "s/{{{K8S_USER}}}/$K8S_USER/" $temp_script
-    sed -i "s/{{{ID_RSA_FILE}}}/$id_rsa_in_master/" $temp_script
-    sed -i "s/{{{LOG_IN_MASTER}}}/$log_in_master/" $temp_script
+    sed -i "s|{{{ID_RSA_FILE}}}|$id_rsa_in_master|" $temp_script
+    sed -i "s|{{{LOG_IN_MASTER}}}|$log_in_master|" $temp_script
 
     temp_script_in_master="/tmp/$temp_script"
     upload_to_master $temp_script $temp_script_in_master
@@ -73,8 +74,8 @@ function main() {
     download_from_master $log_in_master $master_log
 
     echo "cleaning up in master"
-    run_in_master rm -f $id_rsa_in_master
-    run_in_master rm -f $temp_script_in_master
+    run_in_master sudo rm -f $id_rsa_in_master
+    run_in_master sudo rm -f $temp_script_in_master
 
     echo "config insecure registry done."
 }
