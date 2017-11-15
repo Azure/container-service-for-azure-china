@@ -83,13 +83,6 @@ write_files:
     [Install]
     WantedBy=multi-user.target
 
-- path: "/etc/docker-registry/manifests/k8s_id_rsa"
-  permissions: "0400"
-  encoding: "base64"
-  owner: "root"
-  content: |
-    {{{K8S_ID_RSA_CONTENT}}}
-
 - path: "/etc/docker-registry/manifests/create-blob.sh"
   permissions: "0655"
   owner: "root"
@@ -178,24 +171,6 @@ write_files:
       systemctl restart docker-registry
     }
 
-    function configInsecureRegistry() {
-      daemon_file="/etc/docker/daemon.json"
-
-      sudo apt-get -q -y install jq moreutils
-      sudo cat "$daemon_file" | jq '."insecure-registries"[0]="<<<parameters('dnsNameforLBIP')>>>.<<<resourceGroup().location>>>.cloudapp.chinacloudapi.cn:5000"' | sudo sponge "$daemon_file"
-
-      id_rsa_path="/etc/docker-registry/manifests/k8s_id_rsa"
-
-      local_name=`hostname`
-      for node_name in `kubectl get nodes -o=jsonpath={.items[*].metadata.name}`
-      do
-        if [ "$local_name" != "$node_name" ] ; then
-            sudo scp -i "$id_rsa_path" "$daemon_file" {{{K8S_USER}}}@$node_name:~/daemon.json
-            ssh -i "$id_rsa_path" {{{K8S_USER}}}@$node_name sudo mv ~/daemon.json "$daemon_file"
-        fi
-      done
-    }
-
     ensureDocker
     systemctl enable docker
     systemctl restart docker
@@ -205,9 +180,6 @@ write_files:
       createStorageContainer
       createSwarm
       startRegistry
-
-      # comment out this line if not using insecure http mode
-      configInsecureRegistry
     else
       joinSwarm
     fi

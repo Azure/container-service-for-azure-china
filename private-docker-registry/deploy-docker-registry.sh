@@ -5,18 +5,14 @@ usage(){
   echo "Usage: deploy-docker-registry -n [Resource group name]"
   echo "                              -l [Resource group location]"
   echo "                              -m [Azure mirror site]"
-  echo "                              -i [id_rsa file for SSH to k8s nodes]"
-  echo "                              -u [user name for SSH to k8s nodes]"
   exit 1
 }
 
-while getopts ":n:l:m:i:u:" opt; do
+while getopts ":n:l:m:" opt; do
   case $opt in
     n)GROUP_NAME=$OPTARG;;
     l)LOCATION=$OPTARG;;
     m)MIRROR=$OPTARG;;
-    i)ID_RSA_FILE=$OPTARG;;
-    u)K8S_USER=$OPTARG;;
     *)usage;;
   esac
 done
@@ -46,9 +42,6 @@ cp -f $CLOUDINIT cloud-config.yml
 sed -i "s|{{{serverCertificate}}}|$CERTFILECONTENT|g; s|{{{serverKey}}}|$KEYFILECONTENT|g;" cloud-config.yml
 sed -i "s|{{{azureMirror}}}|$MIRROR|g;" cloud-config.yml
 
-sed -i "s|{{{K8S_ID_RSA_CONTENT}}}|$K8S_ID_RSA_CONTENT|g;" cloud-config.yml
-sed -i "s|{{{K8S_USER}}}|$K8S_USER|g;" cloud-config.yml
-
 sed -i 's/\r$//' cloud-config.yml
 sed -i 's/\\/\\\\/g' cloud-config.yml
 sed -i ':a;N;$!ba;s/\n/\\n/g' cloud-config.yml
@@ -62,16 +55,20 @@ sed -i "s/<<<[^>]*>>>/$(sed 's:/:\\/:g; s:&:\\&:g; s:\\\":\\\\\":g;' updatepatte
 
 if type az >/dev/null 2>&1 ; then
   echo "azure cli 2.0 already installed"
+  
+  az group create --name "$GROUP_NAME" --location "$LOCATION"
+  az group deployment create -g "$GROUP_NAME" --template-file $TEMPLATE --parameters $PARAMETERS
 else
+  echo "azure cli 2.0 not found, installing..."
+
   echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ wheezy main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
   sudo apt-key adv --keyserver packages.microsoft.com --recv-keys 417A0893
   sudo apt-get install -q -y apt-transport-https
   sudo apt-get update
   sudo apt-get install -q -y azure-cli
-fi
 
-az group create --name "$GROUP_NAME" --location "$LOCATION"
-az group deployment create -g "$GROUP_NAME" --template-file $TEMPLATE --parameters $PARAMETERS
+  echo "please az login first, then re-run this script"
+fi
 
 rm $TEMPLATE
 rm cloud-config.yml
