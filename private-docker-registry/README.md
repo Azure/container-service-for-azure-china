@@ -40,7 +40,7 @@ $ cd /path/to/project/devops-sample-solution-for-azure-china/private-docker-regi
 For test purpose, you can deploy a plain HTTP registry. Notice that this is very insecure and not recommended.
 1. Edit azuredeploy.parameters.json, and run command below
 ```
-$ ./deploy-docker-registry.sh -n <resource_group_name> -l <location> -m mirror.azure.cn
+$ bash ./deploy-docker-registry.sh -n <resource_group_name> -l <location> -m mirror.azure.cn
 ```
 2. Once deployment completed, on each machine that wants to access the registry, following the [instruction](https://docs.docker.com/registry/insecure/#deploy-a-plain-http-registry) to configure client.
 E.g. for linux, edit /etc/docker/daemon.json with 
@@ -50,6 +50,11 @@ E.g. for linux, edit /etc/docker/daemon.json with
 }
 ```
 and then restart docker with `sudo service docker restart`.
+
+Could also run below command to config the insecure registry settings in docker for each k8s nodes:
+```
+$ bash ./config-insecure-registry.sh -r <registry_fqdn> -r <k8s_master_fqdn> -u <k8s_ssh_user> -k <path_to_id_rsa>
+```
 
 ## B. Deploy a TLS enabled registry with a self-signed certificate
 To be more secure than plain HTTP solution, you can [deploy with a self-signed certificate](https://docs.docker.com/registry/insecure/#use-self-signed-certificates).
@@ -61,7 +66,7 @@ To be more secure than plain HTTP solution, you can [deploy with a self-signed c
 ```
 3. Edit azuredeploy.parameters.json, and run command below
 ```
-$ ./deploy-docker-registry.sh -n <resource_group_name> -l <location> -m mirror.azure.cn
+$ bash ./deploy-docker-registry.sh -n <resource_group_name> -l <location> -m mirror.azure.cn
 ```
 4. Once deployment completed, on each machine that wants to access the registry, following the [instruction](https://docs.docker.com/registry/insecure/#use-self-signed-certificates).
 E.g. for linux, copy server.crt file to /etc/docker/certs.d/< dns of the public IP created >:5000/server.crt
