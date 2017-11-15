@@ -177,11 +177,24 @@ fi
 
 # config insecure registry if user name is empty
 if [ -z "$registry_user_name" ] ; then
+  echo "config insecure registry started..."
+  
   daemon_file="/etc/docker/daemon.json"
 
+  echo "original daemon file"
+  cat $daemon_file
+  echo "\n"
+
   sudo apt-get install -y -q git jq moreutils
-  sudo cat "$daemon_file" | jq ".\"insecure-registries\"[0]=\"$registry\"" | sudo sponge "$daemon_file"
+  sudo cat "$daemon_file" | jq '."insecure-registries"[0]="{{{REGISTRY}}}"' | sudo sponge "$daemon_file"
+  sudo sed -i "s|{{{REGISTRY}}}|$registry|" $daemon_file
+
+  echo "updated daemon file"
+  cat $daemon_file
+  echo "\n"
+
   sudo service docker restart
+  echo "docker insecure registry config enabled"
 fi
 
 #sleep 5 seconds wait for docker to boot up
