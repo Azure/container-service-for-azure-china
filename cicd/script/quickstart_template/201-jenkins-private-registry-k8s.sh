@@ -175,6 +175,15 @@ if !(command -v docker >/dev/null); then
   install_docker_fromMirror
 fi
 
+# config insecure registry if user name is empty
+if [ -z "$registry_user_name" ] ; then
+  daemon_file="/etc/docker/daemon.json"
+
+  sudo apt-get install -y -q git jq moreutils
+  sudo cat "$daemon_file" | jq ".\"insecure-registries\"[0]=\"$registry\"" | sudo sponge "$daemon_file"
+  sudo service docker restart
+fi
+
 #sleep 5 seconds wait for docker to boot up
 sleep 5
 #make sure jenkins has access to docker cli
