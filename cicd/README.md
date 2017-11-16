@@ -14,16 +14,8 @@ It also includes a basic Jenkins pipeline that will checkout a sample git reposi
 ## A. Deploy a Jenkins VM with an embedded Docker build and publish pipeline
 1. Click the "Deploy to Azure" button. If you don't have an Azure subscription, you can follow instructions to signup for a free trial.
 1. Enter the desired user name and password for the VM that's going to host the Jenkins instance. Also provide a DNS prefix for your VM.
-1. Enter the appId and appKey for your Service Principal (used by the Jenkins pipeline to push the built docker container). If you don't have a service principal, use the [Azure CLI 2.0](https://docs.microsoft.com/cli/azure/install-azure-cli) to create one (see [here](https://docs.microsoft.com/cli/azure/create-an-azure-service-principal-azure-cli?toc=%2fazure%2fazure-resource-manager%2ftoc.json) for more details):
-    ```bash
-    az cloud set -n AzureChinaCloud
-    az login 
-    az account set --subscription <Subscription ID>
-    az ad sp create-for-rbac --name "Jenkins"
-    ```
-    > NOTE: You can run `az account list` after you login to get a list of subscription IDs for your account.
 1. Enter a public git repository. The repository must have a Dockerfile in its root.
-1. Provide a private Docker registry url , login user name and password
+1. Provide a private Docker registry url , login user name and password. (if using the HTTP private registry deployed from this project, the registry url should be http://< DNS or Public IP >:5000)
 1. The Kubernetes master FQDN, user name and private key which is [base64](https://en.wikipedia.org/wiki/Base64) encoded, the pipeline will deploy sample project to this kubernetes cluster. You could use some online [tool](https://www.bing.com/search?q=base64+encode&qs=AS&pq=base64+&sk=AS1&sc=8-7&cvid=FFECC475833E43958634B83EA90B2364&FORM=QBLH&sp=2) to do encode.
 
 ## B. Setup SSH port forwarding

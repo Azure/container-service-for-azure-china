@@ -51,12 +51,7 @@ Kubectl cluster-info
 ```
 4. Open a brower, and go to http://< DNS or Public IP address of controller VM >/ui, with the admin username and password provided in deployment parameters, to check if the Kubernetes UI shows correctly
 
-## C. View the monitoring stacks
-1. In kubernetes UI, browse the namespace in which the monitoring stacks are deployed
-2. In Services, Grafana and Kibana are exposed as a services with Public IP address
-3. Go to Grafana and Kibana portal with those Public IP address, to check if data is collected and shows correctly
-
-## D. Customize the config for data collection
+## C. Customize the config for data collection
 [Beats](https://www.elastic.co/products/beats) are the data shipper which ships kinds of data to ELK stack. Currently we install [Filebeat](https://www.elastic.co/products/beats/filebeat) for shipping container logs, and [Heartbeat](https://www.elastic.co/products/beats/heartbeat) for service health check.
 
 You can config the Beats per your request, following the official documentation. Here we take Heartbeat as an example to show how to customize the config.
@@ -69,6 +64,15 @@ You can config the Beats per your request, following the official documentation.
 yes | cp -rf configs/heartbeat-config/heartbeat.yml heartbeat/config
 helm upgrade -f configs/heartbeat.yaml heartbeat heartbeat/
 ```
+
+## D. View the monitoring stacks
+1. In kubernetes UI, browse the namespace in which the monitoring stacks are deployed
+2. In Services, Grafana and Kibana are exposed as a services with Public IP address
+3. Go to Grafana portal, check if there are dashboards of Node and Pod, and if the data show correctly
+4. Go to Kibana portal, make sure the two indexes are added (if not, add by yourself)
+   * filebeat-*
+   * heartbeat-* （should be automatically added after step C）
+   In Discovery page, check if there are data corrected for these two indexes. And in Dashboard page, check if there's a dashboard of Heartbeat HTTP monitoring.
 
 ## Troubleshooting
 

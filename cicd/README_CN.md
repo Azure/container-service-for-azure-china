@@ -14,16 +14,8 @@
 ## A. 部署一个内嵌了包含编译和发布Docker镜像流水线的Jenkins虚拟机
 1. 点击 "Deploy to Azure" 按钮. 如果你还没有Azure中国的订阅，可以到[Azure中国的官网](http://www.azure.cn)申请订阅并免费试用.
 1. 输入用来部署Jenkins虚拟机的用户名和密码，并提供虚拟机的DNS前缀。
-1. 输入你的Service Principal的appID和appKey (用于jenkins流水线推送docker镜像). 如果你还没有Service Principle, 可以利用 [Azure CLI 2.0](https://docs.microsoft.com/cli/azure/install-azure-cli) 创建 (参考 [here](https://docs.microsoft.com/cli/azure/create-an-azure-service-principal-azure-cli?toc=%2fazure%2fazure-resource-manager%2ftoc.json)):
-    ```bash
-    az cloud set -n AzureChinaCloud
-    az login 
-    az account set --subscription <Subscription ID>
-    az ad sp create-for-rbac --name "Jenkins"
-    ```
-    > 注意: 你可以在登陆后运行 `az account list` 获得你账户订阅的ID列表。
 1. 输入一个代码仓库，代码仓库必须在根目录中包含一个Dockerfile。
-1. 提供一个私有Docker镜像仓库的地址， 以及登陆的用户名和密码。
+1. 提供一个私有Docker镜像仓库的地址， 以及登陆的用户名和密码。(如果使用本项目中部署的HTTP private registry，镜像仓库地址应为http://< DNS or Public IP >:5000)
 1. 提供Kubernetes master FQDN, 用户名和私有的encode过的key [base64](https://en.wikipedia.org/wiki/Base64),流水线会部署一个示例项目到kubernetes集群中. 你可以使用[在线工具](https://www.bing.com/search?q=base64+encode&qs=AS&pq=base64+&sk=AS1&sc=8-7&cvid=FFECC475833E43958634B83EA90B2364&FORM=QBLH&sp=2) 进行encode.
 
 ## B. 配置 SSH port forwarding

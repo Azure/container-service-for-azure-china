@@ -46,16 +46,7 @@ Kubectl cluster-info
 ```
 4. 打开浏览器，访问http://< 跳板机公有IP或DNS >/ui, 输入部署时提供的管理员用户名和密码，确认成功访问Kubernetes UI
 
-## C. 检查监控环境
-1. 在kubernetes UI中，确认部署时提供的命名空间（Namespace）存在，选择该命名空间
-2. 在服务（Service）页面，确认Grafana和Kibana两个服务正常运行，并且有各自的公有IP地址
-3. 通过Grafana的公有IP地址访问Granfa网站，确认仪表板（Dashboard）列表中包含Cluster和Node两个仪表盘，并且有实时数据显示
-4. 通过Kibana的公有IP地址访问Kibana网站，添加下面两个Index Pattern
-   * filebeat-*
-   * heartbeat-* （默认已添加）
-   在Discover页面，确认上面两个Index Pattern的数据正常收集。在Dashboard页面，确认包含Heartbeat HTTP monitoring仪表板
-
-## D. 自定义监控数据
+## C. 自定义监控数据
 ELK方案中使用[Beats](https://www.elastic.co/products/beats)收集监控数据。在项目中我们使用[Filebeat](https://www.elastic.co/products/beats/filebeat)收集容器日志，[Heartbeat](https://www.elastic.co/products/beats/heartbeat)收集服务的心跳数据。
 
 用户可以根据需求对Beats进行配置（所有配置细节请参考Beats官方文档）。以Heartbeat为例，配置Heatbeat来监控Kubernetes集群中用户自己的服务：
@@ -67,6 +58,15 @@ ELK方案中使用[Beats](https://www.elastic.co/products/beats)收集监控数�
 yes | cp -rf configs/heartbeat-config/heartbeat.yml heartbeat/config
 helm upgrade -f configs/heartbeat.yaml heartbeat heartbeat/
 ```
+
+## D. 检查监控环境
+1. 在kubernetes UI中，确认部署时提供的命名空间（Namespace）存在，选择该命名空间
+2. 在服务（Service）页面，确认Grafana和Kibana两个服务正常运行，并且有各自的公有IP地址
+3. 通过Grafana的公有IP地址访问Granfa网站，确认仪表板（Dashboard）列表中包含Node和Pod两个仪表盘，并且有实时数据显示
+4. 通过Kibana的公有IP地址访问Kibana网站，添加下面两个Index Pattern
+   * filebeat-*
+   * heartbeat-* （配置完C步骤后自动添加）
+   在Discover页面，确认上面两个Index Pattern的数据正常收集。在Dashboard页面，确认包含Heartbeat HTTP monitoring仪表板
 
 ## 故障排除
 
