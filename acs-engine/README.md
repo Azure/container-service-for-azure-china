@@ -4,7 +4,7 @@ The Azure Container Service Engine (acs-engine) generates ARM (Azure Resource Ma
 
 
 ## 1. Install acs-engine. It supports build acd-engine from source and install binary download:
-* Binary downloads for the specific version(better to install v0.9.1 and later versions) of acs-engine for are available [here](https://github.com/Azure/acs-engine/releases/). For some previous version packages, please download from Azure China mirror site: https://mirror.azure.cn/kubernetes/acs-engine/ or https://mirror.kaiyuanshe.cn/kubernetes/acs-engine/
+* Binary downloads for the specific version(better to install v0.9.1 and later versions) of acs-engine for are available [here](https://github.com/Azure/acs-engine/releases/). For other binary packages, please download from Azure China mirror site: https://mirror.azure.cn/kubernetes/acs-engine/ or https://mirror.kaiyuanshe.cn/kubernetes/acs-engine/
 ```
   curl -LO https://mirror.azure.cn/kubernetes/acs-engine/v0.9.1/acs-engine-v0.9.1-linux-amd64.tar.gz
   tar -xvzf acs-engine-v0.9.1-linux-amd64.tar.gz
@@ -37,7 +37,7 @@ az account set --subscription="${SUBSCRIPTION_ID}" (if there is only one subscri
 az ad sp create-for-rbac --name XXX
 ```
 
-## 5. Edit cluster definition
+## 5. Clone & edit kubernetes cluster definition file [example/kubernetes.json](https://raw.githubusercontent.com/Azure/acs-engine/master/examples/kubernetes.json)
 Acs-engine consumes a cluster definition which outlines the desired shape, size, and configuration of Kubernetes. There are a number of features that can be enabled through the cluster definition:
 * adminUsername - change username for agent nodes
 * dnsPrefix - must be a region-unique name and will form part of the hostname (e.g. myprod1, staging, leapingllama) 
