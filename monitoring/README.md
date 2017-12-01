@@ -47,7 +47,7 @@ The first one is for cluster resource monitoring (e.g. CPU and memory of Node an
 2. SSH into the VM, with the admin username and password provided in deployment parameters
 3. Run the kubectl command below to check if the VM accesses Kubernetes correctly
 ```
-Kubectl cluster-info
+kubectl cluster-info
 ```
 4. Open a brower, and go to http://< DNS or Public IP address of controller VM >/ui, with the admin username and password provided in deployment parameters, to check if the Kubernetes UI shows correctly
 
