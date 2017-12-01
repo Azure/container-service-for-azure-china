@@ -42,7 +42,7 @@
 2. 用部署时提供的管理员用户名和密码通过SSH登陆到跳板机
 3. 执行下面kubectl命令，确认跳板机成功访问Kubernetes集群
 ```
-Kubectl cluster-info
+kubectl cluster-info
 ```
 4. 打开浏览器，访问http://< 跳板机公有IP或DNS >/ui, 输入部署时提供的管理员用户名和密码，确认成功访问Kubernetes UI
 
