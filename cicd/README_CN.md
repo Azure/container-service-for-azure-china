@@ -56,7 +56,7 @@ sudo vim /etc/docker/daemon.json
 ```
 then add below entry to configuration:
 
-{"insecure-registries" : [ "私有镜像仓库的地址" ]}
+{"insecure-registries" : [ "私有镜像仓库的DNS/IP：端口" ]}
 
 then save the changes and run below command to restart docker
 ```bash
