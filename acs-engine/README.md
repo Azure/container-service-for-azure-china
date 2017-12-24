@@ -75,7 +75,7 @@ ssh -i <path_to_id_rsa> <adminUsername>@<master_node_fqdn>
 ```
 > Download config_k8s_ui_http.sh script
 ```
-curl -LO https://raw.githubusercontent.com/Azure/devops-sample-solution-for-azure-china/acs-engine/config_k8s_ui_http.sh
+curl -LO https://raw.githubusercontent.com/Azure/devops-sample-solution-for-azure-china/master-dev/acs-engine/config_k8s_ui_http.sh
 ```
 > Run following command:
 ```
