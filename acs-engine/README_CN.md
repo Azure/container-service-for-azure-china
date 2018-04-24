@@ -2,11 +2,11 @@
 
 微软容器服务引擎（`acs-engine`）用于将一个容器集群描述文件转化成一组ARM（Azure Resource Manager）模板，通过在Azure上部署这些模板，用户可以很方便地在Azure上建立一套基于Docker的容器服务集群。用户可以自由地选择集群编排引擎DC/OS, Kubernetes或者是Swarm/Swarm Mode。集群描述文件使用和ARM模板相同的语法，它们都可以用来部署Azure容器服务。关于acs-engine的详细内容请参考：https://github.com/Azure/acs-engine
 
-## 1.  安装acs-engine（建议安装v0.9.1及后续的版本，之前的版本需要做一些额外的工作才可以工作）。支持直接安装包和通过源代码编译两种方式：
+## 1.  安装acs-engine（建议安装v0.14.0及后续的版本，之前的版本需要做一些额外的工作才可以工作）。支持直接安装包和通过源代码编译两种方式：
 - 下载并解压具体版本的[acs-engine](https://github.com/Azure/acs-engine/releases/)，对于没有安装包的版本，可直接从国内的镜像站点下载：https://mirror.kaiyuanshe.cn/kubernetes/acs-engine/
 ```
-  curl -LO https://mirror.kaiyuanshe.cn/kubernetes/acs-engine/v0.9.1/acs-engine-v0.9.1-linux-amd64.tar.gz
-  tar -xvzf acs-engine-v0.9.1-linux-amd64.tar.gz
+  curl -LO https://mirror.kaiyuanshe.cn/kubernetes/acs-engine/v0.14.0/acs-engine-v0.14.0-linux-amd64.tar.gz
+  tar -xvzf acs-engine-v0.14.0-linux-amd64.tar.gz
 ```
 - [本地下载源代码并编译acs-engine](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.zh-CN.md)
 
