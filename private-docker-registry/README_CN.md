@@ -40,7 +40,7 @@ $ cd /path/to/project/devops-sample-solution-for-azure-china/private-docker-regi
 为了测试需求，可以部署一个使用HTTP的仓库。这种方法是不安全的，因此并不推荐。
 1. 编辑azuredeploy.parameters.json中的参数，运行命令
 ```
-$ bash ./deploy-docker-registry.sh -n <resource_group_name> -l <location> -m mirror.azure.cn
+$ bash ./deploy-docker-registry.sh -n <resource_group_name> -l <location> -m mirror.kaiyuanshe.cn
 ```
 2. 部署完成后，在每个需要访问仓库的客户端上，[进行配置](https://docs.docker.com/registry/insecure/#deploy-a-plain-http-registry) 。
 例如，在Linux客户端上，编辑/etc/docker/daemon.json，添加 
@@ -66,7 +66,7 @@ $ bash ./config-insecure-registry.sh -r <registry_fqdn> -r <k8s_master_fqdn> -u 
 ```
 3. 编辑azuredeploy.parameters.json中的参数，运行命令
 ```
-$ bash ./deploy-docker-registry.sh -n <resource_group_name> -l <location> -m mirror.azure.cn
+$ bash ./deploy-docker-registry.sh -n <resource_group_name> -l <location> -m mirror.kaiyuanshe.cn
 ```
 4. 部署完成后，在每个需要访问仓库的客户端上，[进行配置](https://docs.docker.com/registry/insecure/#use-self-signed-certificates)。
 例如，在Linux客户端上，将server.crt拷贝到/etc/docker/certs.d/< dns of the public IP created >:5000/server.crt

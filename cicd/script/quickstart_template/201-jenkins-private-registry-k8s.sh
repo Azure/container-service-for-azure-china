@@ -157,7 +157,7 @@ throw_if_empty --kubernetes_master_fqdn $kubernetes_master_fqdn
 throw_if_empty --kubernetes_user_name $kubernetes_user_name
 
 if [ -z "$docker_engine_download_repo" ] ; then
-  docker_engine_download_repo="https://mirror.azure.cn/docker-engine/apt/repo"
+  docker_engine_download_repo="https://mirror.kaiyuanshe.cn/docker-engine/apt/repo"
 fi
 
 if [ -z "$repository" ]; then

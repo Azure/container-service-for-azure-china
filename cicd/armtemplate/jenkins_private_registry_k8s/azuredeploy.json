@@ -73,7 +73,7 @@
       "metadata": {
         "description": "docker-engine download repo."
       },
-      "defaultValue": "https://mirror.azure.cn/docker-engine/apt/repo",
+      "defaultValue": "https://mirror.kaiyuanshe.cn/docker-engine/apt/repo",
       "type": "string"
     }
   },

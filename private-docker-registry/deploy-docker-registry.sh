@@ -23,7 +23,7 @@ if [ -z $GROUP_NAME ] || [ -z $LOCATION ]; then
 fi
 
 if [ -z $MIRROR ] ; then
-  MIRROR="mirror.azure.cn"
+  MIRROR="mirror.kaiyuanshe.cn"
 fi
 
 ARMTEMPLATE="azuredeploy-template.json"
