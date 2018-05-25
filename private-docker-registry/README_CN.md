@@ -53,7 +53,7 @@ $ bash ./deploy-docker-registry.sh -n <resource_group_name> -l <location> -m mir
 
 也可以通过运行一下命令自动修改每个Kubernetes节点上的docker设置：
 ```
-$ bash ./config-insecure-registry.sh -r <registry_fqdn> -r <k8s_master_fqdn> -u <k8s_ssh_user> -k <path_to_id_rsa>
+$ bash ./config-insecure-registry.sh -r <registry_fqdn> -m <k8s_master_fqdn> -u <k8s_ssh_user> -k <path_to_id_rsa>
 ```
 
 ## B. 用自签名证书部署使用TLS的仓库
