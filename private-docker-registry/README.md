@@ -53,7 +53,7 @@ and then restart docker with `sudo service docker restart`.
 
 Could also run below command to config the insecure registry settings in docker for each k8s nodes:
 ```
-$ bash ./config-insecure-registry.sh -r <registry_fqdn> -r <k8s_master_fqdn> -u <k8s_ssh_user> -k <path_to_id_rsa>
+$ bash ./config-insecure-registry.sh -r <registry_fqdn> -m <k8s_master_fqdn> -u <k8s_ssh_user> -k <path_to_id_rsa>
 ```
 
 ## B. Deploy a TLS enabled registry with a self-signed certificate
