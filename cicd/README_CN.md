@@ -64,7 +64,7 @@ sudo service docker restart
 ```
 
 ## 示例项目
-这个模板中包含的jenkins流水线基于示例项目(https://github.com/azure-devops/spin-kub-demo).你可以使用你自己的项目，但需要更新jenkins流水线中编译和部署的脚本。
+这个模板中包含的jenkins流水线基于示例项目( https://github.com/azure-devops/spin-kub-demo ).你可以使用你自己的项目，但需要更新jenkins流水线中编译和部署的脚本。
 
 ## 故障排除
 
