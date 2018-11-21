@@ -37,8 +37,10 @@ Since some container registries like `gcr.io`, `docker.io` are not accessible or
 
 > Note:
 `k8s.gcr.io` would redirect to `gcr.io/google-containers`, following images are identical:
+
 k8s.gcr.io/pause-amd64:3.1
-gcr.io/google_containers/pause-amd64:3.1 |
+
+gcr.io/google_containers/pause-amd64:3.1
 
 ## 3. Install kubectl
 Original `az aks install-cli` does not work in azure china, follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
