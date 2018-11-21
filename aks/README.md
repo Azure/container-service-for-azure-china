@@ -12,8 +12,6 @@ az account list
 az account set -s <subscription-name>
 ```
 
-> Detailed "az aks" command line manual could be found [here](https://docs.microsoft.com/en-us/cli/azure/aks)
-
  - Example: create a `v1.10.8` AKS cluster on `chinaeast2`
 ```sh
 RESOURCE_GROUP_NAME=demo-aks1108
@@ -44,7 +42,9 @@ az aks scale -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --agent-count=2
 az aks delete -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
 
 ```
- > Get more detailed steps [here](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
+ > Get more detailed [AKS set up steps](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
+ 
+ > Detailed "az aks" command line manual could be found [here](https://docs.microsoft.com/en-us/cli/azure/aks)
 
  -  All available kubernetes version on `chinaeast2`
 ```
