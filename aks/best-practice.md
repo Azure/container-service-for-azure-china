@@ -96,6 +96,5 @@ Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-ser
   > please make sure you already have an **Azure China** Subscription
  - AKS doc: [https://docs.microsoft.com/en-us/azure/aks/](https://docs.microsoft.com/en-us/azure/aks/) 
   > Chinese version: [https://docs.microsoft.com/zh-cn/azure/aks/](https://docs.microsoft.com/zh-cn/azure/aks/) 
- - [Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/)
  - [Deploy an Azure Container Service (AKS) cluster](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
  - [Frequently asked questions about Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/faq#are-security-updates-applied-to-aks-agent-nodes)
