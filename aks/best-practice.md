@@ -1,5 +1,6 @@
 # AKS on Azure China Best Practices
 Azure Kubernetes Service is in **Private Preview**, this page gives best practices about how to use AKS on Azure China cloud.
+ - Contact AKS China Team: [akscn@microsoft.com](mailto:akscn@microsoft.com)
 
 ## 1. How to create AKS on Azure China
 Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2` region
@@ -35,8 +36,15 @@ kubectl get nodes
 
 # open the Kubernetes dashboard
 az aks browse --resource-group $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
+
+# scale up/down AKS cluster nodes 
+az aks scale -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --agent-count=2
+
+# delete AKS cluster node
+az aks delete -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
+
 ```
- > You could find detailed steps [here](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
+ > Get more detailed steps [here](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
 
  -  All available kubernetes version on `chinaeast2`
 ```
@@ -65,11 +73,11 @@ Since some container registries like `gcr.io`, `docker.io` are not accessible or
 | quay.io | [quay.azk8s.cn](http://mirror.azk8s.cn/help/quay-proxy-cache.html) | quay.azk8s.cn/deis/go-dev:v1.10.0 |
 
 > Note:
-`k8s.gcr.io` would redirect to `gcr.io/google-containers`, following images are identical:
-
+`k8s.gcr.io` would redirect to `gcr.io/google-containers`, following image urls are identical:
+```
 k8s.gcr.io/pause-amd64:3.1
-
 gcr.io/google_containers/pause-amd64:3.1
+```
 
 ## 3. Install kubectl
 Original `az aks install-cli` does not work in azure china, follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
@@ -82,7 +90,9 @@ All kubernetes related binaries on github could be found under [https://mirror.a
 
 ## Links
  - Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview)
-  > Note: please make sure you already have an **Azure China** Subscription
+  > please make sure you already have an **Azure China** Subscription
  - AKS doc: [https://docs.microsoft.com/en-us/azure/aks/](https://docs.microsoft.com/en-us/azure/aks/) 
   > Chinese version: [https://docs.microsoft.com/zh-cn/azure/aks/](https://docs.microsoft.com/zh-cn/azure/aks/) 
- - Contact AKS China Team: [akscn@microsoft.com](mailto:akscn@microsoft.com)  
+ - [Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/)
+ - [Deploy an Azure Container Service (AKS) cluster](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
+ - [Frequently asked questions about Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/faq#are-security-updates-applied-to-aks-agent-nodes)
