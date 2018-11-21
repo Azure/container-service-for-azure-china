@@ -88,6 +88,9 @@ follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
 > Note:
 All kubernetes related binaries on github could be found under [https://mirror.azk8s.cn/kubernetes](https://mirror.azk8s.cn/kubernetes), e.g. helm, charts, etc.
 
+## 5. Run a demo on AKS cluster
+Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo
+
 ## Links
  - Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview)
   > please make sure you already have an **Azure China** Subscription
