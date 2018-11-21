@@ -16,7 +16,7 @@ az account set -s <subscription-name>
  - Example: create a `v1.10.8` AKS cluster on `chinaeast2`
 ```sh
 RESOURCE_GROUP_NAME=demo-aks1108
-CLUSTER_NAME=demo-aks1108  #change cluster name here!
+CLUSTER_NAME=demo-aks1108
 LOCATION=chinaeast2
 
 # create a resource group
