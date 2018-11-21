@@ -12,8 +12,6 @@ az account list
 az account set -s <subscription-name>
 ```
 
-> Detailed "az aks" command line manual could be found [here](https://docs.microsoft.com/en-us/cli/azure/aks)
-
  - Example: create a `v1.10.8` AKS cluster on `chinaeast2`
 ```sh
 RESOURCE_GROUP_NAME=demo-aks1108
@@ -24,7 +22,7 @@ LOCATION=chinaeast2
 az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
 
 # create AKS cluster with 1 agent node
-az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D2_v2 --generate-ssh-keys --kubernetes-version 1.10.8
+az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_DS3_v2 --generate-ssh-keys --kubernetes-version 1.10.8
 
 # wait about 15 min for `az aks create` running complete
 
@@ -44,7 +42,9 @@ az aks scale -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --agent-count=2
 az aks delete -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
 
 ```
- > Get more detailed steps [here](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
+ > Get more detailed [AKS set up steps](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
+ 
+ > Detailed "az aks" command line manual could be found [here](https://docs.microsoft.com/en-us/cli/azure/aks)
 
  -  All available kubernetes version on `chinaeast2`
 ```
@@ -91,7 +91,12 @@ All kubernetes related binaries on github could be found under [https://mirror.a
 ## 5. Run a demo on AKS cluster
 Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo
 
-## Links
+### Limitations of current AKS Private Preview on Azure China
+ - only `chinaeast2` region is supported
+ - AKS set up wizard is not available on azure portal, only azure cli command line is supported
+ - AKS monitoring is not available on AKS portal, do not click on `Monitor containers` link on AKS overview page otherwise there will be error message poping up
+
+### Links
  - Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview)
   > please make sure you already have an **Azure China** Subscription
  - AKS doc: [https://docs.microsoft.com/en-us/azure/aks/](https://docs.microsoft.com/en-us/azure/aks/) 
