@@ -94,7 +94,8 @@ Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-ser
 ### Limitations of current AKS Private Preview on Azure China
  - only `chinaeast2` region is supported
  - AKS set up wizard is not available on azure portal, only azure cli command line is supported
- - AKS monitoring is not available on AKS portal, do not click on `Monitor containers` link on AKS overview page otherwise there will be error message poping up
+ - AKS monitoring is not available, there will be error when clicking on `Monitor containers` link in AKS overview page
+ - AKS logging is not available, there will be error when clicking on `View logs` link in AKS overview page
 
 ### Links
  - Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview)
