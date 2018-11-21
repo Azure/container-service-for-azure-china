@@ -18,13 +18,42 @@ Detailed "az aks" command line manual could be found [here](https://docs.microso
 RESOURCE_GROUP_NAME=demo-aks1108
 CLUSTER_NAME=demo-aks1108  #change cluster name here!
 LOCATION=chinaeast2
+
+# create a resource group
 az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
+
+# create AKS cluster with 1 agent node
 az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D2_v2 --generate-ssh-keys --kubernetes-version 1.10.8
+
 # wait about 15 min for `az aks create` running complete
+
+# get the credentials for the cluster
 az aks get-credentials -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
+
+# get all agent nodes
 kubectl get nodes
+
+# open the Kubernetes dashboard
+az aks browse --resource-group $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
 ```
  > Note: You could find details steps [here](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
+
+ -  All available kubernetes version on `chinaeast2`
+```
+az aks get-versions -l chinaeast2 -o table
+KubernetesVersion    Upgrades
+-------------------  ----------------------
+1.11.3               None available
+1.11.2               1.11.3
+1.10.8               1.11.2, 1.11.3
+1.10.7               1.10.8, 1.11.2, 1.11.3
+1.9.11               1.10.7, 1.10.8
+1.9.10               1.9.11, 1.10.7, 1.10.8
+1.8.15               1.9.10, 1.9.11
+1.8.14               1.8.15, 1.9.10, 1.9.11
+1.7.16               1.8.14, 1.8.15
+1.7.15               1.7.16, 1.8.14, 1.8.15
+```
 
 ## 2. Container registry proxies
 Since some container registries like `gcr.io`, `docker.io` are not accessible or very slow in China, we have set up container registry proxies in `chinaeast2` region now:
