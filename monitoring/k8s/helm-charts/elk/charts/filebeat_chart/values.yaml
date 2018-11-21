@@ -1,0 +1,30 @@
+nameOverride: filebeat
+
+image: 
+  repository: docker.elastic.co/beats/filebeat
+  tag: 5.5.1
+  pullPolicy: Always
+
+configmap:
+  name: filebeat-config
+  data:
+    filebeat.prospectors:
+    - input_type: log
+      paths:
+        - "/var/log/containers/*.log"
+      exclude_files: ['filebeat.*log','kube.*log']
+      symlinks: true
+      json.message_key: log
+      json.keys_under_root: true
+      json.add_error_key: true
+      multiline.pattern: '^\s'
+      multiline.match: after
+      document_type: kube-logs
+    output.logstash:
+      hosts: ${LOGSTASH_HOSTS}
+      timeout: 15
+    logging.level: ${LOG_LEVEL}
+
+env:
+  LOGSTASH_HOSTS: logstash:5043
+  LOG_LEVEL: debug

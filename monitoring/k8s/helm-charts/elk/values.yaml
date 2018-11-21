@@ -1,0 +1,6 @@
+global:
+  env:
+    CLUSTER_NAME: "elk-k8s-cluster"
+  busybox:
+    image:
+      repository: busybox

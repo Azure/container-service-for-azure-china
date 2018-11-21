@@ -1,0 +1,80 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-master
+  labels:
+    component: {{ template "fullname" . }}
+    role: master
+spec:
+  replicas: {{ .Values.master.replicas }}
+  template:
+    metadata:
+      labels:
+        component: {{ template "fullname" . }}
+        role: master
+    spec:
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      # Elasticsearch uses a hybrid mmapfs / niofs directory by default to
+      # store its indices. The default operating system limits on mmap counts
+      # is likely to be too low, which may result in out of memory exceptions,
+      # so we use vm.max_map_count=262144 to increase that value.  
+      initContainers:
+      - name: init-sysctl
+        image: "{{ .Values.global.busybox.image.repository }}"
+        imagePullPolicy: IfNotPresent
+        command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+        securityContext:
+          runAsUser: 0
+          privileged: true
+      containers:
+      - name: es-master
+        securityContext:
+          privileged: false
+          capabilities:
+            add:
+              - IPC_LOCK
+              - SYS_RESOURCE
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: NAMESPACE
+          value: "{{ .Release.Namespace }}"
+        - name: CHART_INFO
+          value: "{{ .Chart.Name}} - {{ .Chart.Version }} - {{ .Release.Name }}"
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: DISCOVERY_SERVICE
+          value: {{ template "fullname" .}}-discovery
+        {{- range $key, $value :=  .Values.global.env }}
+        - name: {{ $key | upper | replace "-" "_" }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- range $key, $value :=  .Values.common.env }}
+        - name: {{ $key | upper | replace "-" "_" }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- range $key, $value :=  .Values.master.env }}
+        - name: {{ $key | upper | replace "-" "_" }}
+          value: {{ $value | quote }}
+        {{- end }}
+        ports:
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        volumeMounts:
+        - name: esdata
+          mountPath: /usr/share/elasticsearch/esdata/
+        - name: config
+          mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+          subPath: elasticsearch.yml
+      volumes:
+        - name: "esdata" 
+          emptyDir:
+            medium: ""
+        - name: "config"
+          configMap:
+            name: {{ .Values.configmap.name }}

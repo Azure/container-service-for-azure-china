@@ -1,0 +1,8 @@
+{
+  "itemDisplayName": "Jenkins to Azure Container Registry",
+  "icon": "ubuntu",
+  "description": "This template allows you to deploy an instance of Jenkins on a DS1_v2 size Linux Ubuntu 14.04 LTS VM. It also includes an optional pipeline push images to private registry and deploy to a kubernetes cluster.",
+  "summary": "This template allows you to deploy an instance of Jenkins on a DS1_v2 size Linux Ubuntu 14.04 LTS VM. It also includes an optional pipeline push images to private registry and deploy to a kubernetes cluster.",
+  "githubUsername": "azure-devops",
+  "dateUpdated": "2017-06-26"
+}

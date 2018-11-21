@@ -1,0 +1,5 @@
+image:
+  repository: crproxy.trafficmanager.net:5000/ccgmsref/heartbeat
+  tag: 5.5.1
+
+

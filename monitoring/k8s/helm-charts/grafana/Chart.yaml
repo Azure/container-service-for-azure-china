@@ -1,0 +1,11 @@
+name: grafana
+version: 0.4.1
+description: The leading tool for querying and visualizing time series and metrics.
+home: https://grafana.net
+icon: https://raw.githubusercontent.com/grafana/grafana/master/public/img/logo_transparent_400x.png
+sources:
+  - https://github.com/grafana/grafana
+maintainers:
+  - name: Ming Hsieh
+    email: zanhsieh@gmail.com
+engine: gotpl

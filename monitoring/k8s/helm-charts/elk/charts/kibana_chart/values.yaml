@@ -1,0 +1,24 @@
+nameOverride: kibana
+
+image: 
+  repository: docker.elastic.co/kibana/kibana
+  tag: 5.5.1
+  pullPolicy: Always
+
+configmap:
+  name: kibana-config
+  data:
+    server.name: kibana
+    server.host: "0"
+    elasticsearch.url: http://elasticsearch:9200
+    xpack.graph.enabled: false
+    xpack.ml.enabled: false
+    xpack.monitoring.enabled: false
+    xpack.reporting.enabled: false
+    xpack.security.enabled: false
+
+replicaCount: 2
+
+service:
+  type: LoadBalancer
+  port: 80

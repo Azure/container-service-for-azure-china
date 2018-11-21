@@ -286,3 +286,7 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+
+# DevOps Sample Solution
+controller_parameters.debug.json
+azuredeploy.parameters.debug.json

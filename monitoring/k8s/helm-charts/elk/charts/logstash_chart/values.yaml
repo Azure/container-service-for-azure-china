@@ -1,0 +1,21 @@
+nameOverride: logstash
+
+image: 
+  repository: docker.elastic.co/logstash/logstash
+  tag: 5.5.1
+  pullPolicy: Always
+
+replicaCount: 2
+
+configmap:
+  name: logstash-config
+
+env:
+  HTTP_HOST: 0.0.0.0
+  ES_URL: http://elasticsearch:9200
+  XPACK_MONITORING_ENABLED: false
+
+service:
+  name: logstash
+  type: ClusterIP
+  port: 5043
