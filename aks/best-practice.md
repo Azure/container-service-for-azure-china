@@ -50,4 +50,4 @@ All kubernetes related binaries on github could be found under [https://mirror.a
   > Note: please make sure you already have an **Azure China** Subscription
  - AKS doc: [https://docs.microsoft.com/en-us/azure/aks/](https://docs.microsoft.com/en-us/azure/aks/) 
   > Chinese version: [https://docs.microsoft.com/zh-cn/azure/aks/](https://docs.microsoft.com/zh-cn/azure/aks/) 
- - Contact us: [akscn@micrsoft.com](mailto:akscn@micrsoft.com)  
+ - Contact AKS China Team: [akscn@micrsoft.com](mailto:akscn@micrsoft.com)  
