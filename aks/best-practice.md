@@ -1,5 +1,5 @@
 # AKS on Azure China Best Practices
-Azure Kubernetes Service is in **Private Preview** from 2018.11.13, this page gives best practices about how to use AKS on Azure China cloud.
+Azure Kubernetes Service is in **Private Preview**, this page gives best practices about how to use AKS on Azure China cloud.
 
 ## 1. How to create AKS on Azure China
 Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2` region
