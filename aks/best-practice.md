@@ -11,7 +11,7 @@ az account list
 az account set -s <subscription-name>
 ```
 
-Detailed "az aks" command line manual could be found [here](https://docs.microsoft.com/en-us/cli/azure/aks)
+> Detailed "az aks" command line manual could be found [here](https://docs.microsoft.com/en-us/cli/azure/aks)
 
  - Example: create a `v1.10.8` AKS cluster on `chinaeast2`
 ```sh
@@ -36,7 +36,7 @@ kubectl get nodes
 # open the Kubernetes dashboard
 az aks browse --resource-group $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
 ```
- > Note: You could find details steps [here](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
+ > You could find detailed steps [here](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
 
  -  All available kubernetes version on `chinaeast2`
 ```
