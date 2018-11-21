@@ -1,6 +1,6 @@
 # AKS on Azure China Best Practices
 ## 1. How to create AKS on Azure China
-Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2` region
+Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2` region (in **Private Preview** from 2018.11.13)
  - How to use [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) on Azure China
 ```sh
 az cloud set --name AzureChinaCloud
@@ -44,3 +44,10 @@ follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
 
 > Note:
 All kubernetes related binaries on github could be found under [https://mirror.azk8s.cn/kubernetes](https://mirror.azk8s.cn/kubernetes), e.g. helm, charts, etc.
+
+## Links
+ - Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview)
+  > Note: please make sure you already have an **Azure China** Subscription
+ - AKS doc: [https://docs.microsoft.com/en-us/azure/aks/](https://docs.microsoft.com/en-us/azure/aks/) 
+  > Chinese version: [https://docs.microsoft.com/zh-cn/azure/aks/](https://docs.microsoft.com/zh-cn/azure/aks/) 
+ - Contact us: [akscn@micrsoft.com](mailto:akscn@micrsoft.com)  
