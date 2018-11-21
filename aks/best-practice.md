@@ -1,6 +1,6 @@
 # AKS on Azure China Best Practices
 ## 1. How to create AKS on Azure China
-Currently AKS on Azure China could be only created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only `chinaeast2` region is supported now
+Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2` region
  - How to use [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) on Azure China
 ```sh
 az cloud set --name AzureChinaCloud
@@ -21,3 +21,17 @@ az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-
 az aks get-credentials -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
 kubectl get nodes
 ```
+
+## 2. Container registry proxies
+Since some container registries like `gcr.io`, `docker.io` are not accessible or very slow in China, we have set up container registry proxies in `chinaeast2` region now:
+
+| global | registry proxy in Azure China | Example |
+| ---- | ---- | ---- |
+| dockerhub (docker.io) | [dockerhub.azk8s.cn](http://mirror.azk8s.cn/help/docker-registry-proxy-cache.html) | dockerhub.azk8s.cn/library/centos |
+| gcr.io | [gcr.azk8s.cn](http://mirror.azk8s.cn/help/gcr-proxy-cache.html) | gcr.azk8s.cn/google_containers/hyperkube-amd64:v1.9.2 |
+| quay.io | [quay.azk8s.cn](http://mirror.azk8s.cn/help/quay-proxy-cache.html) | quay.azk8s.cn/deis/go-dev:v1.10.0 |
+
+> Note:
+`k8s.gcr.io` would redirect to `gcr.io/google-containers`, following images are identical:
+k8s.gcr.io/pause-amd64:3.1
+gcr.io/google_containers/pause-amd64:3.1 |
