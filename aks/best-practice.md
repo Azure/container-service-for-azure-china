@@ -16,7 +16,7 @@ Detailed "az aks" command line manual could be found [here](https://docs.microso
  - Example: create a `v1.10.8` AKS cluster on `chinaeast2`
 ```sh
 RESOURCE_GROUP_NAME=demo-aks1108
-CLUSTER_NAME=demo-aks1108
+CLUSTER_NAME=demo-aks1108  #change cluster name here!
 LOCATION=chinaeast2
 az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
 az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D2_v2 --generate-ssh-keys --kubernetes-version 1.10.8
