@@ -1,6 +1,8 @@
 # AKS on Azure China Best Practices
+Azure Kubernetes Service is in **Private Preview** from 2018.11.13, this page gives best practices about how to use AKS on Azure China cloud.
+
 ## 1. How to create AKS on Azure China
-Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2` region (in **Private Preview** from 2018.11.13)
+Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2` region
  - How to use [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) on Azure China
 ```sh
 az cloud set --name AzureChinaCloud
@@ -18,9 +20,11 @@ CLUSTER_NAME=demo-aks1108
 LOCATION=chinaeast2
 az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
 az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D2_v2 --generate-ssh-keys --kubernetes-version 1.10.8
+# wait about 15 min for `az aks create` running complete
 az aks get-credentials -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
 kubectl get nodes
 ```
+ > Note: You could find details steps [here](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
 
 ## 2. Container registry proxies
 Since some container registries like `gcr.io`, `docker.io` are not accessible or very slow in China, we have set up container registry proxies in `chinaeast2` region now:
