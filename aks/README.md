@@ -1,5 +1,5 @@
 # AKS on Azure China Best Practices
-Azure Kubernetes Service is in **Private Preview**, this page gives best practices about how to use AKS on Azure China cloud.
+Azure Kubernetes Service is in **Private Preview**, this page provides best practices about how to use AKS on Azure China cloud.
  - Contact AKS China Team: [akscn@microsoft.com](mailto:akscn@microsoft.com)
 
 ## 1. How to create AKS on Azure China
