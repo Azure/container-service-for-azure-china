@@ -1,4 +1,5 @@
 # Azure Docker Registry Template
+## Deprecated: since **Azure Container Registry** is already available in China North region, following manual steps are not necessary now.
 This is a Azure ARM template to deploy Docker registry on Azure China. ***Some urls are hard coded to Azure China now, so this template is NOT workable on Global Azure.***
 
 ## Overview
