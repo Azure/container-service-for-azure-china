@@ -68,9 +68,9 @@ Since some container registries like `gcr.io`, `docker.io` are not accessible or
 
 | global | registry proxy in Azure China | Example |
 | ---- | ---- | ---- |
-| dockerhub (docker.io) | [dockerhub.azk8s.cn](http://mirror.azk8s.cn/help/docker-registry-proxy-cache.html) | dockerhub.azk8s.cn/library/centos |
-| gcr.io | [gcr.azk8s.cn](http://mirror.azk8s.cn/help/gcr-proxy-cache.html) | gcr.azk8s.cn/google_containers/hyperkube-amd64:v1.9.2 |
-| quay.io | [quay.azk8s.cn](http://mirror.azk8s.cn/help/quay-proxy-cache.html) | quay.azk8s.cn/deis/go-dev:v1.10.0 |
+| dockerhub (docker.io) | [dockerhub.azk8s.cn](http://mirror.azk8s.cn/help/docker-registry-proxy-cache.html) | `dockerhub.azk8s.cn/library/nginx`; personal dockerhub image [example](https://github.com/andyzhangx/k8s-demo/blob/1362402d8f585ab6f03cf0c40eefa8d0ac21c5ad/nginx-server/nginx-server-azurefile-mooncake.yaml#L39) |
+| gcr.io | [gcr.azk8s.cn](http://mirror.azk8s.cn/help/gcr-proxy-cache.html) | `gcr.azk8s.cn/google_containers/hyperkube-amd64:v1.9.2` |
+| quay.io | [quay.azk8s.cn](http://mirror.azk8s.cn/help/quay-proxy-cache.html) | `quay.azk8s.cn/deis/go-dev:v1.10.0` |
 
 > Note:
 `k8s.gcr.io` would redirect to `gcr.io/google-containers`, following image urls are identical:
@@ -80,7 +80,7 @@ gcr.io/google_containers/pause-amd64:3.1
 ```
 
 ## 3. Install kubectl
-Original `az aks install-cli` does not work in azure china, follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
+Original `az aks install-cli` command does not work in azure china, follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
 
 ## 4. Install helm
 follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
