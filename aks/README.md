@@ -91,7 +91,8 @@ All kubernetes related binaries on github could be found under [https://mirror.a
 ## 5. Run a demo on AKS cluster
 Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo
 
-### Limitations of current AKS Private Preview on Azure China
+
+## Limitations of current AKS Private Preview on Azure China
  - only `chinaeast2` region is supported
  - AKS set up wizard is not available on azure portal, only azure cli command line is supported
  - AKS monitoring and logging are not available, there will be error when clicking on `Monitor containers` and `View logs` links in AKS overview page
