@@ -2,6 +2,12 @@
 Azure Kubernetes Service is in **Private Preview**, this page provides best practices about how to use AKS on Azure China cloud.
  - Contact AKS China Team: [akscn@microsoft.com](mailto:akscn@microsoft.com)
 
+## Limitations of current AKS Private Preview on Azure China
+ - only `chinaeast2` region is supported
+ - AKS set up wizard is not available on azure portal, only azure cli command line is supported
+ - AKS monitoring and logging are not available, there will be error when clicking on `Monitor containers` and `View logs` links in AKS overview page
+
+
 ## 1. How to create AKS on Azure China
 Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2` region
  - How to use [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) on Azure China
@@ -64,7 +70,7 @@ KubernetesVersion    Upgrades
 ```
 
 ## 2. Container registry proxies
-Since some container registries like `gcr.io`, `docker.io` are not accessible or very slow in China, we have set up container registry proxies in `chinaeast2` region now:
+Since some container registries like `gcr.io`, `docker.io` are not accessible or very slow in China, we have set up container registry proxies in `chinaeast2` region now for **public anonymous access**:
 
 | global | registry proxy in Azure China | Example |
 | ---- | ---- | ---- |
@@ -90,12 +96,6 @@ All kubernetes related binaries on github could be found under [https://mirror.a
 
 ## 5. Run a demo on AKS cluster
 Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo
-
-
-## Limitations of current AKS Private Preview on Azure China
- - only `chinaeast2` region is supported
- - AKS set up wizard is not available on azure portal, only azure cli command line is supported
- - AKS monitoring and logging are not available, there will be error when clicking on `Monitor containers` and `View logs` links in AKS overview page
 
 ### Links
  - Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview)
