@@ -28,7 +28,7 @@ LOCATION=chinaeast2
 az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
 
 # create AKS cluster with 1 agent node
-az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D3_v2 --generate-ssh-keys --kubernetes-version 1.10.8
+az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_DS3_v2 --generate-ssh-keys --kubernetes-version 1.10.8
 
 # wait about 15 min for `az aks create` running complete
 
