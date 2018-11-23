@@ -99,9 +99,7 @@ All kubernetes related binaries on github could be found under [https://mirror.a
 Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo
 
 ### Known issues
- - Access error when using kubernetes dashboard due to k8s RBAC enabled
-
-Follow https://docs.microsoft.com/en-us/azure/aks/kubernetes-dashboard#for-rbac-enabled-clusters
+ - RBAC related issues: https://github.com/andyzhangx/demo/blob/master/issues/rbac-issues.md
 
 ### Links
  - Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview)
