@@ -98,6 +98,11 @@ All kubernetes related binaries on github could be found under [https://mirror.a
 ## 5. Run a demo on AKS cluster
 Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo
 
+### Known issues
+ - Access error when using kubernetes dashboard
+
+Follow https://docs.microsoft.com/en-us/azure/aks/kubernetes-dashboard#for-rbac-enabled-clusters
+
 ### Links
  - Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview)
   > please make sure you already have an **Azure China** Subscription
