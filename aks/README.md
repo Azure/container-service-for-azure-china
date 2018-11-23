@@ -90,6 +90,7 @@ Original `az aks install-cli` command does not work in azure china, follow detai
 
 ## 4. Install helm
 follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
+ - Example: `helm install stable/wordpress`
 
 > Note:
 All kubernetes related binaries on github could be found under [https://mirror.azk8s.cn/kubernetes](https://mirror.azk8s.cn/kubernetes), e.g. helm, charts, etc.
