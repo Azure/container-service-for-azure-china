@@ -100,6 +100,7 @@ Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-ser
 
 ### Known issues
  - RBAC related issues: https://github.com/andyzhangx/demo/blob/master/issues/rbac-issues.md
+ - AKS addons are not enabled, including `monitoring` and `http_application_routing`
 
 ### Links
  - Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview)
