@@ -95,7 +95,16 @@ follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
 > Note:
 All kubernetes related binaries on github could be found under [https://mirror.azk8s.cn/kubernetes](https://mirror.azk8s.cn/kubernetes), e.g. helm, charts, etc.
 
-## 5. Run a demo on AKS cluster
+## 5. Cluster autoscaler
+follow detailed steps as [Cluster Autoscaler on Azure Kubernetes Service (AKS) - Preview](https://docs.microsoft.com/en-us/azure/aks/autoscaler) and in `Deployment` config of `aks-cluster-autoscaler.yaml`:
+ - use `gcr.azk8s.cn/google-containers/cluster-autoscaler:v1.2.2` instead of `gcr.io/google-containers/cluster-autoscaler:v1.2.2`
+ - add following environment variable
+```
+        - name: ARM_CLOUD
+          value: AzureChinaCloud
+```
+
+## Run a demo on AKS cluster
 Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo
 
 ### Known issues
