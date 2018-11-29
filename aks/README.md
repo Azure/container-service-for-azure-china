@@ -106,12 +106,12 @@ follow detailed steps as [Cluster Autoscaler on Azure Kubernetes Service (AKS) -
 ```
 here is the complete `Deployment` config [example](https://github.com/Azure/container-service-for-azure-china/blob/master/aks/cluster-autoscaler-deployment-mooncake.yaml)
 
-## Run a demo on AKS cluster
+## Hands on: run a simple web application on AKS cluster
 Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo
 
 ### Known issues
- - RBAC related issues: https://github.com/andyzhangx/demo/blob/master/issues/rbac-issues.md
- - AKS addons are not enabled, including `monitoring` and `http_application_routing`
+ - RBAC related issues(if enable RABC on AKS cluster): https://github.com/andyzhangx/demo/blob/master/issues/rbac-issues.md
+ - AKS addons are not enabled on Azure China yet, including `monitoring` and `http_application_routing`
 
 ### Links
  - Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview)
