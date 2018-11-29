@@ -15,6 +15,7 @@ Currently AKS on Azure China could only be created by [azure cli](https://docs.m
 az cloud set --name AzureChinaCloud
 az login
 az account list
+# make sure <subscription-name> is the whitelisted subscription
 az account set -s <subscription-name>
 ```
 
@@ -97,12 +98,13 @@ All kubernetes related binaries on github could be found under [https://mirror.a
 
 ## 5. Cluster autoscaler
 follow detailed steps as [Cluster Autoscaler on Azure Kubernetes Service (AKS) - Preview](https://docs.microsoft.com/en-us/azure/aks/autoscaler) and in `Deployment` config of `aks-cluster-autoscaler.yaml`:
- - use `gcr.azk8s.cn/google-containers/cluster-autoscaler:v1.2.2` instead of `gcr.io/google-containers/cluster-autoscaler:v1.2.2`
- - add following environment variable
+ - use `gcr.azk8s.cn/google-containers/cluster-autoscaler:version` instead of `gcr.io/google-containers/cluster-autoscaler:version`
+ - add following environment variable:
 ```
         - name: ARM_CLOUD
           value: AzureChinaCloud
 ```
+here is the complete `Deployment` config [example](https://github.com/Azure/container-service-for-azure-china/blob/master/aks/cluster-autoscaler-deployment-mooncake.yaml)
 
 ## Run a demo on AKS cluster
 Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo
