@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cluster-autoscaler
+  name: cluster-autoscaler
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cluster-autoscaler
+  template:
+    metadata:
+      labels:
+        app: cluster-autoscaler
+    spec:
+      serviceAccountName: cluster-autoscaler
+      containers:
+      - image: gcr.azk8s.cn/google-containers/cluster-autoscaler:v1.2.2
+        imagePullPolicy: Always
+        name: cluster-autoscaler
+        resources:
+          limits:
+            cpu: 100m
+            memory: 300Mi
+          requests:
+            cpu: 100m
+            memory: 300Mi
+        command:
+        - ./cluster-autoscaler
+        - --v=3
+        - --logtostderr=true
+        - --cloud-provider=azure
+        - --skip-nodes-with-local-storage=false
+        - --nodes=1:10:nodepool1
+        env:
+        - name: ARM_SUBSCRIPTION_ID
+          valueFrom:
+            secretKeyRef:
+              key: SubscriptionID
+              name: cluster-autoscaler-azure
+        - name: ARM_RESOURCE_GROUP
+          valueFrom:
+            secretKeyRef:
+              key: ResourceGroup
+              name: cluster-autoscaler-azure
+        - name: ARM_TENANT_ID
+          valueFrom:
+            secretKeyRef:
+              key: TenantID
+              name: cluster-autoscaler-azure
+        - name: ARM_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: ClientID
+              name: cluster-autoscaler-azure
+        - name: ARM_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: ClientSecret
+              name: cluster-autoscaler-azure
+        - name: ARM_VM_TYPE
+          valueFrom:
+            secretKeyRef:
+              key: VMType
+              name: cluster-autoscaler-azure
+        - name: AZURE_CLUSTER_NAME
+          valueFrom:
+            secretKeyRef:
+              key: ClusterName
+              name: cluster-autoscaler-azure
+        - name: AZURE_NODE_RESOURCE_GROUP
+          valueFrom:
+            secretKeyRef:
+              key: NodeResourceGroup
+              name: cluster-autoscaler-azure
+        - name: ARM_CLOUD
+          value: AzureChinaCloud			  
+      restartPolicy: Always
