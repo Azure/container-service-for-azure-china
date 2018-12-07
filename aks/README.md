@@ -3,7 +3,7 @@ Azure Kubernetes Service is in **Private Preview**, this page provides best prac
  - Contact AKS China Team: [akscn@microsoft.com](mailto:akscn@microsoft.com)
 
 ## Limitations of current AKS Private Preview on Azure China
- - only `chinaeast2` region is supported
+ - only `chinaeast2` region is supported up to now
  - AKS set up wizard is not available on azure portal, only azure cli command line is supported
  - AKS monitoring and logging are not available, there will be error when clicking on `Monitor containers` and `View logs` links in AKS overview page
  - AKS addons are not enabled on Azure China yet, including `monitoring` and `http_application_routing` addons
