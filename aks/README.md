@@ -85,6 +85,12 @@ Since some container registries like `gcr.io`, `docker.io` are not accessible or
 k8s.gcr.io/pause-amd64:3.1
 gcr.io/google_containers/pause-amd64:3.1
 ```
+ - Example
+
+specify `defaultBackend.image.repository` as `gcr.azk8s.cn/google_containers/defaultbackend` in [nginx-ingress](https://github.com/helm/charts/tree/master/stable/nginx-ingress) chart since original `k8s.gcr.io` does not work in Azure China:
+```
+helm install stable/nginx-ingress --namespace kube-system --set controller.replicaCount=2 --set defaultBackend.image.repository=gcr.azk8s.cn/google_containers/defaultbackend
+```
 
 ## 3. Install kubectl
 Original `az aks install-cli` command does not work in azure china, follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
