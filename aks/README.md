@@ -20,19 +20,19 @@ az account list
 az account set -s <subscription-name>
 ```
 
- - Example: create a `v1.10.8` AKS cluster on `chinaeast2`
+ - Example: create a `v1.11.4` AKS cluster on `chinaeast2`
 ```sh
-RESOURCE_GROUP_NAME=demo-aks1108
-CLUSTER_NAME=demo-aks1108
+RESOURCE_GROUP_NAME=demo-aks1114
+CLUSTER_NAME=demo-aks1114
 LOCATION=chinaeast2
 
 # create a resource group
 az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
 
 # create AKS cluster with 1 agent node (if your azure cli version is low, remove `--disable-rbac`)
-az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D3_v2 --disable-rbac --generate-ssh-keys --kubernetes-version 1.10.8
+az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D3_v2 --disable-rbac --generate-ssh-keys --kubernetes-version 1.11.4
 
-# wait about 15 min for `az aks create` running complete
+# wait about 10 min for `az aks create` running complete
 
 # get the credentials for the cluster
 az aks get-credentials -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
@@ -74,7 +74,9 @@ KubernetesVersion    Upgrades
 ## 2. Container Registry
 ### 2.1 Azure Container Registry(ACR)
 [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/)(ACR) provides storage of private Docker container images, enabling fast, scalable retrieval, and network-close deployment of container workloads on Azure. It's now available on `chinaeast2`, `chinanorth` region.
-> ACR does not provide **public anonymous access** functionality.
+ - ACR does not provide **public anonymous access** functionality.
+ - AKS has good integration with ACR, container image stored in ACR could be pulled in AKS after [Configure ACR authentication
+](https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster#configure-acr-authentication)
 
 ### 2.2 Container Registry Proxy
 Since some well known container registries like `docker.io`, `gcr.io` are not accessible or very slow in China, we have set up container registry proxies in `chinaeast2` region for **public anonymous access**:
@@ -109,7 +111,7 @@ follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
 All kubernetes related binaries on github could be found under [https://mirror.azk8s.cn/kubernetes](https://mirror.azk8s.cn/kubernetes), e.g. helm, charts, etc.
 
 ## 5. Cluster autoscaler
-follow detailed steps as [Cluster Autoscaler on Azure Kubernetes Service (AKS) - Preview](https://docs.microsoft.com/en-us/azure/aks/autoscaler) and in `Deployment` config of `aks-cluster-autoscaler.yaml`:
+follow detailed steps in [Cluster Autoscaler on Azure Kubernetes Service (AKS) - Preview](https://docs.microsoft.com/en-us/azure/aks/autoscaler) and in `Deployment` config of `aks-cluster-autoscaler.yaml`:
  - use `gcr.azk8s.cn/google-containers/cluster-autoscaler:version` instead of `gcr.io/google-containers/cluster-autoscaler:version`
  - add following environment variable:
 ```
