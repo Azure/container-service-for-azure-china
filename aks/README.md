@@ -124,7 +124,7 @@ here is the complete `Deployment` config [example](https://github.com/Azure/cont
 Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo
 
 ### Known issues
- - RBAC related issues(if enable RABC on AKS cluster): https://github.com/andyzhangx/demo/blob/master/issues/rbac-issues.md
+ - RBAC related issues(RABC is enabled on AKS cluster): https://github.com/andyzhangx/demo/blob/master/issues/rbac-issues.md
 
 ### Links
  - Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview)
