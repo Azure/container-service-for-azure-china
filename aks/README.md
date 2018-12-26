@@ -71,8 +71,13 @@ KubernetesVersion    Upgrades
 1.7.15               1.7.16, 1.8.14, 1.8.15
 ```
 
-## 2. Container registry proxies
-Since some container registries like `gcr.io`, `docker.io` are not accessible or very slow in China, we have set up container registry proxies in `chinaeast2` region now for **public anonymous access**:
+## 2. Container Registry
+### 2.1 Azure Container Registry(ACR)
+[Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/)(ACR) provides storage of private Docker container images, enabling fast, scalable retrieval, and network-close deployment of container workloads on Azure. It's now available on `chinaeast2`, `chinanorth` region.
+> ACR does not provide **public anonymous access** functionality.
+
+### 2.2 Container Registry Proxy
+Since some well known container registries like `docker.io`, `gcr.io` are not accessible or very slow in China, we have set up container registry proxies in `chinaeast2` region for **public anonymous access**:
 
 | global | registry proxy in Azure China | Example |
 | ---- | ---- | ---- |
