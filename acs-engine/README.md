@@ -112,6 +112,11 @@ Usages:
 http://<master_node_fqdn>/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 ```
 
+> You may hit access error when using kubernetes dashboard, run following command and refresh:
+> ```
+> kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
+> ```
+
 ## Tips
 #### If there is provision failure on the node, check following log file for diagnostics:
 ```
