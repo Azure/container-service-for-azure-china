@@ -72,10 +72,16 @@ az group deployment create \
 ```
 
 ## 8. Verify the cluster status
-Log in to master node via SSH and run below command. If all services(like kubernetes, heapster, kube-dns, kubernetes-dashboard, tiller-deploy) in `default` and `kube-system` namespaces are working fine, it indicates the cluster were installed correctly.
+ - Log in to master node via SSH by 
+```
+ssh azureuser@$dnsPrefix.$REGION.cloudapp.chinacloudapi.cn
+``` 
+ - run below command
 ```
 kubectl get services --all-namespaces
 ```
+> If all services(like kubernetes, heapster, kube-dns, kubernetes-dashboard, tiller-deploy) in `default` and `kube-system` namespaces are working fine, it indicates the cluster were installed correctly.
+
 
 ## 9. Config kubernetes dashboard (Optional)
 > Login to master node via SSH
@@ -102,4 +108,10 @@ Usages:
 > Access dashboard via following link:
 ```
 http://<master_node_fqdn>/ui
+```
+
+## Tips
+#### If there is provision failure on the node, check following log file for diagnostics:
+```
+/var/log/azure/cluster-provision.log
 ```
