@@ -4,10 +4,11 @@ The Azure Container Service Engine (acs-engine) generates ARM (Azure Resource Ma
 
 
 ## 1. Install acs-engine. It supports build acd-engine from source and install binary download:
-* Binary downloads for the specific version(better to install v0.14.0 and later versions) of acs-engine for are available [here](https://github.com/Azure/acs-engine/releases/). For other binary packages, please download from Azure China mirror site: https://mirror.kaiyuanshe.cn/kubernetes/acs-engine/
+* Binary downloads for the specific version(take v0.26.3 as an example) of acs-engine for are available [here](https://github.com/Azure/acs-engine/releases/). For other binary packages, please download from Azure China mirror site: https://mirror.azure.cn/kubernetes/acs-engine/
 ```
-  curl -LO https://mirror.kaiyuanshe.cn/kubernetes/acs-engine/v0.14.0/acs-engine-v0.14.0-linux-amd64.tar.gz
-  tar -xvzf acs-engine-v0.14.0-linux-amd64.tar.gz
+acs_version=v0.26.3
+wget https://mirror.azure.cn/kubernetes/acs-engine/$acs_version/acs-engine-$acs_version-linux-amd64.tar.gz
+tar -xvzf acs-engine-$acs_version-linux-amd64.tar.gz
 ```
 * [Build acs-engine from source](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.zh-CN.md)
 
@@ -45,6 +46,7 @@ Acs-engine consumes a cluster definition which outlines the desired shape, size,
 * clientId - this is the service principal's appId uuid or name from step 4
 * secret - this is the service principal's password or randomly-generated password from step 4
 * add location definition `"location": "chinaeast",` behind `apiVersion: "vlabs"`
+> specify `location` as (`chinaeast`, `chinanorth`, `chinaeast2`, `chinanorth2`) in cluster defination file
 
 ## 6. Generate ARM templates
 Run `acs-engine generate kubernetes.json` command to generate a number of files that may be submitted to ARM. By default, generate will create a new directory named after your cluster nested in the `_output` directory. The generated files include:
