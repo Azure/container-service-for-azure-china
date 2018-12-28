@@ -1,4 +1,4 @@
-# Microsoft Azure Container Service Engine
+# Microsoft acs-engine deployment guide on Azure China
 
 The Azure Container Service Engine (acs-engine) generates ARM (Azure Resource Manager) templates for Docker enabled clusters on Microsoft Azure with your choice of DCOS, Kubernetes, or Swarm orchestrators. The input to acs-engine is a cluster definition file which describes the desired cluster, including orchestrator, features, and agents. The structure of the input files is very similar to the public API for Azure Container Service.
 
@@ -74,7 +74,7 @@ az group deployment create \
 ## 8. Verify the cluster status
  - Log in to master node via SSH by 
 ```
-ssh azureuser@$dnsPrefix.$REGION.cloudapp.chinacloudapi.cn
+ssh adminUsername@$dnsPrefix.$REGION.cloudapp.chinacloudapi.cn
 ``` 
  - run below command
 ```
