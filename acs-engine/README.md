@@ -34,8 +34,8 @@ Kubernetes clusters have integrated support for various cloud providers as core 
 ```
 az cloud set -n AzureChinaCloud
 az login
-az account set --subscription="${SUBSCRIPTION_ID}" (if there is only one subscription, this step is optional)
-az ad sp create-for-rbac --name XXX
+az account set --subscription="${SUBSCRIPTION_ID}" #if there is only one subscription, this step is optional
+az ad sp create-for-rbac -n RBAC_NAME --role="Contributor" --scopes="/subscriptions/{subs-id}"
 ```
 
 ## 5. Clone & edit kubernetes cluster definition file [example/kubernetes.json](https://raw.githubusercontent.com/Azure/acs-engine/master/examples/kubernetes.json)
