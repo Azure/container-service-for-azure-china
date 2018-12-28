@@ -4,7 +4,7 @@ The Azure Container Service Engine (acs-engine) generates ARM (Azure Resource Ma
 
 
 ## 1. download acs-engine binary
-* take v0.26.3 as an example 
+* take acs-engine v0.26.3 as an example 
 ```
 acs_version=v0.26.3
 wget https://mirror.azure.cn/kubernetes/acs-engine/$acs_version/acs-engine-$acs_version-linux-amd64.tar.gz
