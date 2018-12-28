@@ -101,7 +101,7 @@ bash config_k8s_ui_http.sh -c <cloud_name> -g <rg_name> -t <tenant_id> -i <app_i
 Usages: 
 * -c [Cloud instance name, AzureCloud or AzureChinaCloud]"
 * -g [Resource group]"
-* -t [Service principal tenant id, e.g. foo.onmicrosoft.com, bar.partner.onmschina.cn etc. ]"
+* -t [Service principal tenantId, e.g. 89e1b688-8d74-xxx-9680-54d0a43a4f0d ]"
 * -i [Service principal app id]"
 * -s [Service principal secret]"
 * -u [Kubernetes dashboard user name, default value is 'admin']"
