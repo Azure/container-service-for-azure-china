@@ -49,7 +49,7 @@ Acs-engine consumes a [cluster definition](https://github.com/Azure/acs-engine/b
 > specify `location` as (`chinaeast`, `chinanorth`, `chinaeast2`, `chinanorth2`) in cluster defination file
 
 ## 6. Generate ARM templates
-Run `acs-engine generate kubernetes.json` command to generate a number of files that may be submitted to ARM. By default, generate will create a new directory named after your cluster nested in the `_output` directory. The generated files include:
+Run `./acs-engine generate kubernetes.json` command to generate a number of files that may be submitted to ARM. By default, generate will create a new directory(naming as `dnsPrefix`) after your cluster nested in the `_output` directory. The generated files include:
 * apimodel.json - is an expanded version of the cluster definition provided to the generate command. All default or computed values will be expanded during the generate phase
 * azuredeploy.json - represents a complete description of all Azure resources required to fulfill the cluster definition from apimodel.json
 * azuredeploy.parameters.json - the parameters file holds a series of custom variables which are used in various locations throughout azuredeploy.json
@@ -58,10 +58,17 @@ Run `acs-engine generate kubernetes.json` command to generate a number of files 
 ## 7. Deploy K8S cluster with ARM
 [Deploy the output azuredeploy.json and azuredeploy.parameters.json](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.md#deployment-usage)
 ```
-az cloud set -n AzureChinaCloud
-az login
-az group create -l chinaeast -n xxx
-az group deployment create -g xxx --template-file azuredeploy.json --parameters azuredeploy.parameters.json
+# create a resource group first
+RESOURCE_GROUP_NAME=demo-k8s
+az group create -l chinaeast -n $RESOURCE_GROUP_NAME
+
+# deploy ARM template
+dnsPrefix=demo-k8s
+az group deployment create \
+    --name="$dnsPrefix" \
+    --resource-group=$RESOURCE_GROUP_NAME \
+    --template-file="./_output/$dnsPrefix/azuredeploy.json" \
+    --parameters "@./_output/$dnsPrefix/azuredeploy.parameters.json"
 ```
 
 ## 8. Verify the cluster status
