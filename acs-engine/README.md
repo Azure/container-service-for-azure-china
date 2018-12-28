@@ -3,14 +3,14 @@
 The Azure Container Service Engine (acs-engine) generates ARM (Azure Resource Manager) templates for Docker enabled clusters on Microsoft Azure with your choice of DCOS, Kubernetes, or Swarm orchestrators. The input to acs-engine is a cluster definition file which describes the desired cluster, including orchestrator, features, and agents. The structure of the input files is very similar to the public API for Azure Container Service.
 
 
-## 1. Install acs-engine. It supports build acd-engine from source and install binary download:
-* Binary downloads for the specific version(take v0.26.3 as an example) of acs-engine for are available [here](https://github.com/Azure/acs-engine/releases/). For other binary packages, please download from [Azure China mirror site](https://mirror.azure.cn/kubernetes/acs-engine/). 
+## 1. download acs-engine binary
+* take v0.26.3 as an example 
 ```
 acs_version=v0.26.3
 wget https://mirror.azure.cn/kubernetes/acs-engine/$acs_version/acs-engine-$acs_version-linux-amd64.tar.gz
 tar -xvzf acs-engine-$acs_version-linux-amd64.tar.gz
 ```
-* [Build acs-engine from source](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.zh-CN.md)
+> as an alternative, you could also [Build acs-engine from source](https://github.com/Azure/acs-engine/blob/master/docs/acsengine.zh-CN.md)
 
 
 ## 2. Generate an SSH Key 
