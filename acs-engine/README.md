@@ -39,7 +39,7 @@ az ad sp create-for-rbac --name XXX
 ```
 
 ## 5. Clone & edit kubernetes cluster definition file [example/kubernetes.json](https://raw.githubusercontent.com/Azure/acs-engine/master/examples/kubernetes.json)
-Acs-engine consumes a cluster definition which outlines the desired shape, size, and configuration of Kubernetes. There are a number of features that can be enabled through the cluster definition:
+Acs-engine consumes a [cluster definition](https://github.com/Azure/acs-engine/blob/master/docs/clusterdefinition.md) which outlines the desired shape, size, and configuration of Kubernetes. There are a number of features that can be enabled through the cluster definition:
 * adminUsername - change username for agent nodes
 * dnsPrefix - must be a region-unique name and will form part of the hostname (e.g. myprod1, staging, leapingllama) 
 * keyData - must contain the public portion of an SSH key - this will be associated with the adminUsername value found in the same section of the cluster definition (e.g. 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABA....')
