@@ -74,8 +74,10 @@ az group deployment create \
 ## 8. Verify the cluster status
  - Log in to master node via SSH by 
 ```
-ssh adminUsername@$dnsPrefix.$REGION.cloudapp.chinacloudapi.cn
-``` 
+ssh adminUsername@<master_node_fqdn>
+```
+> usually master_node_fqdn is `$dnsPrefix.$REGION.cloudapp.chinacloudapi.cn`
+
  - run below command
 ```
 kubectl get services --all-namespaces
@@ -83,7 +85,7 @@ kubectl get services --all-namespaces
 > If all services(like kubernetes, heapster, kube-dns, kubernetes-dashboard, tiller-deploy) in `default` and `kube-system` namespaces are working fine, it indicates the cluster were installed correctly.
 
 
-## 9. Config kubernetes dashboard (Optional)
+## 9. Config kubernetes dashboard (Only for testing purpose)
 > Login to master node via SSH
 ```
 ssh -i <path_to_id_rsa> <adminUsername>@<master_node_fqdn>
@@ -107,7 +109,7 @@ Usages:
 
 > Access dashboard via following link:
 ```
-http://<master_node_fqdn>/ui
+http://<master_node_fqdn>/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 ```
 
 ## Tips
