@@ -85,7 +85,8 @@ kubectl get services --all-namespaces
 > If all services(like kubernetes, heapster, kube-dns, kubernetes-dashboard, tiller-deploy) in `default` and `kube-system` namespaces are working fine, it indicates the cluster were installed correctly.
 
 ## Tips
-#### If there is provision failure on the node, check following log file for diagnostics:
+ - [Config kubernetes dashboard (only for testing purpose)](./config-k8s-dashboard.md)
+ - If there is provision failure on the node, check following log file for diagnostics:
 ```
 /var/log/azure/cluster-provision.log
 ```
