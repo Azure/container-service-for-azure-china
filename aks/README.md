@@ -7,7 +7,7 @@ Azure Kubernetes Service is in **Private Preview**, this page provides best prac
  - AKS set up wizard is not available on azure portal, only azure cli command line is supported
  - AKS monitoring and logging are not available, there will be error when clicking on `Monitor containers` and `View logs` links in AKS overview page
  - AKS addons are not enabled on Azure China yet, including `monitoring` and `http_application_routing` addons
- > note: for `http_application_routing` addon functionality, you could use [ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress-basic) instead.
+ > note: for [`http_application_routing`](https://docs.microsoft.com/en-us/azure/aks/http-application-routing) addon functionality, it's not for production use, you could use [ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress-basic) instead.
  - GPU support is not enabled on Azure China yet
 
 ## 1. How to create AKS on Azure China
