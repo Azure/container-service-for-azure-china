@@ -84,7 +84,7 @@ Since some well known container registries like `docker.io`, `gcr.io` are not ac
 
 | global | proxy in China | Example |
 | ---- | ---- | ---- |
-| [dockerhub](hub.docker.com) (docker.io) | [dockerhub.azk8s.cn](http://mirror.azk8s.cn/help/docker-registry-proxy-cache.html) | `dockerhub.azk8s.cn/library/nginx`; personal dockerhub image [example](https://github.com/andyzhangx/k8s-demo/blob/1362402d8f585ab6f03cf0c40eefa8d0ac21c5ad/nginx-server/nginx-server-azurefile-mooncake.yaml#L39) |
+| [dockerhub](hub.docker.com) (docker.io) | [dockerhub.azk8s.cn](http://mirror.azk8s.cn/help/docker-registry-proxy-cache.html) | `dockerhub.azk8s.cn/library/nginx`|
 | gcr.io | [gcr.azk8s.cn](http://mirror.azk8s.cn/help/gcr-proxy-cache.html) | `gcr.azk8s.cn/google_containers/hyperkube-amd64:v1.9.2` |
 | quay.io | [quay.azk8s.cn](http://mirror.azk8s.cn/help/quay-proxy-cache.html) | `quay.azk8s.cn/deis/go-dev:v1.10.0` |
 
