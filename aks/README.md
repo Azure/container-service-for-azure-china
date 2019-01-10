@@ -74,7 +74,7 @@ KubernetesVersion    Upgrades
 
 ## 2. Container Registry
 ### 2.1 Azure Container Registry(ACR)
-[Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/)(ACR) provides storage of private Docker container images, enabling fast, scalable retrieval, and network-close deployment of container workloads on Azure. It's now available on `chinaeast2`, `chinanorth` region.
+[Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/)(ACR) provides storage of private Docker container images, enabling fast, scalable retrieval, and network-close deployment of container workloads on Azure. It's now available on `chinaeast2`(Preview), `chinanorth` region.
  - ACR does not provide **public anonymous access** functionality.
  - AKS has good integration with ACR, container image stored in ACR could be pulled in AKS after [Configure ACR authentication
 ](https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster#configure-acr-authentication)
