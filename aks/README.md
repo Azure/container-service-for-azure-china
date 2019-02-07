@@ -81,7 +81,8 @@ KubernetesVersion    Upgrades
 
 ### 2.2 Container Registry Proxy
 Since some well known container registries like `docker.io`, `gcr.io` are not accessible or very slow in China, we have set up container registry proxies in `chinaeast2` region for **public anonymous access**:
-
+ > The first docker pull of new image will be slow, and then image would be cached, would be much faster in the next docker pull action.
+ 
 | global | proxy in China | Example |
 | ---- | ---- | ---- |
 | [dockerhub](hub.docker.com) (docker.io) | [dockerhub.azk8s.cn](http://mirror.azk8s.cn/help/docker-registry-proxy-cache.html) | `dockerhub.azk8s.cn/library/nginx`|
