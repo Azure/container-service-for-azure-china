@@ -99,7 +99,7 @@ gcr.io/google_containers/pause-amd64:3.1
 
 specify `defaultBackend.image.repository` as `gcr.azk8s.cn/google_containers/defaultbackend` in [nginx-ingress](https://github.com/helm/charts/tree/master/stable/nginx-ingress) chart since original `k8s.gcr.io` does not work in Azure China:
 ```
-helm install stable/nginx-ingress --namespace kube-system --set controller.replicaCount=2 --set defaultBackend.image.repository=gcr.azk8s.cn/google_containers/defaultbackend
+helm install stable/nginx-ingress --name ingress --namespace kube-system --set controller.replicaCount=2 --set defaultBackend.image.repository=gcr.azk8s.cn/google_containers/defaultbackend --set rbac.create=false --set rbac.createRole=false --set rbac.createClusterRole=false
 ```
 
 ## 3. Install kubectl
