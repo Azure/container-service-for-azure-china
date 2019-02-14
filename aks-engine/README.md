@@ -60,7 +60,7 @@ Run `./aks-engine generate kubernetes.json` command to generate a number of file
 ```
 # create a resource group first
 RESOURCE_GROUP_NAME=demo-k8s
-az group create -l chinaeast -n $RESOURCE_GROUP_NAME
+az group create -l chinaeast2 -n $RESOURCE_GROUP_NAME
 
 # deploy ARM template
 dnsPrefix=demo-k8s
