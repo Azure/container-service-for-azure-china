@@ -1,6 +1,6 @@
 # Microsoft aks-engine deployment guide on Azure China
 
-The Azure Container Service Engine (aks-engine) generates ARM (Azure Resource Manager) templates for Docker enabled clusters on Microsoft Azure with your choice of DCOS, Kubernetes, or Swarm orchestrators. The input to aks-engine is a cluster definition file which describes the desired cluster, including orchestrator, features, and agents. The structure of the input files is very similar to the public API for Azure Container Service.
+[AKS Engine](https://github.com/Azure/aks-engine) provides convenient tooling to quickly bootstrap Kubernetes clusters on Azure. By leveraging [ARM (Azure Resource Manager)](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview), AKS Engine helps you create, destroy and maintain clusters provisioned with basic IaaS resources in Azure. AKS Engine is also the library used by AKS for performing these operations to provide managed service implementations.
 
 
 ## 1. download aks-engine binary
