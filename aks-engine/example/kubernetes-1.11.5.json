@@ -8,7 +8,7 @@
         },
         "masterProfile": {
             "count": 1,
-            "dnsPrefix": "andy-k8s1115",
+            "dnsPrefix": "k8s1115",
             "vmSize": "Standard_D2_v2"
         },
         "agentPoolProfiles": [
