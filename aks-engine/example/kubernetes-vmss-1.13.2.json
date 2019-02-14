@@ -1,0 +1,37 @@
+{
+    "apiVersion": "vlabs",
+    "location": "chinaeast2",
+    "properties": {
+        "orchestratorProfile": {
+            "orchestratorType": "Kubernetes",
+            "orchestratorVersion": "1.13.2"
+        },
+        "masterProfile": {
+            "count": 1,
+            "dnsPrefix": "andy-vmss1132",
+            "vmSize": "Standard_D2_v2"
+        },
+        "agentPoolProfiles": [
+            {
+                "name": "agentpool1",
+                "count": 2,
+                "vmSize": "Standard_D2_v2",
+                "availabilityProfile": "VirtualMachineScaleSets"
+            }
+        ],
+        "linuxProfile": {
+            "adminUsername": "azureuser",
+            "ssh": {
+                "publicKeys": [
+                    {
+                        "keyData": "ssh-rsa ... user@dev"
+                    }
+                ]
+            }
+        },
+        "servicePrincipalProfile": {
+            "clientId": "63ae75bb-xxxx-xxxx-xxxx-6beca315b963",
+            "secret": ""
+        }
+    }
+}
