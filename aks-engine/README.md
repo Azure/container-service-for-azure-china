@@ -38,15 +38,19 @@ az account set --subscription="${SUBSCRIPTION_ID}" #if there is only one subscri
 az ad sp create-for-rbac -n RBAC_NAME --role="Contributor" --scopes="/subscriptions/{subs-id}"
 ```
 
-## 5. Clone & edit kubernetes cluster definition file [example/kubernetes.json](https://raw.githubusercontent.com/Azure/aks-engine/master/examples/kubernetes.json)
+## 5. Clone & edit Kubernetes cluster definition file [example/kubernetes.json](https://raw.githubusercontent.com/Azure/aks-engine/master/examples/kubernetes.json)
 Acs-engine consumes a [cluster definition](https://github.com/Azure/aks-engine/blob/master/docs/clusterdefinition.md) which outlines the desired shape, size, and configuration of Kubernetes. There are a number of features that can be enabled through the cluster definition:
 * adminUsername - change username for agent nodes
 * dnsPrefix - must be a region-unique name and will form part of the hostname (e.g. myprod1, staging, leapingllama) 
 * keyData - must contain the public portion of an SSH key - this will be associated with the adminUsername value found in the same section of the cluster definition (e.g. 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABA....')
 * clientId - this is the service principal's appId uuid or name from step 4
 * secret - this is the service principal's password or randomly-generated password from step 4
-* add location definition `"location": "chinaeast",` behind `apiVersion: "vlabs"`
-> specify `location` as (`chinaeast`, `chinanorth`, `chinaeast2`, `chinanorth2`) in cluster defination file
+* add **location** definition `"location": "chinaeast2",` behind `apiVersion: "vlabs"`
+  * specify `location` as (`chinaeast`, `chinanorth`, `chinaeast2`, `chinanorth2`) in cluster defination file
+* Kubernetes cluster definition example files for Azure China
+  * [VM Availability Set cluster example](./example/kubernetes-1.11.5.json)
+  * [VM Scale Set cluster example](./example/kubernetes-vmss-1.13.2.json)
+
 
 ## 6. Generate ARM templates
 Run `./aks-engine generate kubernetes.json` command to generate a number of files that may be submitted to ARM. By default, generate will create a new directory(naming as `dnsPrefix`) after your cluster nested in the `_output` directory. The generated files include:
