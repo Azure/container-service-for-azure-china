@@ -104,6 +104,12 @@ helm install stable/nginx-ingress --name ingress --namespace kube-system --set c
 
 ## 3. Install kubectl
 Original `az aks install-cli` command does not work on Azure China, follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
+ - There is a PR [add "az aks install-cli" support for Azure China](https://github.com/Azure/azure-cli/pull/8675) to fix this issue, you could use containerized azure-cl(`andyzhangx/azure-cli:mooncake-kubectl`) to workaround:
+```
+# docker run -v ${HOME}:/root -it andyzhangx/azure-cli:mooncake-kubectl
+root@09feb993f352:/# az cloud set --name AzureChinaCloud
+root@09feb993f352:/# az aks install-cli
+```
 
 ## 4. Install helm
 follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
