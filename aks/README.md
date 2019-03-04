@@ -12,74 +12,84 @@ Azure Kubernetes Service is in **Private Preview**, this page provides best prac
 
 ## 1. How to create AKS on Azure China
 Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2` region
- - How to use [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) on Azure China
-```sh
-az cloud set --name AzureChinaCloud
-az login
-az account list
-# make sure <subscription-name> is the whitelisted subscription
-az account set -s <subscription-name>
-```
 
- - Example: create a `v1.11.4` AKS cluster on `chinaeast2`
-```sh
-RESOURCE_GROUP_NAME=demo-aks1114
-CLUSTER_NAME=demo-aks1114
-LOCATION=chinaeast2
+- How to use [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) on Azure China
 
-# create a resource group
-az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
+    ```sh
+    az cloud set --name AzureChinaCloud
+    az login
+    az account list
+    # make sure <subscription-name> is the whitelisted subscription
+    az account set -s <subscription-name>
+    ```
 
-# create AKS cluster with 1 agent node (if your azure cli version is low, remove `--disable-rbac`)
-az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D3_v2 --disable-rbac --generate-ssh-keys --kubernetes-version 1.11.4
+- Pick one available kubernetes version on `chinaeast2`.
 
-# wait about 10 min for `az aks create` running complete
+    ```
+    az aks get-versions -l chinaeast2 -o table
+    KubernetesVersion    Upgrades
+    -------------------  ----------------------
+    1.11.5               None available
+    1.11.4               1.11.5
+    1.10.9               1.11.4, 1.11.5
+    1.10.8               1.10.9, 1.11.4, 1.11.5
+    1.9.11               1.10.8, 1.10.9
+    1.9.10               1.9.11, 1.10.8, 1.10.9
+    1.8.15               1.9.10, 1.9.11
+    1.8.14               1.8.15, 1.9.10, 1.9.11
+    1.7.16               1.8.14, 1.8.15
+    1.7.15               1.7.16, 1.8.14, 1.8.15
+    ```
 
-# get the credentials for the cluster
-az aks get-credentials -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
+- Example: create a `v1.11.5` AKS cluster on `chinaeast2`
 
-# get all agent nodes
-kubectl get nodes
+    ```sh
+    RESOURCE_GROUP_NAME=demo-aks
+    CLUSTER_NAME=demo-aks
+    LOCATION=chinaeast2
+    LOCATION=1.11.5
+    
+    # create a resource group
+    az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
+    
+    # create AKS cluster with 1 agent node (if your azure cli version is low, remove `--disable-rbac`)
+    az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D3_v2 --disable-rbac --generate-ssh-keys --kubernetes-version $VERSION -l $LOCATION
+    
+    # wait about 10 min for `az aks create` running complete
+    
+    # get the credentials for the cluster
+    az aks get-credentials -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
+    
+    # get all agent nodes
+    kubectl get nodes
+    
+    # open the Kubernetes dashboard
+    az aks browse --resource-group $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
+    
+    # scale up/down AKS cluster nodes 
+    az aks scale -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count=2
+    
+    # delete AKS cluster node
+    az aks delete -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
+    
+    ```
 
-# open the Kubernetes dashboard
-az aks browse --resource-group $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
-
-# scale up/down AKS cluster nodes 
-az aks scale -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count=2
-
-# delete AKS cluster node
-az aks delete -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
-
-```
- > Get more detailed [AKS set up steps](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
+    > Get more detailed [AKS set up steps](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
  
- > Detailed "az aks" command line manual could be found [here](https://docs.microsoft.com/en-us/cli/azure/aks)
+    > Detailed "az aks" command line manual could be found [here](https://docs.microsoft.com/en-us/cli/azure/aks)
 
- -  All available kubernetes version on `chinaeast2`
-```
-az aks get-versions -l chinaeast2 -o table
-KubernetesVersion    Upgrades
--------------------  ----------------------
-1.11.5               None available
-1.11.4               1.11.5
-1.10.9               1.11.4, 1.11.5
-1.10.8               1.10.9, 1.11.4, 1.11.5
-1.9.11               1.10.8, 1.10.9
-1.9.10               1.9.11, 1.10.8, 1.10.9
-1.8.15               1.9.10, 1.9.11
-1.8.14               1.8.15, 1.9.10, 1.9.11
-1.7.16               1.8.14, 1.8.15
-1.7.15               1.7.16, 1.8.14, 1.8.15
-```
 
 ## 2. Container Registry
+
 ### 2.1 Azure Container Registry(ACR)
+
 [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/)(ACR) provides storage of private Docker container images, enabling fast, scalable retrieval, and network-close deployment of container workloads on Azure. It's now available on `chinanorth` region.
  - ACR does not provide **public anonymous access** functionality.
  - AKS has good integration with ACR, container image stored in ACR could be pulled in AKS after [Configure ACR authentication
 ](https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster#configure-acr-authentication)
 
 ### 2.2 Container Registry Proxy
+
 Since some well known container registries like `docker.io`, `gcr.io` are not accessible or very slow in China, we have set up container registry proxies in `chinaeast2` region for **public anonymous access**:
  > The first docker pull of new image will be slow, and then image would be cached, would be much faster in the next docker pull action.
  
@@ -91,6 +101,7 @@ Since some well known container registries like `docker.io`, `gcr.io` are not ac
 
 > Note:
 `k8s.gcr.io` would redirect to `gcr.io/google-containers`, following image urls are identical:
+
 ```
 k8s.gcr.io/pause-amd64:3.1
 gcr.io/google_containers/pause-amd64:3.1
@@ -103,8 +114,10 @@ helm install stable/nginx-ingress --name ingress --namespace kube-system --set c
 ```
 
 ## 3. Install kubectl
+
 Original `az aks install-cli` command does not work on Azure China, follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
  - There is a PR [add "az aks install-cli" support for Azure China](https://github.com/Azure/azure-cli/pull/8675) to fix this issue, you could use containerized azure-cl(`andyzhangx/azure-cli:mooncake-kubectl`) to workaround:
+
 ```
 # docker run -v ${HOME}:/root -it andyzhangx/azure-cli:mooncake-kubectl
 root@09feb993f352:/# az cloud set --name AzureChinaCloud
@@ -112,6 +125,7 @@ root@09feb993f352:/# az aks install-cli
 ```
 
 ## 4. Install helm
+
 follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
  - Example: `helm install stable/wordpress`
 
@@ -119,6 +133,7 @@ follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
 All kubernetes related binaries on github could be found under [https://mirror.azk8s.cn/kubernetes](https://mirror.azk8s.cn/kubernetes), e.g. helm, charts, etc.
 
 ## 5. Cluster autoscaler
+
 follow detailed steps in [Cluster Autoscaler on Azure Kubernetes Service (AKS) - Preview](https://docs.microsoft.com/en-us/azure/aks/autoscaler) and in `Deployment` config of `aks-cluster-autoscaler.yaml`:
  - use `gcr.azk8s.cn/google-containers/cluster-autoscaler:version` instead of `gcr.io/google-containers/cluster-autoscaler:version`
  - add following environment variable:
@@ -129,15 +144,19 @@ follow detailed steps in [Cluster Autoscaler on Azure Kubernetes Service (AKS) -
 here is the complete `Deployment` config [example](https://github.com/Azure/container-service-for-azure-china/blob/master/aks/cluster-autoscaler-deployment-mooncake.yaml)
 
 ## Hands on: run a simple web application on AKS cluster
+
 Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo
 
 ### Known issues
+
  - RBAC related issues(RABC is enabled on AKS cluster): https://github.com/andyzhangx/demo/blob/master/issues/rbac-issues.md
  
 ### Tips
+
  - For production usage, agent VM size should have at least 4 CPU cores(e.g. D3_v2) since k8s components would also occupy CPU, memory resource on the node, details about [AKS resource reservation](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#resource-reservations).
 
 ### Links
+
  - Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview)
   > please make sure you already have an **Azure China** Subscription
  - AKS doc: [https://docs.microsoft.com/en-us/azure/aks/](https://docs.microsoft.com/en-us/azure/aks/) 
