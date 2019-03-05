@@ -1,19 +1,28 @@
 # AKS on Azure China Best Practices
+
 Azure Kubernetes Service is in **Private Preview**, this page provides best practices about how to use AKS on Azure China cloud.
- - Contact AKS China Team: [akscn@microsoft.com](mailto:akscn@microsoft.com)
+
+- Contact AKS China Team: [akscn@microsoft.com](mailto:akscn@microsoft.com)
 
 ## Limitations of current AKS Private Preview on Azure China
- - only `chinaeast2` region is supported up to now
- - AKS set up wizard is not available on azure portal, only azure cli command line is supported
- - AKS monitoring and logging are not available, there will be error when clicking on `Monitor containers` and `View logs` links in AKS overview page
- - AKS addons are not enabled on Azure China yet, including `monitoring` and `http_application_routing` addons
- > note: for [`http_application_routing`](https://docs.microsoft.com/en-us/azure/aks/http-application-routing) addon functionality, it's not for production use, you could use [ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress-basic) instead.
- - GPU support is not enabled on Azure China yet
+
+- only `chinaeast2` region is supported up to now.
+
+- AKS set up wizard is not available on azure portal, only azure cli command line is supported.
+
+- AKS monitoring and logging are not available, there will be error when clicking on `Monitor containers` and `View logs` links in AKS overview page.
+
+- AKS addons are not enabled on Azure China yet, including `monitoring` and `http_application_routing` addons.
+
+  > note: for [`http_application_routing`](https://docs.microsoft.com/en-us/azure/aks/http-application-routing) addon functionality, it's not for production use, you could use [ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress-basic) instead.
+
+- GPU support is not enabled on Azure China yet.
 
 ## 1. How to create AKS on Azure China
-Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2` region
 
-- How to use [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) on Azure China
+Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2` region.
+
+- How to use [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) on Azure China.
 
     ```sh
     az cloud set --name AzureChinaCloud
@@ -47,7 +56,7 @@ Currently AKS on Azure China could only be created by [azure cli](https://docs.m
     RESOURCE_GROUP_NAME=demo-aks
     CLUSTER_NAME=demo-aks
     LOCATION=chinaeast2
-    LOCATION=1.11.5
+    VERSION=1.11.5
     
     # create a resource group
     az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
@@ -84,14 +93,16 @@ Currently AKS on Azure China could only be created by [azure cli](https://docs.m
 ### 2.1 Azure Container Registry(ACR)
 
 [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/)(ACR) provides storage of private Docker container images, enabling fast, scalable retrieval, and network-close deployment of container workloads on Azure. It's now available on `chinanorth` region.
- - ACR does not provide **public anonymous access** functionality.
- - AKS has good integration with ACR, container image stored in ACR could be pulled in AKS after [Configure ACR authentication
-](https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster#configure-acr-authentication)
+
+- ACR does not provide **public anonymous access** functionality.
+
+- AKS has good integration with ACR, container image stored in ACR could be pulled in AKS after [Configure ACR authentication](https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster#configure-acr-authentication).
 
 ### 2.2 Container Registry Proxy
 
 Since some well known container registries like `docker.io`, `gcr.io` are not accessible or very slow in China, we have set up container registry proxies in `chinaeast2` region for **public anonymous access**:
- > The first docker pull of new image will be slow, and then image would be cached, would be much faster in the next docker pull action.
+
+> The first docker pull of new image will be slow, and then image would be cached, would be much faster in the next docker pull action.
  
 | global | proxy in China | Example |
 | ---- | ---- | ---- |
@@ -106,42 +117,49 @@ Since some well known container registries like `docker.io`, `gcr.io` are not ac
 k8s.gcr.io/pause-amd64:3.1
 gcr.io/google_containers/pause-amd64:3.1
 ```
- - Container Registry Proxy Example
+- Container Registry Proxy Example
 
-specify `defaultBackend.image.repository` as `gcr.azk8s.cn/google_containers/defaultbackend` in [nginx-ingress](https://github.com/helm/charts/tree/master/stable/nginx-ingress) chart since original `k8s.gcr.io` does not work in Azure China:
-```
-helm install stable/nginx-ingress --name ingress --namespace kube-system --set controller.replicaCount=2 --set defaultBackend.image.repository=gcr.azk8s.cn/google_containers/defaultbackend --set rbac.create=false --set rbac.createRole=false --set rbac.createClusterRole=false
-```
+    specify `defaultBackend.image.repository` as `gcr.azk8s.cn/google_containers/defaultbackend` in [nginx-ingress](https://github.com/helm/charts/tree/master/stable/nginx-ingress) chart since original `k8s.gcr.io` does not work in Azure China:
+
+    ```
+    helm install stable/nginx-ingress --name ingress --namespace kube-system --set controller.replicaCount=2 --set defaultBackend.image.repository=gcr.azk8s.cn/google_containers/defaultbackend --set rbac.create=false --set rbac.createRole=false --set rbac.createClusterRole=false
+    ```
 
 ## 3. Install kubectl
 
 Original `az aks install-cli` command does not work on Azure China, follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
- - There is a PR [add "az aks install-cli" support for Azure China](https://github.com/Azure/azure-cli/pull/8675) to fix this issue, following command will start up containerized azure-cl(`dockerhub.azk8s.cn/andyzhangx/azure-cli:v2.0.60-china`) to download latest `kubectl` version to `/usr/local/bin/`:
 
-```
-# docker run -v ${HOME}:/root -v /usr/local/bin/:/kube -it dockerhub.azk8s.cn/andyzhangx/azure-cli:v2.0.60-china
-root@09feb993f352:/# az cloud set --name AzureChinaCloud
-root@09feb993f352:/# az aks install-cli --install-location /kube/kubectl
-```
+- There is a PR [add "az aks install-cli" support for Azure China](https://github.com/Azure/azure-cli/pull/8675) to fix this issue, following command will start up containerized azure-cl(`dockerhub.azk8s.cn/andyzhangx/azure-cli:v2.0.60-china`) to download latest `kubectl` version to `/usr/local/bin/`:
+
+    ```
+    # docker run -v ${HOME}:/root -v /usr/local/bin/:/kube -it dockerhub.azk8s.cn/andyzhangx/azure-cli:v2.0.60-china
+    root@09feb993f352:/# az cloud set --name AzureChinaCloud
+    root@09feb993f352:/# az aks install-cli --install-location /kube/kubectl
+    ```
 
 ## 4. Install helm
 
-follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
- - Example: `helm install stable/wordpress`
+Follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html).
+
+- Example: `helm install stable/wordpress`
 
 > Note:
 All kubernetes related binaries on github could be found under [https://mirror.azk8s.cn/kubernetes](https://mirror.azk8s.cn/kubernetes), e.g. helm, charts, etc.
 
 ## 5. Cluster autoscaler
 
-follow detailed steps in [Cluster Autoscaler on Azure Kubernetes Service (AKS) - Preview](https://docs.microsoft.com/en-us/azure/aks/autoscaler) and in `Deployment` config of `aks-cluster-autoscaler.yaml`:
- - use `gcr.azk8s.cn/google-containers/cluster-autoscaler:version` instead of `gcr.io/google-containers/cluster-autoscaler:version`
- - add following environment variable:
-```
-        - name: ARM_CLOUD
-          value: AzureChinaCloud
-```
-here is the complete `Deployment` config [example](https://github.com/Azure/container-service-for-azure-china/blob/master/aks/cluster-autoscaler-deployment-mooncake.yaml)
+Follow detailed steps in [Cluster Autoscaler on Azure Kubernetes Service (AKS) - Preview](https://docs.microsoft.com/en-us/azure/aks/autoscaler) and in `Deployment` config of `aks-cluster-autoscaler.yaml`:
+
+- use `gcr.azk8s.cn/google-containers/cluster-autoscaler:version` instead of `gcr.io/google-containers/cluster-autoscaler:version`
+
+- add following environment variable:
+
+    ```
+    - name: ARM_CLOUD
+      value: AzureChinaCloud
+    ```
+
+    Here is the complete `Deployment` config [example](https://github.com/Azure/container-service-for-azure-china/blob/master/aks/cluster-autoscaler-deployment-mooncake.yaml).
 
 ## Hands on: run a simple web application on AKS cluster
 
@@ -149,17 +167,22 @@ Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-ser
 
 ### Known issues
 
- - RBAC related issues(RABC is enabled on AKS cluster): https://github.com/andyzhangx/demo/blob/master/issues/rbac-issues.md
+- RBAC related issues(RABC is enabled on AKS cluster): https://github.com/andyzhangx/demo/blob/master/issues/rbac-issues.md
  
 ### Tips
 
- - For production usage, agent VM size should have at least 4 CPU cores(e.g. D3_v2) since k8s components would also occupy CPU, memory resource on the node, details about [AKS resource reservation](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#resource-reservations).
+- For production usage, agent VM size should have at least 4 CPU cores(e.g. D3_v2) since k8s components would also occupy CPU, memory resource on the node, details about [AKS resource reservation](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#resource-reservations).
 
 ### Links
 
- - Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview)
-  > please make sure you already have an **Azure China** Subscription
- - AKS doc: [https://docs.microsoft.com/en-us/azure/aks/](https://docs.microsoft.com/en-us/azure/aks/) 
-  > Chinese version: [https://docs.microsoft.com/zh-cn/azure/aks/](https://docs.microsoft.com/zh-cn/azure/aks/) 
- - [Deploy an Azure Container Service (AKS) cluster](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
- - [Frequently asked questions about Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/faq#are-security-updates-applied-to-aks-agent-nodes)
+- Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview).
+
+    > please make sure you already have an **Azure China** Subscription
+
+- AKS doc: [https://docs.microsoft.com/en-us/azure/aks/](https://docs.microsoft.com/en-us/azure/aks/).
+
+    > Chinese version: [https://docs.microsoft.com/zh-cn/azure/aks/](https://docs.microsoft.com/zh-cn/azure/aks/) 
+
+- [Deploy an Azure Container Service (AKS) cluster](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough).
+
+- [Frequently asked questions about Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/faq#are-security-updates-applied-to-aks-agent-nodes).
