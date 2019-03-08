@@ -1,12 +1,12 @@
 # AKS on Azure China Best Practices
 
-Azure Kubernetes Service is in **Private Preview**, this page provides best practices about how to use AKS on Azure China cloud.
+Azure Kubernetes Service is in **Public Preview**, this page provides best practices about how to use AKS on Azure China cloud.
 
 - Contact AKS China Team: [akscn@microsoft.com](mailto:akscn@microsoft.com)
 
-## Limitations of current AKS Private Preview on Azure China
+## Limitations of current AKS Public Preview on Azure China
 
-- only `chinaeast2` region is supported up to now.
+- `chinaeast2`, `chinanorth2` regions are supported now.
 
 - AKS set up wizard is not available on azure portal, only azure cli command line is supported.
 
