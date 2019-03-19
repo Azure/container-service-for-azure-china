@@ -34,22 +34,20 @@ Currently AKS on Azure China could only be created by [azure cli](https://docs.m
     az account set -s <subscription-name>
     ```
 
-- Pick one available kubernetes version on `chinaeast2`.
+- Pick one available kubernetes version on `chinaeast2` or `chinanorth2`.
 
     ```
     az aks get-versions -l chinaeast2 -o table
     KubernetesVersion    Upgrades
-    -------------------  ----------------------
-    1.11.5               None available
-    1.11.4               1.11.5
-    1.10.9               1.11.4, 1.11.5
-    1.10.8               1.10.9, 1.11.4, 1.11.5
-    1.9.11               1.10.8, 1.10.9
-    1.9.10               1.9.11, 1.10.8, 1.10.9
-    1.8.15               1.9.10, 1.9.11
-    1.8.14               1.8.15, 1.9.10, 1.9.11
-    1.7.16               1.8.14, 1.8.15
-    1.7.15               1.7.16, 1.8.14, 1.8.15
+    -------------------  ------------------------
+    1.12.6               None available
+    1.12.5               1.12.6
+    1.11.8               1.12.5, 1.12.6
+    1.11.7               1.11.8, 1.12.5, 1.12.6
+    1.10.13              1.11.7, 1.11.8
+    1.10.12              1.10.13, 1.11.7, 1.11.8
+    1.9.11               1.10.12, 1.10.13
+    1.9.10               1.9.11, 1.10.12, 1.10.13
     ```
 
 - Example: create a `v1.11.5` AKS cluster on `chinaeast2`
@@ -57,7 +55,7 @@ Currently AKS on Azure China could only be created by [azure cli](https://docs.m
     ```sh
     RESOURCE_GROUP_NAME=demo-aks
     CLUSTER_NAME=demo-aks
-    LOCATION=chinaeast2
+    LOCATION=chinaeast2  #or chinanorth2
     VERSION=1.11.5
     
     # create a resource group
@@ -176,11 +174,6 @@ Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-ser
 - For production usage, agent VM size should have at least 4 CPU cores(e.g. D3_v2) since k8s components would also occupy CPU, memory resource on the node, details about [AKS resource reservation](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#resource-reservations).
 
 ### Links
-
-- Click for trial: [http://aka.ms/aks/chinapreview](http://aka.ms/aks/chinapreview).
-
-    > please make sure you already have an **Azure China** Subscription
-
 - AKS doc: [https://docs.microsoft.com/en-us/azure/aks/](https://docs.microsoft.com/en-us/azure/aks/).
 
     > Chinese version: [https://docs.microsoft.com/zh-cn/azure/aks/](https://docs.microsoft.com/zh-cn/azure/aks/) 
