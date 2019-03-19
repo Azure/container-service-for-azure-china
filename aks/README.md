@@ -18,6 +18,8 @@ Azure Kubernetes Service is in **Public Preview**, this page provides best pract
 
 - GPU support is not enabled on Azure China yet.
 
+- AAD support requires kubectl version >v1.14.0-beta.0
+
 ## 1. How to create AKS on Azure China
 
 Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2` region.
