@@ -22,8 +22,6 @@ kubectl get nodes
 
 > on global azure, `node-vm-size` could be `Standard_NC6` instead.
 
-
-
 ## 2. install GPU plugin on AKS cluster
 ```sh
 kubectl create -f https://raw.githubusercontent.com/andyzhangx/demo/master/linux/gpu/nvidia-device-plugin-ds-mooncake.yaml
