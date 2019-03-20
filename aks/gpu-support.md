@@ -9,6 +9,8 @@
 Below are detailed steps about how to run GPU workload on Azure China AKS cluster: 
 
 ## 1. set up AKS cluster on GPU enabled VM
+> Below example sets `node-vm-size` as `Standard_NC6s_v3` which supports GPU on Azure China, on global azure, `node-vm-size` could be `Standard_NC6` etc.
+
 ```sh
 RESOURCE_GROUP_NAME=demo-gpu1126
 CLUSTER_NAME=demo-gpu1126
@@ -19,8 +21,6 @@ az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-
 az aks get-credentials -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
 kubectl get nodes
 ```
-
-> on global azure, `node-vm-size` could be `Standard_NC6` instead.
 
 ## 2. install GPU plugin on AKS cluster
 ```sh
