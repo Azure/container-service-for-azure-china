@@ -6,8 +6,6 @@ Azure Kubernetes Service is in **Public Preview**, this page provides best pract
 
 ## Limitations of current AKS Public Preview on Azure China
 
-- `chinaeast2`, `chinanorth2` regions are supported now.
-
 - AKS set up wizard is not available on azure portal, only azure cli command line is supported.
 
 - AKS monitoring and logging are not available, there will be error when clicking on `Monitor containers` and `View logs` links in AKS overview page.
@@ -20,7 +18,7 @@ Azure Kubernetes Service is in **Public Preview**, this page provides best pract
 
 ## 1. How to create AKS on Azure China
 
-Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2` region.
+Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2`, `chinanorth2` regions.
 
 - How to use [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) on Azure China.
 
