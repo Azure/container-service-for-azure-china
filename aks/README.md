@@ -16,8 +16,6 @@ Azure Kubernetes Service is in **Public Preview**, this page provides best pract
 
   > note: for [`http_application_routing`](https://docs.microsoft.com/en-us/azure/aks/http-application-routing) addon functionality, it's not for production use, you could use [ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress-basic) instead.
 
-- GPU support is not enabled on Azure China yet.
-
 - AAD support requires kubectl version >v1.14.0-beta.0
 
 ## 1. How to create AKS on Azure China
@@ -161,9 +159,9 @@ Follow detailed steps in [Cluster Autoscaler on Azure Kubernetes Service (AKS) -
 
     Here is the complete `Deployment` config [example](https://github.com/Azure/container-service-for-azure-china/blob/master/aks/cluster-autoscaler-deployment-mooncake.yaml).
 
-## Hands on: run a simple web application on AKS cluster
-
-Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo
+## Hands on
+ - [run a simple web application on AKS cluster](https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo)
+ - [AKS workshop](https://aksworkshop.io/)
 
 ### Known issues
 
@@ -172,6 +170,8 @@ Follow https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-ser
 ### Tips
 
 - For production usage, agent VM size should have at least 4 CPU cores(e.g. D3_v2) since k8s components would also occupy CPU, memory resource on the node, details about [AKS resource reservation](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#resource-reservations).
+
+- [GPU workload support best practices on Azure China](./gpu-support.md)
 
 ### Links
 - AKS doc: [https://docs.microsoft.com/en-us/azure/aks/](https://docs.microsoft.com/en-us/azure/aks/).
