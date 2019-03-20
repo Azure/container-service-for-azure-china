@@ -29,7 +29,7 @@ kubectl create -f https://raw.githubusercontent.com/andyzhangx/demo/master/linux
 
 ## 3. Run GPU workload on AKS cluster
 ```sh
-kubectl create -f https://raw.githubusercontent.com/andyzhangx/demo/master/linux/gpu/pu-demo-mooncake.yaml
+kubectl create -f https://raw.githubusercontent.com/andyzhangx/demo/master/linux/gpu/gpu-demo-mooncake.yaml
 ```
 
 For more detailed steps, refer to [Use GPUs for compute-intensive workloads on Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/gpu-cluster) 
