@@ -1,4 +1,4 @@
-## GPU suppport on Azure China AKS
+## GPU workload support on Azure China AKS
 [Use GPUs for compute-intensive workloads on Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/gpu-cluster) provides detailed steps about how to run GPU workloads on AKS cluster, while there are some configurations needed to change on Azure China. e.g. following docker images should be changed to use `dockerhub.azk8s.cn`:
 
 | original image in doc | supported images on Azure China |
