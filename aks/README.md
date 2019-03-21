@@ -125,7 +125,7 @@ gcr.io/google_containers/pause-amd64:3.1
 
 Original `az aks install-cli` command does not work on Azure China, follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
 
-- There is a PR [add "az aks install-cli" support for Azure China](https://github.com/Azure/azure-cli/pull/8675) to fix this issue, following command will start up containerized azure-cl(`dockerhub.azk8s.cn/andyzhangx/azure-cli:v2.0.60-china`) to download latest `kubectl` version to `/usr/local/bin/`:
+- There is a PR [add "az aks install-cli" support for Azure China](https://github.com/Azure/azure-cli/pull/8675) to fix this issue, following command will start up containerized azure-cli(`dockerhub.azk8s.cn/andyzhangx/azure-cli:v2.0.60-china`) to download latest `kubectl` version to `/usr/local/bin/` on Linux:
 
     ```
     # docker run -v ${HOME}:/root -v /usr/local/bin/:/kube -it dockerhub.azk8s.cn/andyzhangx/azure-cli:v2.0.60-china
