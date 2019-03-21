@@ -14,7 +14,7 @@ Azure Kubernetes Service is in **Public Preview**, this page provides best pract
   > note: for [`http_application_routing`](https://docs.microsoft.com/en-us/azure/aks/http-application-routing) addon functionality, it's not for production use, you could use [ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress-basic) instead.
 
 - Preview features on Global Azure won't be supported on Azure China, e.g. [Cluster-autoscaler](https://docs.microsoft.com/en-us/azure/aks/cluster-autoscaler), [Network Policy](https://docs.microsoft.com/en-us/azure/aks/use-network-policies)
-- AAD support requires kubectl version >v1.14.0-beta.0
+- [AAD integration support with AKS](https://docs.microsoft.com/en-us/azure/aks/aad-integration) requires kubectl version >= `v1.14.0-beta.2`, download `kubectl` binary [here](https://mirror.azure.cn/kubernetes/kubectl/v1.14.0-beta.2/bin/)
 
 ## 1. How to create AKS on Azure China
 
