@@ -26,7 +26,6 @@ Currently AKS on Azure China could only be created by [azure cli](https://docs.m
     az cloud set --name AzureChinaCloud
     az login
     az account list
-    # make sure <subscription-name> is the whitelisted subscription
     az account set -s <subscription-name>
     ```
 
