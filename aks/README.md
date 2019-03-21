@@ -13,7 +13,7 @@ Azure Kubernetes Service is in **Public Preview**, this page provides best pract
 - AKS addons are not enabled on Azure China yet, including `monitoring` and `http_application_routing` addons.
   > note: for [`http_application_routing`](https://docs.microsoft.com/en-us/azure/aks/http-application-routing) addon functionality, it's not for production use, you could use [ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress-basic) instead.
 
-- Preview features on Global Azure won't be supported on Azure China, e.g. [Cluster-autoscaler](https://docs.microsoft.com/en-us/azure/aks/cluster-autoscaler), [Network Policy](https://docs.microsoft.com/en-us/azure/aks/use-network-policies)
+- Preview features on Global Azure won't be supported on Azure China, e.g. [Network Policy](https://docs.microsoft.com/en-us/azure/aks/use-network-policies)
 - [AAD integration support with AKS](https://docs.microsoft.com/en-us/azure/aks/aad-integration) requires kubectl version >= `v1.14.0-beta.2`, download `kubectl` binary [here](https://mirror.azure.cn/kubernetes/kubectl/v1.14.0-beta.2/bin/)
 
 ## 1. How to create AKS on Azure China
@@ -147,7 +147,7 @@ helm install bitnami/wordpress --set global.imageRegistry=dockerhub.azk8s.cn
 All kubernetes related binaries on github could be found under [https://mirror.azk8s.cn/kubernetes](https://mirror.azk8s.cn/kubernetes), e.g. helm, charts, etc.
 
 ## 5. Cluster autoscaler
-
+ > Note: AKS integrated [Cluster-autoscaler](https://docs.microsoft.com/en-us/azure/aks/cluster-autoscaler) is not availalbe on Azure China now since it's still in Preview on Global Azure, instead following autoscaler is supported on Azure China now, it supports both VMAS and VMSS:
 Follow detailed steps in [Cluster Autoscaler on Azure](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/azure#cluster-autoscaler-on-azure) and in `Deployment` config of `aks-cluster-autoscaler.yaml`:
 
 - use `gcr.azk8s.cn/google-containers/cluster-autoscaler:version` instead of `gcr.io/google-containers/cluster-autoscaler:version`
