@@ -148,7 +148,7 @@ All kubernetes related binaries on github could be found under [https://mirror.a
 
 ## 5. Cluster autoscaler
 
-Follow detailed steps in [Cluster Autoscaler on Azure Kubernetes Service (AKS) - Preview](https://docs.microsoft.com/en-us/azure/aks/autoscaler) and in `Deployment` config of `aks-cluster-autoscaler.yaml`:
+Follow detailed steps in [Cluster Autoscaler on Azure](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/azure#cluster-autoscaler-on-azure) and in `Deployment` config of `aks-cluster-autoscaler.yaml`:
 
 - use `gcr.azk8s.cn/google-containers/cluster-autoscaler:version` instead of `gcr.io/google-containers/cluster-autoscaler:version`
 
