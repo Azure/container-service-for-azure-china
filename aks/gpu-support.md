@@ -7,6 +7,8 @@
 | microsoft/samples-tf-mnist-demo:gpu | dockerhub.azk8s.cn/microsoft/samples-tf-mnist-demo:gpu |
 
 Below are detailed steps about how to run GPU workload on Azure China AKS cluster: 
+## Prerequisite
+Make sure your Azure subscription could create NC serial VMs, e.g. `Standard_NC6s_v3`, otherwise you may file a support ticket to enable that kind of VM size for your Azure subscription.
 
 ## 1. set up AKS cluster on GPU enabled VM
 > Below example sets `node-vm-size` as `Standard_NC6s_v3` which supports GPU on Azure China, on global azure, `node-vm-size` could be `Standard_NC6` etc.
