@@ -137,7 +137,11 @@ Original `az aks install-cli` command does not work on Azure China, follow detai
 
 Follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html).
 
-- Example: `helm install stable/wordpress`
+- Example: 
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install bitnami/wordpress --set global.imageRegistry=dockerhub.azk8s.cn
+```
 
 > Note:
 All kubernetes related binaries on github could be found under [https://mirror.azk8s.cn/kubernetes](https://mirror.azk8s.cn/kubernetes), e.g. helm, charts, etc.
