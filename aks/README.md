@@ -177,6 +177,6 @@ Follow detailed steps in [Cluster Autoscaler on Azure](https://github.com/kubern
 ### Links
 - AKS doc: https://docs.azure.cn/zh-cn/aks/
 
-- [Azure Kubernetes Service Issues (AKS)](https://github.com/Azure/AKS/)
+- [Azure Kubernetes Service Issues](https://github.com/Azure/AKS/)
 
 - [Frequently asked questions about Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/faq#are-security-updates-applied-to-aks-agent-nodes).
