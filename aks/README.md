@@ -175,10 +175,8 @@ Follow detailed steps in [Cluster Autoscaler on Azure](https://github.com/kubern
 - [GPU workload support best practices on Azure China](./gpu-support.md)
 
 ### Links
-- AKS doc: [https://docs.microsoft.com/en-us/azure/aks/](https://docs.microsoft.com/en-us/azure/aks/).
+- AKS doc: https://docs.azure.cn/zh-cn/aks/
 
-    > Chinese version: [https://docs.microsoft.com/zh-cn/azure/aks/](https://docs.microsoft.com/zh-cn/azure/aks/) 
-
-- [Deploy an Azure Container Service (AKS) cluster](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough).
+- [Azure Kubernetes Service Issues (AKS)](https://github.com/Azure/AKS/)
 
 - [Frequently asked questions about Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/faq#are-security-updates-applied-to-aks-agent-nodes).
