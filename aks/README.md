@@ -146,7 +146,7 @@ helm install bitnami/wordpress --set global.imageRegistry=dockerhub.azk8s.cn
 All kubernetes related binaries on github could be found under [https://mirror.azk8s.cn/kubernetes](https://mirror.azk8s.cn/kubernetes), e.g. helm, charts, etc.
 
 ## 5. Cluster autoscaler
- > Note: AKS integrated [Cluster-autoscaler](https://docs.microsoft.com/en-us/azure/aks/cluster-autoscaler) is not availalbe on Azure China now since it's still in Preview on Global Azure, instead following autoscaler is supported on Azure China now, it supports both VMAS and VMSS:
+ > Note: AKS integrated [Cluster-autoscaler](https://docs.microsoft.com/zh-cn/azure/aks/cluster-autoscaler) is not availalbe on Azure China now since it's still in Preview on Global Azure, instead following autoscaler is supported on Azure China now, it supports both VMAS and VMSS:
 Follow detailed steps in [Cluster Autoscaler on Azure](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/azure#cluster-autoscaler-on-azure) and in `Deployment` config of `aks-cluster-autoscaler.yaml`:
 
 - use `gcr.azk8s.cn/google-containers/cluster-autoscaler:version` instead of `gcr.io/google-containers/cluster-autoscaler:version`
@@ -179,4 +179,4 @@ Follow detailed steps in [Cluster Autoscaler on Azure](https://github.com/kubern
 
 - [Azure Kubernetes Service Issues](https://github.com/Azure/AKS/)
 
-- [Frequently asked questions about Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/faq#are-security-updates-applied-to-aks-agent-nodes).
+- [Frequently asked questions about Azure Container Service (AKS)](https://docs.microsoft.com/zh-cn/azure/aks/faq#are-security-updates-applied-to-aks-agent-nodes).
