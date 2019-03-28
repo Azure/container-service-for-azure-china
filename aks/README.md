@@ -78,7 +78,7 @@ Currently AKS on Azure China could only be created by [azure cli](https://docs.m
     
     ```
 
-    > Get more detailed [AKS set up steps](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough)
+    > Get more detailed [AKS set up steps](https://docs.azure.cn/zh-cn/aks/kubernetes-walkthrough)
  
     > Detailed "az aks" command line manual could be found [here](https://docs.microsoft.com/en-us/cli/azure/aks)
 
