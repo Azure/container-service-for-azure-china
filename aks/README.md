@@ -170,7 +170,7 @@ Follow detailed steps in [Cluster Autoscaler on Azure](https://github.com/kubern
  
 ### Tips
 
-- For production usage, agent VM size should have at least 4 CPU cores(e.g. D3_v2) since k8s components would also occupy CPU, memory resources on the node, details about [AKS resource reservation](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#resource-reservations).
+- For production usage, agent VM size should have at least **8** CPU cores(e.g. D4_v2) since k8s components would also occupy CPU, memory resources on the node, details about [AKS resource reservation](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#resource-reservations).
 
 - [GPU workload support best practices on Azure China](./gpu-support.md)
 
