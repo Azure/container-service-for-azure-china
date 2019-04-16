@@ -6,8 +6,6 @@ Azure Kubernetes Service is in **Public Preview**, this page provides best pract
 
 ## Limitations of current AKS Public Preview on Azure China
 
-- AKS set up wizard is not available on azure portal, only azure cli command line is supported.
-
 - AKS monitoring and logging are not available, there will be error when clicking on `Monitor containers` and `View logs` links in AKS overview page.
 
 - AKS addons are not enabled on Azure China yet, including `monitoring` and `http_application_routing` addons.
