@@ -6,8 +6,6 @@ Azure Kubernetes Service is in **Public Preview**, this page provides best pract
 
 ## Limitations of current AKS Public Preview on Azure China
 
-- AKS monitoring and logging are not available, there will be error when clicking on `Monitor containers` and `View logs` links in AKS overview page.
-
 - AKS addons are not enabled on Azure China yet, including `monitoring` and `http_application_routing` addons.
   > note: for [`http_application_routing`](https://docs.microsoft.com/en-us/azure/aks/http-application-routing) addon functionality, it's not for production use, you could use [ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress-basic) instead.
 
@@ -120,15 +118,13 @@ gcr.io/google_containers/pause-amd64:3.1
 
 ## 3. Install kubectl
 
-Original `az aks install-cli` command does not work on Azure China, follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html)
+`az aks install-cli` command is used to download `kubectl` binary, it works on Azure China from version `2.0.61`, use following command to download `kubectl`:
 
-- There is a PR [add "az aks install-cli" support for Azure China](https://github.com/Azure/azure-cli/pull/8675) to fix this issue, following command will start up containerized azure-cli(`dockerhub.azk8s.cn/andyzhangx/azure-cli:v2.0.60-china`) to download latest `kubectl` version to `/usr/local/bin/` on Linux:
-
-    ```
-    # docker run -v ${HOME}:/root -v /usr/local/bin/:/kube -it dockerhub.azk8s.cn/andyzhangx/azure-cli:v2.0.60-china
-    root@09feb993f352:/# az cloud set --name AzureChinaCloud
-    root@09feb993f352:/# az aks install-cli --install-location /kube/kubectl
-    ```
+```sh
+# docker run -v ${HOME}:/root -v /usr/local/bin/:/kube -it dockerhub.azk8s.cn/microsoft/azure-cli:2.0.61
+root@09feb993f352:/# az cloud set --name AzureChinaCloud
+root@09feb993f352:/# az aks install-cli --install-location /kube/kubectl
+```
 
 ## 4. Install helm
 
