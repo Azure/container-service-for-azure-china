@@ -6,9 +6,6 @@ Azure Kubernetes Service is in **Public Preview**, this page provides best pract
 
 ## Limitations of current AKS Public Preview on Azure China
 
-- AKS addons are not enabled on Azure China yet, including `monitoring` and `http_application_routing` addons.
-  > note: for [`http_application_routing`](https://docs.microsoft.com/en-us/azure/aks/http-application-routing) addon functionality, it's not for production use, you could use [ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress-basic) instead.
-
 - Preview features on Global Azure won't be supported on Azure China, e.g. [Network Policy](https://docs.microsoft.com/en-us/azure/aks/use-network-policies)
 - [AAD integration support with AKS](https://docs.microsoft.com/en-us/azure/aks/aad-integration) requires kubectl version >= `v1.14.0`, download `kubectl` binary from [here](https://mirror.azure.cn/kubernetes/kubectl/v1.14.0/bin/)
 
