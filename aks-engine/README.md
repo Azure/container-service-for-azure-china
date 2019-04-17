@@ -4,9 +4,9 @@
 
 
 ## 1. download aks-engine binary
-* take aks-engine v0.30.1 as an example 
+* take aks-engine v0.34.0 as an example 
 ```
-aks_version=v0.30.1
+aks_version=v0.34.0
 wget https://mirror.azure.cn/kubernetes/aks-engine/$aks_version/aks-engine-$aks_version-linux-amd64.tar.gz
 tar -xvzf aks-engine-$aks_version-linux-amd64.tar.gz
 ```
