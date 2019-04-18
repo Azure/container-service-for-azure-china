@@ -11,7 +11,7 @@ Azure Kubernetes Service is in **Public Preview**, this page provides best pract
 
 ## 1. How to create AKS on Azure China
 
-Currently AKS on Azure China could be created by [Azure portal](https://portal.azure.cn/#create/microsoft.aks) or [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and `chinaeast2`, `chinanorth2` regions are supported. This page shows to create AKS cluster by azure cli.
+Currently AKS on Azure China could be created by [Azure portal](https://portal.azure.cn/#create/microsoft.aks) or [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli), AKS on `chinaeast2`, `chinanorth2` regions are available now. This page shows to create AKS cluster by azure cli.
 
 - How to use [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) on Azure China.
 
