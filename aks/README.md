@@ -11,7 +11,7 @@ Azure Kubernetes Service is in **Public Preview**, this page provides best pract
 
 ## 1. How to create AKS on Azure China
 
-Currently AKS on Azure China could only be created by [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and only supports `chinaeast2`, `chinanorth2` regions.
+Currently AKS on Azure China could be created by [Azure portal](https://portal.azure.cn/#create/microsoft.aks) or [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) and `chinaeast2`, `chinanorth2` regions are supported. This page shows to create AKS cluster by azure cli.
 
 - How to use [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) on Azure China.
 
@@ -50,7 +50,7 @@ Currently AKS on Azure China could only be created by [azure cli](https://docs.m
     az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
     
     # create AKS cluster with 1 agent node (if your azure cli version is low, remove `--disable-rbac`)
-    az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D3_v2 --disable-rbac --generate-ssh-keys --kubernetes-version $VERSION -l $LOCATION
+    az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D3_v2 --disable-rbac --generate-ssh-keys --kubernetes-version $VERSION -l $LOCATION --node-osdisk-size 128
     
     # wait about 10 min for `az aks create` running complete
     
@@ -161,7 +161,9 @@ Follow detailed steps in [Cluster Autoscaler on Azure](https://github.com/kubern
  
 ### Tips
 
-- For production usage, agent VM size should have at least **8** CPU cores(e.g. D4_v2) since k8s components would also occupy CPU, memory resources on the node, details about [AKS resource reservation](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#resource-reservations).
+- For production usage:
+  - agent VM size should have at least **8** CPU cores(e.g. D4_v2) since k8s components would also occupy CPU, memory resources on the node, details about [AKS resource reservation](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#resource-reservations).
+  - it's better set a bigger agent VM os disk size in AKS cluster creation, e.g. set `--node-osdisk-size 128`, original 30GB os disk size is not enough since all images are stored on os disk.
 
 - [GPU workload support best practices on Azure China](./gpu-support.md)
 
