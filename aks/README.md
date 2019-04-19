@@ -1,19 +1,19 @@
 # AKS on Azure China Best Practices
 
-Azure Kubernetes Service is in **Public Preview**, this page provides best practices about how to use AKS on Azure China cloud.
+Azure Kubernetes Service is in **Public Preview**, this page provides best practices about how to operate AKS on Azure China cloud.
 
 - Contact AKS China Team: [akscn@microsoft.com](mailto:akscn@microsoft.com)
 
 ## Limitations of current AKS Public Preview on Azure China
 
-- Preview features on Global Azure won't be supported on Azure China, e.g. [Network Policy](https://docs.microsoft.com/en-us/azure/aks/use-network-policies)
-- [AAD integration support with AKS](https://docs.microsoft.com/en-us/azure/aks/aad-integration) requires kubectl version >= `v1.14.0`, download `kubectl` binary from [here](https://mirror.azure.cn/kubernetes/kubectl/v1.14.0/bin/)
+- Preview features on Global Azure won't be supported on Azure China, e.g. [Network Policy](https://docs.microsoft.com/zh-cn/azure/aks/use-network-policies)
+- [AAD integration support with AKS](https://docs.microsoft.com/zh-cn/azure/aks/aad-integration) requires kubectl version >= `v1.14.0`, download `kubectl` binary from [here](https://mirror.azure.cn/kubernetes/kubectl/v1.14.0/bin/)
 
 ## 1. How to create AKS on Azure China
 
-Currently AKS on Azure China could be created by [Azure portal](https://portal.azure.cn/#create/microsoft.aks) or [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli), AKS on `chinaeast2`, `chinanorth2` regions are available now. This page shows to create AKS cluster by azure cli.
+Currently AKS on Azure China could be created by [Azure portal](https://portal.azure.cn/#create/microsoft.aks) or [azure cli](https://docs.microsoft.com/zh-cn/cli/azure/install-azure-cli), AKS on `chinaeast2`, `chinanorth2` regions are available now. This page shows to create AKS cluster by azure cli.
 
-- How to use [azure cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) on Azure China.
+- How to use [azure cli](https://docs.microsoft.com/zh-cn/cli/azure/install-azure-cli) on Azure China.
 
     ```sh
     az cloud set --name AzureChinaCloud
@@ -73,18 +73,18 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
 
     > Get more detailed [AKS set up steps](https://docs.azure.cn/zh-cn/aks/kubernetes-walkthrough)
  
-    > Detailed "az aks" command line manual could be found [here](https://docs.microsoft.com/en-us/cli/azure/aks)
+    > Detailed "az aks" command line manual could be found [here](https://docs.microsoft.com/zh-cn/cli/azure/aks)
 
 
 ## 2. Container Registry
 
 ### 2.1 Azure Container Registry(ACR)
 
-[Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/)(ACR) provides storage of private Docker container images, enabling fast, scalable retrieval, and network-close deployment of container workloads on Azure. It's now available on `chinanorth` region.
+[Azure Container Registry](https://azure.microsoft.com/zh-cn/services/container-registry/)(ACR) provides storage of private Docker container images, enabling fast, scalable retrieval, and network-close deployment of container workloads on Azure. 
 
-- ACR does not provide **public anonymous access** functionality.
+- ACR does not provide **public anonymous access** functionality on Azure China.
 
-- AKS has good integration with ACR, container image stored in ACR could be pulled in AKS after [Configure ACR authentication](https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster#configure-acr-authentication).
+- AKS has good integration with ACR, container image stored in ACR could be pulled in AKS after [Configure ACR authentication](https://docs.microsoft.com/zh-cn/azure/aks/tutorial-kubernetes-deploy-cluster#configure-acr-authentication).
 
 ### 2.2 Container Registry Proxy
 
@@ -162,7 +162,7 @@ Follow detailed steps in [Cluster Autoscaler on Azure](https://github.com/kubern
 ### Tips
 
 - For production usage:
-  - agent VM size should have at least **8** CPU cores(e.g. D4_v2) since k8s components would also occupy CPU, memory resources on the node, details about [AKS resource reservation](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#resource-reservations).
+  - agent VM size should have at least **8** CPU cores(e.g. D4_v2) since k8s components would also occupy CPU, memory resources on the node, details about [AKS resource reservation](https://docs.microsoft.com/zh-cn/azure/aks/concepts-clusters-workloads#resource-reservations).
   - it's better set a bigger agent VM os disk size in AKS cluster creation, e.g. set `--node-osdisk-size 128`, original 30GB os disk size is not enough since all images are stored on os disk.
 
 - [GPU workload support best practices on Azure China](./gpu-support.md)
