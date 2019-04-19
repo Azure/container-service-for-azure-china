@@ -38,7 +38,7 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
     1.9.10               1.9.11, 1.10.12, 1.10.13
     ```
 
-- Example: create a `v1.11.5` AKS cluster on `chinaeast2`
+- Example: create an AKS cluster on Azure China
 
     ```sh
     RESOURCE_GROUP_NAME=demo-aks
