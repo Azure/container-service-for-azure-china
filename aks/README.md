@@ -163,7 +163,7 @@ Follow detailed steps in [Cluster Autoscaler on Azure](https://github.com/kubern
 
 - For production usage:
   - agent VM size should have at least **8** CPU cores(e.g. D4_v2) since k8s components would also occupy CPU, memory resources on the node, details about [AKS resource reservation](https://docs.microsoft.com/zh-cn/azure/aks/concepts-clusters-workloads#resource-reservations).
-  - it's better set a bigger agent VM os disk size in AKS cluster creation, e.g. set `--node-osdisk-size 128`, original 30GB os disk size is not enough since all images are stored on os disk.
+  - it's better set a bigger os disk size on agent VM in AKS cluster creation, e.g. set `--node-osdisk-size 128`, original 30GB os disk size is not enough since all images are stored on os disk.
 
 - [GPU workload support best practices on Azure China](./gpu-support.md)
 
