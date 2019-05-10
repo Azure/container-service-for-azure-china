@@ -29,8 +29,9 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
     az aks get-versions -l chinaeast2 -o table
     KubernetesVersion    Upgrades
     -------------------  ------------------------
-    1.12.7               None available
-    1.12.6               1.12.7
+    1.13.5               None available
+    1.12.7               1.13.5
+    1.12.6               1.12.7, 1.13.5
     1.11.9               1.12.6, 1.12.7
     1.11.8               1.11.9, 1.12.6, 1.12.7
     1.10.13              1.11.8, 1.11.9
@@ -128,12 +129,17 @@ root@09feb993f352:/# az aks install-cli --install-location /kube/kubectl
 
 Follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html).
 
-- Example: 
+- Example:
 ```
+# Run wordpress
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install bitnami/wordpress --set global.imageRegistry=dockerhub.azk8s.cn
-```
 
+# nginx-ingress
+helm repo add stable https://mirror.azure.cn/kubernetes/charts/
+helm install stable/nginx-ingress
+```
+  
 > Note:
 All kubernetes related binaries on github could be found under [https://mirror.azk8s.cn/kubernetes](https://mirror.azk8s.cn/kubernetes), e.g. helm, charts, etc.
 
