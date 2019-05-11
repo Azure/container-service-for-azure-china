@@ -112,7 +112,7 @@ gcr.io/google_containers/pause-amd64:3.1
     specify `defaultBackend.image.repository` as `gcr.azk8s.cn/google_containers/defaultbackend` in [nginx-ingress](https://github.com/helm/charts/tree/master/stable/nginx-ingress) chart since original `k8s.gcr.io` does not work in Azure China:
 
     ```
-    helm install stable/nginx-ingress --name ingress --namespace kube-system --set controller.replicaCount=2 --set defaultBackend.image.repository=gcr.azk8s.cn/google_containers/defaultbackend --set rbac.create=false --set rbac.createRole=false --set rbac.createClusterRole=false
+    helm install stable/nginx-ingress --set defaultBackend.image.repository=gcr.azk8s.cn/google_containers/defaultbackend
     ```
 
 ## 3. Install kubectl
@@ -131,13 +131,13 @@ Follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html).
 
 - Example:
 ```
-# Run wordpress
+# Install wordpress
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install bitnami/wordpress --set global.imageRegistry=dockerhub.azk8s.cn
 
-# nginx-ingress
+# Install nginx-ingress
 helm repo add stable https://mirror.azure.cn/kubernetes/charts/
-helm install stable/nginx-ingress
+helm install stable/nginx-ingress  --set defaultBackend.image.repository=gcr.azk8s.cn/google_containers/defaultbackend
 ```
   
 > Note:
