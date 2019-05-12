@@ -132,7 +132,7 @@ root@09feb993f352:/# az aks install-cli --install-location /kube/kubectl
 
 ## 4. Install helm
 
-Follow detailed steps [here](https://mirror.azk8s.cn/help/kubernetes.html).
+Follow detailed installation steps [here](https://mirror.azk8s.cn/help/kubernetes.html).
 
 - Example:
 ```
