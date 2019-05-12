@@ -54,7 +54,7 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
     # create AKS cluster with 1 agent node (if your azure cli version is low, remove `--disable-rbac`)
     az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D3_v2 --disable-rbac --generate-ssh-keys --kubernetes-version $VERSION -l $LOCATION --node-osdisk-size 128
     
-    # wait about 10 min for `az aks create` running complete
+    # wait about 5 min for `az aks create` running complete
     
     # get the credentials for the cluster
     az aks get-credentials -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
