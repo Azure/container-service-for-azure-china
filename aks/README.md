@@ -117,13 +117,18 @@ gcr.io/google_containers/pause-amd64:3.1
 
 ## 3. Install kubectl
 
-`az aks install-cli` command is used to download `kubectl` binary, it works on Azure China from version `2.0.61`, use following command to download `kubectl`:
+`az aks install-cli` command is used to download `kubectl` binary, it works on Azure China from version `2.0.61` or later, another alternative is use following command to download `kubectl` if don't have azure-cli:
 
 ```sh
 # docker run -v ${HOME}:/root -v /usr/local/bin/:/kube -it dockerhub.azk8s.cn/microsoft/azure-cli:2.0.61
 root@09feb993f352:/# az cloud set --name AzureChinaCloud
 root@09feb993f352:/# az aks install-cli --install-location /kube/kubectl
 ```
+
+ > run `sudo az aks install-cli` if hit following permission error
+ > ```
+ > Connection error while attempting to download client ([Errno 13] Permission denied: '/usr/local/bin/kubectl'
+ > ```
 
 ## 4. Install helm
 
