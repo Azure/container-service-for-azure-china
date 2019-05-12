@@ -90,9 +90,9 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
 
 ### 2.2 Container Registry Proxy
 
-Since some well known container registries like `docker.io`, `gcr.io` are not accessible or very slow in China, we have set up container registry proxies in `chinaeast2` region for **public anonymous access**:
+Since some well known container registries like `docker.io`, `gcr.io` are not accessible or very slow in China, we have set up container registry proxies on Azure China for **public anonymous access**:
 
-> The first docker pull of new image will be slow, and then image would be cached, would be much faster in the next docker pull action.
+> The first docker pull of new image will be still slow, and then image would be cached, would be much faster in the next docker pull action.
  
 | global | proxy in China | format | example |
 | ---- | ---- | ---- | ---- |
