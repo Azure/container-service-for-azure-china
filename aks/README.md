@@ -84,7 +84,7 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
 
 [Azure Container Registry](https://azure.microsoft.com/zh-cn/services/container-registry/)(ACR) provides storage of private Docker container images, enabling fast, scalable retrieval, and network-close deployment of container workloads on Azure. 
 
-- ACR does not provide **public anonymous access** functionality on Azure China.
+- ACR does not provide **public anonymous access** functionality on Azure China, this feature is in [public preview](https://github.com/Azure/acr/blob/master/docs/acr-roadmap.md) on global Azure.
 
 - AKS has good integration with ACR, container image stored in ACR could be pulled in AKS after [Configure ACR authentication](https://docs.microsoft.com/zh-cn/azure/aks/tutorial-kubernetes-deploy-cluster#configure-acr-authentication).
 
