@@ -44,7 +44,7 @@ server:
   name: grafana
 
   adminUser: "admin"
-  # adminPassword: "admin"
+  # adminPassword: ""
 
   ## Global imagePullPolicy
   ## Default: 'Always' if image tag is 'latest', else 'IfNotPresent'
@@ -275,8 +275,8 @@ serverConfigFile:
 
     [security]
     ;admin_user = admin
-    ;admin_password = admin
-    ;secret_key = SW2YcwTIb9zpOOhoPsMm
+    ;admin_password = 
+    ;secret_key = 
     ;login_remember_days = 7
     ;cookie_username = grafana_user
     ;cookie_remember_name = grafana_remember
