@@ -47,7 +47,7 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
     RESOURCE_GROUP_NAME=demo-aks
     CLUSTER_NAME=demo-aks
     LOCATION=chinaeast2  #or chinanorth2
-    VERSION=1.13.5  # select an available version by "az aks get-versions -l chinaeast2 -o table"
+    VERSION=1.14.5  # select an available version by "az aks get-versions -l chinaeast2 -o table"
     
     # create a resource group
     az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
