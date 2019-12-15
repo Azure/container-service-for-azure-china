@@ -41,6 +41,7 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
     1.11.9               1.11.10, 1.12.7, 1.12.8
     1.10.13              1.11.9, 1.11.10
     1.10.12              1.10.13, 1.11.9, 1.11.10
+    ```
 
 - Example: create an AKS cluster on Azure China
 
