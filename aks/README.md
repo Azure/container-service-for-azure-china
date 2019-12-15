@@ -6,15 +6,15 @@ Azure Kubernetes Service is in **General Available**, this page provides best pr
 
 ## Limitations of current AKS General Available on Azure China
 
-- Preview features on Global Azure won't be supported on Azure China, e.g. [Network Policy](https://docs.microsoft.com/zh-cn/azure/aks/use-network-policies)
+- Preview features on Global Azure won't be supported on Azure China, e.g. [Windows Container](https://docs.microsoft.com/en-us/azure/aks/windows-container-cli)
 - [AAD integration support with AKS](https://docs.microsoft.com/zh-cn/azure/aks/aad-integration) requires kubectl version >= `v1.13.6`, download `kubectl` binary from [here](https://mirror.azure.cn/kubernetes/kubectl/v1.13.6/bin/)
 
 ## 1. How to create AKS on Azure China
 
-Currently AKS on Azure China could be created by [Azure portal](https://portal.azure.cn/#create/microsoft.aks) or [azure cli](https://docs.microsoft.com/zh-cn/cli/azure/install-azure-cli), AKS on `chinaeast2`, `chinanorth2` regions are available now. This page shows to create AKS cluster by azure cli.
- > You need the Azure CLI version 2.0.61 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli).
+Currently AKS on Azure China could be created by [Azure portal](https://portal.azure.cn/#create/microsoft.aks) or [azure cli](https://docs.microsoft.com/zh-cn/cli/azure/install-azure-cli?view=azure-cli-latest), AKS on `chinaeast2`, `chinanorth2` regions are available now. This page shows to create AKS cluster by azure cli.
+ > You need the Azure CLI version 2.0.61 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](https://docs.microsoft.com/zh-cn/cli/azure/install-azure-cli?view=azure-cli-latest).
 
-- How to use [azure cli](https://docs.microsoft.com/zh-cn/cli/azure/install-azure-cli) on Azure China.
+- How to use [azure cli](https://docs.microsoft.com/zh-cn/cli/azure/install-azure-cli?view=azure-cli-latest) on Azure China.
 
     ```sh
     az cloud set --name AzureChinaCloud
@@ -28,13 +28,15 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
     ```
     az aks get-versions -l chinaeast2 -o table
     KubernetesVersion    Upgrades
-    -------------------  -----------------------
-    1.14.6               None available
-    1.14.5               1.14.6
-    1.13.10              1.14.5, 1.14.6
-    1.13.9               1.13.10, 1.14.5, 1.14.6
-    1.12.8               1.13.9, 1.13.10
-    1.12.7               1.12.8, 1.13.9, 1.13.10
+    -------------------  ----------------------------------------
+    1.15.5(preview)      None available
+    1.15.4(preview)      1.15.5(preview)
+    1.14.8               1.15.4(preview), 1.15.5(preview)
+    1.14.7               1.14.8, 1.15.4(preview), 1.15.5(preview)
+    1.13.12              1.14.7, 1.14.8
+    1.13.11              1.13.12, 1.14.7, 1.14.8
+    1.12.8               1.13.11, 1.13.12
+    1.12.7               1.12.8, 1.13.11, 1.13.12
     1.11.10              1.12.7, 1.12.8
     1.11.9               1.11.10, 1.12.7, 1.12.8
     1.10.13              1.11.9, 1.11.10
@@ -47,7 +49,7 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
     RESOURCE_GROUP_NAME=demo-aks
     CLUSTER_NAME=demo-aks
     LOCATION=chinaeast2  #or chinanorth2
-    VERSION=1.14.5  # select an available version by "az aks get-versions -l chinaeast2 -o table"
+    VERSION=1.14.8  # select an available version by "az aks get-versions -l chinaeast2 -o table"
     
     # create a resource group
     az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
@@ -87,7 +89,7 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
 
 - ACR does not provide **public anonymous access** functionality on Azure China, this feature is in [public preview](https://github.com/Azure/acr/blob/master/docs/acr-roadmap.md) on global Azure.
 
-- AKS has good integration with ACR, container image stored in ACR could be pulled in AKS after [Configure ACR authentication](https://docs.microsoft.com/zh-cn/azure/aks/tutorial-kubernetes-deploy-cluster#configure-acr-authentication).
+- AKS has good integration with ACR, container image stored in ACR could be pulled in AKS after [Configure ACR authentication](https://docs.azure.cn/zh-cn/aks/tutorial-kubernetes-deploy-cluster#configure-acr-authentication).
 
 ### 2.2 Container Registry Proxy
 
@@ -164,6 +166,20 @@ Follow detailed steps in [Cluster Autoscaler on Azure](https://github.com/kubern
 
     Here is the complete `Deployment` config [example](https://github.com/Azure/container-service-for-azure-china/blob/master/aks/cluster-autoscaler-deployment-mooncake.yaml).
 
+## 6. VMSS Cluster
+
+VMSS cluster and Multi-node pool is now available in Mooncake: https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools
+
+> Note: Currently, only Azure CLI is supported to create VMSS cluster.
+        
+There's a potential issue of ARM throttling for VMSS cluster. Azure ARM API has request limits and would throttle the client if there're too many requests are sent: https://docs.azure.cn/zh-cn/azure-resource-manager/resource-manager-request-limits
+
+A few things could reduce the API requests number:
+
+   - Reduce number of nodes and frequency of node scaling
+   - Reduce frequency of AzureDisk detaching or attaching
+   - Reduce frequency of LoadBalancer typed service creating or deleting
+
 ## Hands on
  - [run a simple web application on AKS cluster](https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo)
  - [AKS workshop](https://aksworkshop.io/)
@@ -185,4 +201,4 @@ Follow detailed steps in [Cluster Autoscaler on Azure](https://github.com/kubern
 
 - [Azure Kubernetes Service Issues](https://github.com/Azure/AKS/)
 
-- [Frequently asked questions about Azure Container Service (AKS)](https://docs.microsoft.com/zh-cn/azure/aks/faq)
+- [Frequently asked questions about Azure Container Service (AKS)](https://docs.azure.cn/zh-cn/aks/faq)
