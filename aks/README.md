@@ -29,18 +29,15 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
     az aks get-versions -l chinaeast2 -o table
     KubernetesVersion    Upgrades
     -------------------  ----------------------------------------
-    1.15.5(preview)      None available
-    1.15.4(preview)      1.15.5(preview)
-    1.14.8               1.15.4(preview), 1.15.5(preview)
-    1.14.7               1.14.8, 1.15.4(preview), 1.15.5(preview)
+    1.17.0(preview)      None available
+    1.16.4(preview)      1.17.0(preview)
+    1.16.1(preview)      1.16.4(preview), 1.17.0(preview)
+    1.15.7               1.16.1(preview), 1.16.4(preview)
+    1.15.5               1.15.7, 1.16.1(preview), 1.16.4(preview)
+    1.14.8               1.15.5, 1.15.7
+    1.14.7               1.14.8, 1.15.5, 1.15.7
     1.13.12              1.14.7, 1.14.8
     1.13.11              1.13.12, 1.14.7, 1.14.8
-    1.12.8               1.13.11, 1.13.12
-    1.12.7               1.12.8, 1.13.11, 1.13.12
-    1.11.10              1.12.7, 1.12.8
-    1.11.9               1.11.10, 1.12.7, 1.12.8
-    1.10.13              1.11.9, 1.11.10
-    1.10.12              1.10.13, 1.11.9, 1.11.10
     ```
 
 - Example: create an AKS cluster on Azure China
@@ -49,7 +46,7 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
     RESOURCE_GROUP_NAME=demo-aks
     CLUSTER_NAME=demo-aks
     LOCATION=chinaeast2  #or chinanorth2
-    VERSION=1.14.8  # select an available version by "az aks get-versions -l chinaeast2 -o table"
+    VERSION=1.15.7  # select an available version by "az aks get-versions -l chinaeast2 -o table"
     
     # create a resource group
     az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
@@ -102,7 +99,7 @@ Since some well known container registries like `docker.io`, `gcr.io` are not ac
 | [dockerhub](hub.docker.com) (docker.io) | [dockerhub.azk8s.cn](http://mirror.azk8s.cn/help/docker-registry-proxy-cache.html) | `dockerhub.azk8s.cn/<repo-name>/<image-name>:<version>` | `dockerhub.azk8s.cn/microsoft/azure-cli:2.0.61` `dockerhub.azk8s.cn/library/nginx:1.15` |
 | gcr.io | [gcr.azk8s.cn](http://mirror.azk8s.cn/help/gcr-proxy-cache.html) | `gcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `gcr.azk8s.cn/google_containers/hyperkube-amd64:v1.13.5` |
 | quay.io | [quay.azk8s.cn](http://mirror.azk8s.cn/help/quay-proxy-cache.html) | `quay.azk8s.cn/<repo-name>/<image-name>:<version>` | `quay.azk8s.cn/deis/go-dev:v1.10.0` |
-| mcr.microsoft.com | mcr.azk8s.cn| `mcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `mcr.azk8s.cn/k8s/csi/azuredisk-csi:v0.5.0` |
+| mcr.microsoft.com | mcr.azk8s.cn| `mcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `mcr.azk8s.cn/oss/kubernetes/hyperkube:v1.15.7` |
 
 > Note:
 `k8s.gcr.io` would redirect to `gcr.io/google-containers`, following image urls are identical:
