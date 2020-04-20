@@ -7,7 +7,6 @@ Azure Kubernetes Service is in **General Available**, this page provides best pr
 ## Limitations of current AKS General Available on Azure China
 
 - Preview features on Global Azure won't be supported on Azure China, e.g. [Windows Container](https://docs.microsoft.com/en-us/azure/aks/windows-container-cli)
-- [AAD integration support with AKS](https://docs.microsoft.com/zh-cn/azure/aks/aad-integration) requires kubectl version >= `v1.13.6`, download `kubectl` binary from [here](https://mirror.azure.cn/kubernetes/kubectl/v1.13.6/bin/)
 
 ## 1. How to create AKS on Azure China
 
