@@ -107,6 +107,9 @@ Since some container registries like `docker.io`, `gcr.io` are not accessible or
 k8s.gcr.io/pause-amd64:3.1
 gcr.io/google_containers/pause-amd64:3.1
 ```
+> Note:
+currently *.azk8s.cn could only be accessed by Azure China IP, we don't provide public outside access any more. If you have such requirement to whitelist your IP, please contact akscn@microsoft.com, provide your IP address, we will decide whether to whitelist your IP per your reasonable requirement, thanks for understanding.
+
 - Container Registry Proxy Example
 
     specify `defaultBackend.image.repository` as `gcr.azk8s.cn/google_containers/defaultbackend` in [nginx-ingress](https://github.com/helm/charts/tree/master/stable/nginx-ingress) chart since original `k8s.gcr.io` does not work in Azure China:
