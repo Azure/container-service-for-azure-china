@@ -28,15 +28,14 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
     az aks get-versions -l chinaeast2 -o table
     KubernetesVersion    Upgrades
     -------------------  ----------------------------------------
-    1.17.0(preview)      None available
-    1.16.4(preview)      1.17.0(preview)
-    1.16.1(preview)      1.16.4(preview), 1.17.0(preview)
-    1.15.7               1.16.1(preview), 1.16.4(preview)
-    1.15.5               1.15.7, 1.16.1(preview), 1.16.4(preview)
-    1.14.8               1.15.5, 1.15.7
-    1.14.7               1.14.8, 1.15.5, 1.15.7
-    1.13.12              1.14.7, 1.14.8
-    1.13.11              1.13.12, 1.14.7, 1.14.8
+    KubernetesVersion    Upgrades
+    -------------------  -----------------------
+    1.17.3(preview)      None available
+    1.16.7               1.17.3(preview)
+    1.15.10              1.16.7
+    1.15.7               1.15.10, 1.16.7
+    1.14.8               1.15.7, 1.15.10
+    1.14.7               1.14.8, 1.15.7, 1.15.10
     ```
 
 - Example: create an AKS cluster on Azure China
@@ -45,7 +44,7 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
     RESOURCE_GROUP_NAME=demo-aks
     CLUSTER_NAME=demo-aks
     LOCATION=chinaeast2  #or chinanorth2
-    VERSION=1.15.7  # select an available version by "az aks get-versions -l chinaeast2 -o table"
+    VERSION=1.15.10  # select an available version by "az aks get-versions -l chinaeast2 -o table"
     
     # create a resource group
     az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
