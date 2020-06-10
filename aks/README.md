@@ -121,7 +121,7 @@ gcr.io/google_containers/pause-amd64:3.1
 `az aks install-cli` command is used to download `kubectl` binary, it works on Azure China from version `2.0.61` or later, another alternative is use following command to download `kubectl` if don't have azure-cli:
 
 ```sh
-# docker run -v ${HOME}:/root -v /usr/local/bin/:/kube -it dockerhub.azk8s.cn/microsoft/azure-cli:2.0.61
+# docker run -v ${HOME}:/root -v /usr/local/bin/:/kube -it mcr.azk8s.cn/azure-cli:2.0.77
 root@09feb993f352:/# az cloud set --name AzureChinaCloud
 root@09feb993f352:/# az aks install-cli --install-location /kube/kubectl
 ```
