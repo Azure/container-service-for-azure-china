@@ -37,11 +37,11 @@ KubernetesVersion    Upgrades
 
 - Example: create an AKS cluster on Azure China
 
-    ```sh
+    ```console
     RESOURCE_GROUP_NAME=demo-aks
     CLUSTER_NAME=demo-aks
     LOCATION=chinaeast2  #or chinanorth2
-    VERSION=1.15.10  # select an available version by "az aks get-versions -l chinaeast2 -o table"
+    VERSION=1.18.4  # select an available version by "az aks get-versions -l chinaeast2 -o table"
     
     # create a resource group
     az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
@@ -65,7 +65,6 @@ KubernetesVersion    Upgrades
     
     # delete AKS cluster node
     az aks delete -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME
-    
     ```
 
     > Get more detailed [AKS set up steps](https://docs.azure.cn/zh-cn/aks/kubernetes-walkthrough)
