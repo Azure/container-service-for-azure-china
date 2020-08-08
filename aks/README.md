@@ -15,28 +15,25 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
 
 - How to use [azure cli](https://docs.microsoft.com/zh-cn/cli/azure/install-azure-cli?view=azure-cli-latest) on Azure China.
 
-    ```sh
+    ```console
     az cloud set --name AzureChinaCloud
     az login
     az account list
     az account set -s <subscription-name>
     ```
 
-- Pick one available kubernetes version on `chinaeast2` or `chinanorth2`.
-
-    ```
-    az aks get-versions -l chinaeast2 -o table
-    KubernetesVersion    Upgrades
-    -------------------  ----------------------------------------
-    KubernetesVersion    Upgrades
-    -------------------  -----------------------
-    1.17.3(preview)      None available
-    1.16.7               1.17.3(preview)
-    1.15.10              1.16.7
-    1.15.7               1.15.10, 1.16.7
-    1.14.8               1.15.7, 1.15.10
-    1.14.7               1.14.8, 1.15.7, 1.15.10
-    ```
+- Pick one available AKS version on `chinaeast2` or `chinanorth2`.
+```console
+az aks get-versions -l chinaeast2 -o table
+KubernetesVersion    Upgrades
+-------------------  --------------------------------
+1.18.4(preview)      None available
+1.18.2(preview)      1.18.4(preview)
+1.17.7               1.18.2(preview), 1.18.4(preview)
+1.16.10              1.17.7
+1.15.12              1.16.10
+1.15.11              1.15.12, 1.16.10
+```
 
 - Example: create an AKS cluster on Azure China
 
@@ -97,7 +94,8 @@ currently *.azk8s.cn could only be accessed by Azure China IP, we don't provide 
 | global | proxy in China | format | example |
 | ---- | ---- | ---- | ---- |
 | [dockerhub](hub.docker.com) (docker.io) | [dockerhub.azk8s.cn](http://mirror.azk8s.cn/help/docker-registry-proxy-cache.html) | `dockerhub.azk8s.cn/<repo-name>/<image-name>:<version>` | `dockerhub.azk8s.cn/microsoft/azure-cli:2.0.61` `dockerhub.azk8s.cn/library/nginx:1.15` |
-| gcr.io | [gcr.azk8s.cn](http://mirror.azk8s.cn/help/gcr-proxy-cache.html) | `gcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `gcr.azk8s.cn/google_containers/hyperkube-amd64:v1.13.5` |
+| gcr.io | [gcr.azk8s.cn](http://mirror.azk8s.cn/help/gcr-proxy-cache.html) | `gcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `gcr.azk8s.cn/google_containers/hyperkube-amd64:v1.18.4` |
+| us.gcr.io | usgcr.azk8s.cn | `usgcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `usgcr.azk8s.cn/k8s-artifacts-prod/ingress-nginx/controller:v0.34.1` |
 | quay.io | [quay.azk8s.cn](http://mirror.azk8s.cn/help/quay-proxy-cache.html) | `quay.azk8s.cn/<repo-name>/<image-name>:<version>` | `quay.azk8s.cn/deis/go-dev:v1.10.0` |
 | mcr.microsoft.com | mcr.azk8s.cn| `mcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `mcr.azk8s.cn/oss/kubernetes/hyperkube:v1.15.7` |
 
@@ -136,14 +134,14 @@ root@09feb993f352:/# az aks install-cli --install-location /kube/kubectl
 Follow detailed installation steps [here](https://mirror.azk8s.cn/help/kubernetes.html).
 
 - Example:
-```
+```console
 # Install wordpress
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install bitnami/wordpress --set global.imageRegistry=dockerhub.azk8s.cn
 
 # Install nginx-ingress
 helm repo add stable https://mirror.azure.cn/kubernetes/charts/
-helm install stable/nginx-ingress  --set defaultBackend.image.repository=gcr.azk8s.cn/google_containers/defaultbackend
+helm install stable/nginx-ingress --set controller.image.registry=usgcr.azk8s.cn --set defaultBackend.image.repository=gcr.azk8s.cn/google_containers/defaultbackend
 ```
   
 > Note:
