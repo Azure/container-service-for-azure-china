@@ -27,12 +27,14 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
 az aks get-versions -l chinaeast2 -o table
 KubernetesVersion    Upgrades
 -------------------  --------------------------------
-1.18.4(preview)      None available
-1.18.2(preview)      1.18.4(preview)
-1.17.7               1.18.2(preview), 1.18.4(preview)
-1.16.10              1.17.7
-1.15.12              1.16.10
-1.15.11              1.15.12, 1.16.10
+1.18.6(preview)      None available
+1.18.4(preview)      1.18.6(preview)
+1.17.9               1.18.4(preview), 1.18.6(preview)
+1.17.7               1.17.9, 1.18.4(preview), 1.18.6(preview)
+1.16.13              1.17.7, 1.17.9
+1.16.10              1.16.13, 1.17.7, 1.17.9
+1.15.12              1.16.10, 1.16.13
+1.15.11              1.15.12, 1.16.10, 1.16.13
 ```
 
 - Example: create an AKS cluster on Azure China
@@ -95,16 +97,10 @@ currently *.azk8s.cn could only be accessed by Azure China IP, we don't provide 
 | [dockerhub](hub.docker.com) (docker.io) | [dockerhub.azk8s.cn](http://mirror.azk8s.cn/help/docker-registry-proxy-cache.html) | `dockerhub.azk8s.cn/<repo-name>/<image-name>:<version>` | `dockerhub.azk8s.cn/microsoft/azure-cli:2.0.61` `dockerhub.azk8s.cn/library/nginx:1.15` |
 | gcr.io | [gcr.azk8s.cn](http://mirror.azk8s.cn/help/gcr-proxy-cache.html) | `gcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `gcr.azk8s.cn/google_containers/hyperkube-amd64:v1.18.4` |
 | us.gcr.io | usgcr.azk8s.cn | `usgcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `usgcr.azk8s.cn/k8s-artifacts-prod/ingress-nginx/controller:v0.34.1` |
+| k8s.gcr.io | k8sgcr.azk8s.cn | `k8sgcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `k8sgcr.azk8s.cn/ingress-nginx/controller:v0.35.0` |
 | quay.io | [quay.azk8s.cn](http://mirror.azk8s.cn/help/quay-proxy-cache.html) | `quay.azk8s.cn/<repo-name>/<image-name>:<version>` | `quay.azk8s.cn/deis/go-dev:v1.10.0` |
 | mcr.microsoft.com | mcr.azk8s.cn| `mcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `mcr.azk8s.cn/oss/kubernetes/hyperkube:v1.15.7` |
 
-> Note:
-`k8s.gcr.io` would redirect to `gcr.io/google-containers`, following image urls are identical:
-
-```
-k8s.gcr.io/pause-amd64:3.1
-gcr.io/google_containers/pause-amd64:3.1
-```
 - Container Registry Proxy Example
 
     specify `defaultBackend.image.repository` as `gcr.azk8s.cn/google_containers/defaultbackend` in [nginx-ingress](https://github.com/helm/charts/tree/master/stable/nginx-ingress) chart since original `k8s.gcr.io` does not work in Azure China:
