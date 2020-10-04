@@ -99,7 +99,7 @@ currently *.azk8s.cn could only be accessed by Azure China IP, we don't provide 
 | us.gcr.io | usgcr.azk8s.cn | `usgcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `usgcr.azk8s.cn/k8s-artifacts-prod/ingress-nginx/controller:v0.34.1` |
 | k8s.gcr.io | k8sgcr.azk8s.cn | `k8sgcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `k8sgcr.azk8s.cn/ingress-nginx/controller:v0.35.0` <br>`k8sgcr.azk8s.cn/autoscaling/cluster-autoscaler:v1.18.2` |
 | quay.io | [quay.azk8s.cn](http://mirror.azk8s.cn/help/quay-proxy-cache.html) | `quay.azk8s.cn/<repo-name>/<image-name>:<version>` | `quay.azk8s.cn/deis/go-dev:v1.10.0` |
-| mcr.microsoft.com | mcr.azk8s.cn| `mcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `mcr.microsoft.com/oss/nginx/nginx:1.17.3-alpine` |
+| mcr.microsoft.com | mcr.azk8s.cn| `mcr.azk8s.cn/<repo-name>/<image-name>:<version>` | `mcr.azk8s.cn/oss/nginx/nginx:1.17.3-alpine` |
 
 - Container Registry Proxy Example
 
@@ -125,7 +125,6 @@ root@09feb993f352:/# az aks install-cli --install-location /kube/kubectl
  > ```
 
 ## 4. Install helm
-
 Follow detailed installation steps [here](https://mirror.azk8s.cn/help/kubernetes.html).
 
 - Example:
@@ -140,36 +139,7 @@ helm install stable/nginx-ingress --set controller.image.registry=usgcr.azk8s.cn
 ```
   
 > Note:
-All kubernetes related binaries on github could be found under [https://mirror.azk8s.cn/kubernetes](https://mirror.azk8s.cn/kubernetes), e.g. helm, charts, etc.
-
-## 5. Cluster autoscaler
- > Note: AKS integrated [Cluster-autoscaler](https://docs.microsoft.com/zh-cn/azure/aks/cluster-autoscaler) is not availalbe on Azure China now since it's still in Preview on Global Azure, instead following autoscaler is supported on Azure China now, it supports both VMAS and VMSS:
-Follow detailed steps in [Cluster Autoscaler on Azure](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/azure#cluster-autoscaler-on-azure) and in `Deployment` config of `aks-cluster-autoscaler.yaml`:
-
-- use `gcr.azk8s.cn/google-containers/cluster-autoscaler:version` instead of `gcr.io/google-containers/cluster-autoscaler:version`
-
-- add following environment variable:
-
-    ```
-    - name: ARM_CLOUD
-      value: AzureChinaCloud
-    ```
-
-    Here is the complete `Deployment` config [example](https://github.com/Azure/container-service-for-azure-china/blob/master/aks/cluster-autoscaler-deployment-mooncake.yaml).
-
-## 6. VMSS Cluster
-
-VMSS cluster and Multi-node pool is now available in Mooncake: https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools
-
-> Note: Currently, only Azure CLI is supported to create VMSS cluster.
-        
-There's a potential issue of ARM throttling for VMSS cluster. Azure ARM API has request limits and would throttle the client if there're too many requests are sent: https://docs.azure.cn/zh-cn/azure-resource-manager/resource-manager-request-limits
-
-A few things could reduce the API requests number:
-
-   - Reduce number of nodes and frequency of node scaling
-   - Reduce frequency of AzureDisk detaching or attaching
-   - Reduce frequency of LoadBalancer typed service creating or deleting
+Download Kubernetes related binaries from [https://mirror.azure.cn/kubernetes](https://mirror.azure.cn/kubernetes), e.g. helm, charts, etc.
 
 ## Hands on
  - [run a simple web application on AKS cluster](https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo)
