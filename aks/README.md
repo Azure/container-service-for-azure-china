@@ -125,17 +125,23 @@ root@09feb993f352:/# az aks install-cli --install-location /kube/kubectl
  > ```
 
 ## 4. Install helm
-Follow detailed installation steps [here](https://mirror.azk8s.cn/help/kubernetes.html).
+- Install helm v3
+```console
+VER=v3.3.4
+wget https://mirror.azure.cn/kubernetes/helm/helm-$VER-linux-amd64.tar.gz
+tar -xvf helm-$VER-linux-amd64.tar.gz
+sudo mv linux-amd64/helm /usr/local/bin
+```
 
-- Example:
+- Helm application example:
 ```console
 # Install wordpress
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install bitnami/wordpress --set global.imageRegistry=dockerhub.azk8s.cn
+helm install bitnami/wordpress --generate-name --set global.imageRegistry=dockerhub.azk8s.cn
 
 # Install nginx-ingress
 helm repo add stable https://mirror.azure.cn/kubernetes/charts/
-helm install stable/nginx-ingress --set controller.image.registry=usgcr.azk8s.cn --set defaultBackend.image.repository=gcr.azk8s.cn/google_containers/defaultbackend
+helm install stable/nginx-ingress --generate-name --set controller.image.registry=usgcr.azk8s.cn --set defaultBackend.image.repository=k8sgcr.azk8s.cn/defaultbackend-amd64
 ```
   
 > Note:
