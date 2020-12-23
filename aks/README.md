@@ -145,7 +145,8 @@ helm install stable/nginx-ingress --generate-name --set controller.image.registr
 ```
   
 > Note:
-Download Kubernetes related binaries from [https://mirror.azure.cn/kubernetes](https://mirror.azure.cn/kubernetes), e.g. helm, charts, etc.
+- Download Kubernetes related binaries from [https://mirror.azure.cn/kubernetes](https://mirror.azure.cn/kubernetes), e.g. helm, charts, etc.
+- Charts under https://mirror.azure.cn/kubernetes/charts are synced from https://charts.helm.sh/stable
 
 ## Hands on
  - [run a simple web application on AKS cluster](https://github.com/andyzhangx/k8s-demo/tree/master/nginx-server#nginx-server-demo)
