@@ -27,12 +27,14 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
 az aks get-versions -l chinaeast2 -o table
 KubernetesVersion    Upgrades
 -------------------  -----------------------
-1.20.5               None available
-1.20.2               1.20.5
-1.19.9               1.20.2, 1.20.5
-1.19.7               1.19.9, 1.20.2, 1.20.5
-1.18.17              1.19.7, 1.19.9
-1.18.14              1.18.17, 1.19.7, 1.19.9
+1.21.2               None available
+1.21.1               1.21.2
+1.20.7               1.21.1, 1.21.2
+1.20.5               1.20.7, 1.21.1, 1.21.2
+1.19.11              1.20.5, 1.20.7
+1.19.9               1.19.11, 1.20.5, 1.20.7
+1.18.19              1.19.9, 1.19.11
+1.18.17              1.18.19, 1.19.9, 1.19.11
 ```
 
 - Example: create an AKS cluster on Azure China
