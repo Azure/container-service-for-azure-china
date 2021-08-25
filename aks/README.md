@@ -43,13 +43,13 @@ KubernetesVersion    Upgrades
     RESOURCE_GROUP_NAME=demo-aks
     CLUSTER_NAME=demo-aks
     LOCATION=chinaeast2  #or chinanorth2
-    VERSION=1.18.4  # select an available version by "az aks get-versions -l chinaeast2 -o table"
+    VERSION=1.20.7  # select an available version by "az aks get-versions -l chinaeast2 -o table"
     
     # create a resource group
     az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
     
     # create AKS cluster with 1 agent node (if your azure cli version is low, remove `--disable-rbac`)
-    az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D3_v2 --disable-rbac --generate-ssh-keys --kubernetes-version $VERSION -l $LOCATION --node-osdisk-size 128
+    az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D3_v2 --generate-ssh-keys --kubernetes-version $VERSION -l $LOCATION --node-osdisk-size 128
     
     # wait about 5 min for `az aks create` running complete
     
