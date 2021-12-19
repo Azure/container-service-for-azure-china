@@ -11,7 +11,6 @@ Azure Kubernetes Service is in **General Available**, this page provides best pr
 ## 1. How to create AKS on Azure China
 
 Currently AKS on Azure China could be created by [Azure portal](https://portal.azure.cn/#create/microsoft.aks) or [azure cli](https://docs.microsoft.com/zh-cn/cli/azure/install-azure-cli?view=azure-cli-latest), AKS on `chinaeast2`, `chinanorth2` regions are available now. This page shows to create AKS cluster by azure cli.
- > You need the Azure CLI version 2.0.61 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](https://docs.microsoft.com/zh-cn/cli/azure/install-azure-cli?view=azure-cli-latest).
 
 - How to use [azure cli](https://docs.microsoft.com/zh-cn/cli/azure/install-azure-cli?view=azure-cli-latest) on Azure China.
 
@@ -26,15 +25,15 @@ Currently AKS on Azure China could be created by [Azure portal](https://portal.a
 ```console
 az aks get-versions -l chinaeast2 -o table
 KubernetesVersion    Upgrades
--------------------  -----------------------
-1.21.2               None available
-1.21.1               1.21.2
-1.20.7               1.21.1, 1.21.2
-1.20.5               1.20.7, 1.21.1, 1.21.2
-1.19.11              1.20.5, 1.20.7
-1.19.9               1.19.11, 1.20.5, 1.20.7
-1.18.19              1.19.9, 1.19.11
-1.18.17              1.18.19, 1.19.9, 1.19.11
+-------------------  ----------------------------------------
+1.22.2(preview)      None available
+1.22.1(preview)      1.22.2(preview)
+1.21.2               1.22.1(preview), 1.22.2(preview)
+1.21.1               1.21.2, 1.22.1(preview), 1.22.2(preview)
+1.20.9               1.21.1, 1.21.2
+1.20.7               1.20.9, 1.21.1, 1.21.2
+1.19.13              1.20.7, 1.20.9
+1.19.11              1.19.13, 1.20.7, 1.20.9
 ```
 
 - Example: create an AKS cluster on Azure China
@@ -48,7 +47,7 @@ KubernetesVersion    Upgrades
     # create a resource group
     az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
     
-    # create AKS cluster with 1 agent node (if your azure cli version is low, remove `--disable-rbac`)
+    # create AKS cluster with 1 agent node
     az aks create -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --node-count 1 --node-vm-size Standard_D3_v2 --generate-ssh-keys --kubernetes-version $VERSION -l $LOCATION --node-osdisk-size 128
     
     # wait about 5 min for `az aks create` running complete
@@ -109,22 +108,7 @@ currently *.azk8s.cn could only be accessed by Azure China IP, we don't provide 
     helm install stable/nginx-ingress --set defaultBackend.image.repository=gcr.azk8s.cn/google_containers/defaultbackend --set defaultBackend.image.tag=1.4
     ```
 
-## 3. Install kubectl
-
-`az aks install-cli` command is used to download `kubectl` binary, it works on Azure China from version `2.0.61` or later, another alternative is use following command to download `kubectl` if don't have azure-cli:
-
-```sh
-# docker run -v ${HOME}:/root -v /usr/local/bin/:/kube -it mcr.azk8s.cn/azure-cli:2.0.77
-root@09feb993f352:/# az cloud set --name AzureChinaCloud
-root@09feb993f352:/# az aks install-cli --install-location /kube/kubectl
-```
-
- > run `sudo az aks install-cli` if hit following permission error
- > ```
- > Connection error while attempting to download client ([Errno 13] Permission denied: '/usr/local/bin/kubectl'
- > ```
-
-## 4. Install helm
+## 3. Install helm
 - Install helm v3
 ```console
 VER=v3.3.4
