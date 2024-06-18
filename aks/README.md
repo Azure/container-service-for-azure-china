@@ -88,6 +88,8 @@ Since some container registries like `docker.io`, `gcr.io` are not accessible or
 
 > **Note**:
 currently *.azk8s.cn could only be accessed by Azure China IP, we don't provide public outside access any more. If you have such requirement to whitelist your IP, please contact akscn@microsoft.com, provide your IP address, we will decide whether to whitelist your IP per your reasonable requirement, thanks for understanding.
+>
+> Please note that we can only offer SLA-based technical support for mcr.azk8s.cn among the listed registries.
  
 | Global | Proxy in China | format | example |
 | ---- | ---- | ---- | ---- |
