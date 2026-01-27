@@ -87,9 +87,9 @@ Since some container registries like `docker.io`, `gcr.io` are not accessible or
 > First docker pull of new image will be still slow, and then image would be cached, would be much faster in the next docker pull action.
 
 > **Note**:
-currently *.azk8s.cn could only be accessed by Azure China IP, we don't provide public outside access any more. If you have such requirement to whitelist your IP, please contact akscn@microsoft.com, provide your IP address, we will decide whether to whitelist your IP per your reasonable requirement, thanks for understanding.
+Currently *.azk8s.cn could only be accessed by Azure China IP, we don't provide public outside access any more. If you have such requirement to whitelist your IP, please contact akscn@microsoft.com, provide your IP address, we will decide whether to whitelist your IP per your reasonable requirement, thanks for understanding.
 >
-> Please note that we can only offer SLA-based technical support for mcr.azk8s.cn among the listed registries.
+> We do not provide SLA-based technical support for any of the China registry proxies listed below. For MAR (Microsoft Artifact Registry) in Azure China, please use the official FQDN `mcr.azure.cn`. Refer to the [official MAR endpoints guidance](https://github.com/microsoft/containerregistry/blob/main/docs/mcr-endpoints-guidance.md#official-fqdns-for-mar) for more details.
  
 | Global | Proxy in China | format | example |
 | ---- | ---- | ---- | ---- |
